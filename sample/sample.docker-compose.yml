@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  <CONTAINERNAME>:
+    hostname: '<CONTAINERNAME>'
+    container_name: '<CONTAINERNAME>'
+    environment:
+      - 'PGID=1000'
+      - 'PUID=1000'
+      - 'TZ=UTC'
+      - 'UMASK=022'
+      - '<ADDITIONALENVIROMENT>'
+    image: '<DOCKRHUBorGHRCIO/><REPO>/<IMAGE>:<VERSION>'
+    restart: 'unless-stopped'
+    ports:
+      - '<OUTSIDEPORTBLOCK><RANDOMPORTFROMHOST>:<PORTOFAPP>'
+    networks:
+      - proxy
+    security_opt:
+      - 'no-new-privileges:true'
+    volumes:
+      - '/opt/appdata/<CONTAINERNAME>:/config:rw'
+      - source: unionfs
+        target: /mnt
+        type: volume
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'dockupdater.enable=true'
+      - 'traefik.http.routers.<CONTAINERNAME>-rtr.entrypoints=https'
+      - 'traefik.http.routers.<CONTAINERNAME>-rtr.rule=Host(`<CONTAINERNAME>.example.com`)'
+      - 'traefik.http.routers.<CONTAINERNAME>-rtr.tls=true'
+      - 'traefik.http.routers.<CONTAINERNAME>-rtr.tls.certresolver=dns-cloudflare'
+      - 'traefik.http.routers.<CONTAINERNAME>-rtr.middlewares=chain-authelia@file'
+      - 'traefik.http.routers.<CONTAINERNAME>-rtr.service=uploader-svc'
+      - 'traefik.http.services.<CONTAINERNAME>-svc.loadbalancer.server.port=<RANDOMPORTFROMHOST>'
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
+
+volumes:
+  unionfs:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /mnt
