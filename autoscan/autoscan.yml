@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  autoscan:
+    hostname: 'autoscan'
+    container_name: 'autoscan'
+    environment:
+      - 'PGID=1000'
+      - 'PUID=1000'
+      - 'TZ=UTC'
+      - 'AUTOSCAN_VERBOSITY=1'
+    image: 'cloudb0x/autoscan'
+    restart: 'unless-stopped'
+    ports:
+      - '127.0.0.1:3030:3030'
+    networks:
+      - proxy
+    volumes:
+      - '/opt/appdata/autoscan:/config:rw'
+      - '/opt/appdata/plex:/data/plex:ro'
+      - '/opt/appdata/emby:/data/emby:ro'      
+      - source: unionfs
+        target: /mnt
+        type: volume
+      - '/etc/locatime:/etc/localtime:ro'
+    labels:
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'dockupdater.enable=true'
+      - 'traefik.http.routers.autoscan-rtr.entrypoints=https'
+      - 'traefik.http.routers.autoscan-rtr.rule=Host(`autoscan.example.com`)'
+      - 'traefik.http.routers.autoscan-rtr.tls=true'
+      - 'traefik.http.routers.autoscan-rtr.tls.certresolver=dns-cloudflare'
+      - 'traefik.http.routers.autoscan-rtr.middlewares=chain-authelia@file'
+      - 'traefik.http.routers.autoscan-rtr.service=autoscan-svc'
+      - 'traefik.http.services.autoscan-svc.loadbalancer.server.port=3030'
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
+
+volumes:
+  unionfs:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /mnt

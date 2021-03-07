@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  uploader:
+    cap_add:
+      - 'SYS_ADMIN'
+    container_name: 'uploader'
+    devices:
+      - '/dev/fuse:/dev/fuse'
+    environment:
+      - 'PGID=1000'
+      - 'PUID=1000'
+      - 'TZ=UTC'
+    image: 'ghcr.io/doob187/uploader'
+    restart: 'unless-stopped'
+    ports:
+      - '127.0.0.1:7777:8080'
+    networks:
+      - proxy
+    security_opt:
+      - 'apparmor:unconfined'
+    networks:
+      - proxy
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '/opt/appdata/uploader:/config:rw'
+      - source: unionfs
+        target: /mnt
+        type: volume
+    labels:
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'dockupdater.enable=true'
+      - 'traefik.http.routers.uploader-rtr.entrypoints=https'
+      - 'traefik.http.routers.uploader-rtr.rule=Host(`uploader.example.com`)'
+      - 'traefik.http.routers.uploader-rtr.tls=true'
+      - 'traefik.http.routers.uploader-rtr.tls.certresolver=dns-cloudflare'
+      - 'traefik.http.routers.uploader-rtr.middlewares=chain-authelia@file'
+      - 'traefik.http.routers.uploader-rtr.service=uploader-svc'
+      - 'traefik.http.services.uploader-svc.loadbalancer.server.port=7777'
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
+
+volumes:
+  unionfs:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /mnt

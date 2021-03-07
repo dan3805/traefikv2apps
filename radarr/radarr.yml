@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  radarr:
+    hostname: 'radarr'
+    container_name: 'radarr'
+    environment:
+      - 'PGID=1000'
+      - 'PUID=1000'
+      - 'TZ=UTC'
+      - 'UMASK=022'
+    image: 'ghcr.io/linuxserver/radarr:nightly'
+    restart: 'unless-stopped'
+    ports:
+      - '127.0.0.1:7878:7878'
+    networks:
+      - proxy
+    security_opt:
+      - 'no-new-privileges:true'
+    volumes:
+      - '/opt/appdata/radarr:/config:rw'
+      - source: unionfs
+        target: /mnt
+        type: volume
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'dockupdater.enable=true'
+      - 'traefik.http.routers.radarr-rtr.entrypoints=https'
+      - 'traefik.http.routers.radarr-rtr.rule=Host(`radarr.example.com`)'
+      - 'traefik.http.routers.radarr-rtr.tls=true'
+      - 'traefik.http.routers.radarr-rtr.tls.certresolver=dns-cloudflare'
+      - 'traefik.http.routers.radarr-rtr.middlewares=chain-authelia@file'
+      - 'traefik.http.routers.radarr-rtr.service=radarr-svc'
+      - 'traefik.http.services.radarr-svc.loadbalancer.server.port=7878'
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
+
+volumes:
+  unionfs:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /mnt

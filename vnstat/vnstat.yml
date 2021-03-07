@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  vnstat:
+    hostname: 'vnstat'
+    container_name: 'vnstat'
+    environment:
+      - 'PGID=1000'
+      - 'PUID=1000'
+      - 'TZ=UTC'
+    image: 'ghcr.io/doob187/vnstat:latest'
+    networks:
+      - proxy
+    restart: 'unless-stopped'
+    ports:
+      - '127.0.0.1:8090:80'
+    volumes:
+      - '/usr/bin/vnstat:/usr/bin/vnstat'
+      - '/var/lib/vnstat:/var/lib/vnstat'
+      - '/etc/localtime:/etc/localtime:ro'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'dockupdater.enable=true'
+      - 'traefik.http.routers.vnstat-rtr.entrypoints=https'
+      - 'traefik.http.routers.vnstat-rtr.rule=Host(`vnstat.example.com`)'
+      - 'traefik.http.routers.vnstat-rtr.tls=true'
+      - 'traefik.http.routers.vnstat-rtr.tls.certresolver=dns-cloudflare'
+      - 'traefik.http.routers.vnstat-rtr.middlewares=chain-authelia@file'
+      - 'traefik.http.routers.vnstat-rtr.service=vnstat-svc'
+      - 'traefik.http.services.vnstat-svc.loadbalancer.server.port=8090'
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
+
+volumes:
+  unionfs:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /mnt

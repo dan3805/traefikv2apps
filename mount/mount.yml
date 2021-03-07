@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  mount:
+    cap_add:
+      - 'SYS_ADMIN'
+    container_name: 'mount'
+    devices:
+      - '/dev/fuse:/dev/fuse'
+    ports:
+      - target: 7755
+        published: 8080
+        protocol: tcp
+        mode: host
+    environment:
+      - 'PGID=1000'
+      - 'PUID=1000'
+      - 'TZ=UTC'
+    image: 'ghcr.io/doob187/mount'
+    restart: 'unless-stopped'
+    security_opt:
+      - 'apparmor=unconfined'
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+      - '/opt/appdata/mount:/config:rw'
+      - '/mnt:/mnt:shared'
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
