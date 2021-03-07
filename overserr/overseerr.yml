@@ -9,7 +9,7 @@ services:
       - 'PUID=1000'
       - 'TZ=UTC'
       - 'LOG_LEVEL=info'
-    image: 'sctx/overseerr:develop'
+    image: 'ghcr.io/sct/overseerr:develop'
     restart: 'unless-stopped'
     ports:
       - '127.0.0.1:5055:5055'
