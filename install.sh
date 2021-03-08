@@ -42,9 +42,13 @@ Check of Docker is running
   >> change values inside the Preferences.xml for Plex 
   >> run sqlite3 edit command
 
-
+>>><<<
 ## run autocomposer when all is done
-  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose 
-  >> mirror to /opt/appdata/composebackup/
-
+## mkdir -p /opt/appdata/composebackup/
+## docker=$(docker ps -aq --format={{.Names}})
+## docker run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker >>/opt/appdata/composebackup/docker-compose.yml
+## docker system prune -af
+[X]  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose 
+[X]  >> mirror to /opt/appdata/composebackup/
+>>><<<
 # Multi deploy *?* more as one docker at the same time *?* 
