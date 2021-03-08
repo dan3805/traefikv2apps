@@ -43,4 +43,7 @@ Check of Docker is running
   >> run sqlite3 edit command
 
 
+## run autocomposer when all is done 
+  >> mirror to /opt/appdata/composebackup/
+
 # Multi deploy *?* more as one docker at the same time *?* 
