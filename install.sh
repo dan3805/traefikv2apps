@@ -43,7 +43,8 @@ Check of Docker is running
   >> run sqlite3 edit command
 
 
-## run autocomposer when all is done 
+## run autocomposer when all is done
+  docker run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose 
   >> mirror to /opt/appdata/composebackup/
 
 # Multi deploy *?* more as one docker at the same time *?* 
