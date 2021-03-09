@@ -12,7 +12,6 @@ services:
       - 'PLEX_CLAIM=$PLEX_CLAIM_ID'
       - 'VERSION=latest'
       - 'ADVERTISE_IP=http://SERVERIP_ID:32400,http://plex.example.com:32400'
-      - 'NVIDIA_VISIBLE_DEVICES=all'
     image: 'ghcr.io/linuxserver/plex'
     restart: 'unless-stopped'
     networks:
@@ -31,7 +30,7 @@ services:
         mode: host
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
-      - '/dev/shm:/ram_transcode:rw'
+      - '/dev/shm:/transcode:rw'
       - '/opt/appdata/plex/database:/config:rw'
       - 'unionfs:/mnt'
     labels:
