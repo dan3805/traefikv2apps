@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-    emby:
+  emby:
     hostname: 'emby'
     container_name: 'emby'
-    image: ghcr.io/linuxserver/emby
+    image: 'ghcr.io/linuxserver/emby'
     restart: 'unless-stopped'
     networks:
       - proxy
