@@ -20,9 +20,7 @@ services:
       - 'no-new-privileges:true'
     volumes:
       - '/opt/appdata/<CONTAINERNAME>:/config:rw'
-      - source: unionfs
-        target: /mnt
-        type: volume
+      - 'unionfs:/mnt'
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=proxy'
