@@ -1,10 +1,10 @@
-version: '3'
+ version: '3'
 
 services:
-    emby:
+  emby:
     hostname: 'emby'
     container_name: 'emby'
-    image: ghcr.io/linuxserver/emby
+    image: 'ghcr.io/linuxserver/emby'
     restart: 'unless-stopped'
     networks:
       - proxy
@@ -26,7 +26,7 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - '/path/to/library:/config'
+      - '/opt/appdata/emby:/config'
       - 'unionfs:/mnt'
     labels:
       - 'traefik.enable=true'
