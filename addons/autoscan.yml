@@ -19,9 +19,7 @@ services:
       - '/opt/appdata/autoscan:/config:rw'
       - '/opt/appdata/plex:/data/plex:ro'
       - '/opt/appdata/emby:/data/emby:ro'      
-      - source: unionfs
-        target: /mnt
-        type: volume
+      - 'unionfs:/mnt'
       - '/etc/locatime:/etc/localtime:ro'
     labels:
     labels:
