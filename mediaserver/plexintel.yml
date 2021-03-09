@@ -33,9 +33,7 @@ services:
       - '/etc/localtime:/etc/localtime:ro'
       - '/dev/shm:/ram_transcode:rw'
       - '/opt/appdata/plex/database:/config:rw'
-      - source: unionfs
-        target: /mnt
-        type: volume
+      - 'unionfs:/mnt'
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=proxy'
