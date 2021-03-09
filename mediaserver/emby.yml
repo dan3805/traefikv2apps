@@ -24,7 +24,7 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - '/path/to/library:/config'
+      - '/opt/appdata/emby:/config'
       - 'unionfs:/mnt'
     labels:
       - 'traefik.enable=true'
