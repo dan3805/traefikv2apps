@@ -3,23 +3,32 @@
 # Copyright (c) 2020, MrDoob
 # All rights reserved.
 
-#notes ! 
+## notes ! 
 
-list folder
+## ls /opt/apps/${section} | sed -e 's/.yml//g' 
+## ls -t /opt/apps/${section} | grep -v '/$' | sed -e 's/.yml//g'
+## logic for nvidia|intel missing
+## possibly solution find
+## appfolder="/opt/appdata"
+## if [[ ! -d "$appfolder/${typed}" ]]; then
+##    folder="$appfolder/${typed}"
+##    for i in ${folder}; do
+##        mkdir -p /opt/appdata/$i
+##        find $i -exec chmod a=rx,u+w {} \;
+##        find $i -exec chown -hR 1000:1000 {}
+##    done
+## fi
 
-create folder /opt/appdata/${typed}
-set permissions /opt/appdata/${typed}
-
-Rsync or copie/mirror file  /opt/appdata/compose/docker-compose.yml
+Rsync or copie/mirror file /opt/appdata/compose/docker-compose.yml
 >> When file exists remove or overwrite
 
 # Subactions
   >> Plex need sub action for Claim
-  >> Check if /dev/dri is available 
-  >> check if nvidia-docker  is running
+  #>> Check if /dev/dri is available 
+  #>> check if nvidia-docker is running
 
 Replace parts /opt/appdata/compose/docker-compose.yml
-Check if file would working  --config
+Check if file would working --config
 
 ## deploy
 Join folder /opt/appdata/compose/
