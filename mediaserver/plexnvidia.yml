@@ -32,9 +32,9 @@ services:
         mode: host
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
-      - '/dev/shm:/transcode:rw'
-      - '/opt/appdata/plex/database:/config:rw'
-      - 'unionfs:/mnt'
+      - 'tmpfs:/transcode'
+      - '/opt/appdata/plex/database:/config'
+      - 'unionfs:/mnt:ro'
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=proxy'
