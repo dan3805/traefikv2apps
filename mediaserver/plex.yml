@@ -28,7 +28,7 @@ services:
         mode: host
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
-      - '/dev/shm:/transcode:rw'
+      - 'tmpfs:/transcode:rw'
       - '/opt/appdata/plex/database:/config:rw'
       - 'unionfs:/mnt'
     labels:
