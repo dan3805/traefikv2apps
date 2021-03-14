@@ -9,7 +9,7 @@ services:
       - 'PUID=1000'
       - 'TZ=UTC'
       - 'UMASK=022'
-    image: 'ghcr.io/linuxserver/sonarr:preview'
+    image: 'ghcr.io/linuxserver/sonarr:develop'
     restart: 'unless-stopped'
     ports:
       - '127.0.0.1:8989:8989'
