@@ -6,12 +6,12 @@
 # inspiration from Cloudbox Community
 ####################################
 # Plex
-plexdb=/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
+plexdb="/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Plug-in Support/Databases/com.plexapp.plugins.library.db"
 plexdocker="plex"
 plex=$(docker ps -aq --format {{.Names}} | grep -qE 'plex' && echo true || echo false)
 
 # Emby
-embydb=/opt/appdata/emby/data/library.db
+embydb="/opt/appdata/emby/data/library.db"
 embydocker"emby"
 emby=$(docker ps -aq --format {{.Names}} | grep -qE 'emby' && echo true || echo false)
 
