@@ -2,7 +2,7 @@
 # shellcheck shell=bash
 # Copyright (c) 2020, MrDoob
 # All rights reserved.
-updatesystem() {
+appstartup() {
 if [[ $EUID -ne 0 ]]; then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -96,6 +96,7 @@ EOF
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed == "z" || $typed == "Z" ]]; then exit; fi
   if [[ $typed == "" ]]; then install; fi
   current=$(ls /opt/apps/${section}/compose/ | sed -e 's/.yml//g' | grep -qE "\<$typed\>" 1>/dev/null 2>&1 && echo true || echo false)
+  if [[ $current == "false" && $typed != "" ]]; then install;fi
   if [[ $current == "true" && $typed != "" ]]; then run;fi
 
 }
@@ -103,7 +104,7 @@ run() {
 compose="compose/docker-compose.yml"
 appfolder="/opt/apps"
 basefolder="/opt/appdata"
- if [[ ! -d $basefolder/compose/ ]];then $(command -v mkidr) -p $basefolder/compose/; fi
+ if [[ ! -d $basefolder/compose/ ]];then $(command -v mkdir) -p $basefolder/compose/; fi
  if [[ ! -x $(command -v rsync) ]]; then $(command -v apt) install rsync -yqq >/dev/null 2>&1; fi
  if [[ ${section} == "mediaserver" ]]; then
     if [[ ${typed} == "emby" || ${typed} == "plex" ]]; then
@@ -123,7 +124,7 @@ fi
  if [[ ! -d $basefolder/${typed} ]]; then
     folder=$basefolder/${typed}
     for i in ${folder}; do
-        $(command -v mkidr) -p $i
+        $(command -v mkdir) -p $i
         $(command -v find) $i -exec $(command -v chmod) a=rx,u+w {} \;
         $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
     done
@@ -209,22 +210,14 @@ fi
 #if [[ ${section} == "mediaserver" && ${typed} == "plex" || ${typed} == "emby" ]]; then $(command -v bash) $appfolder/subactions/${typed}.sh;fi
 container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE "\<$typed\>")
 if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then $(command -v docker) restart $container 1>/dev/null 2>&1;fi
+backupcomposer
 }
 backupcomposer() {
 ## run autocomposer when all is done
-if [[ ! -d $basefolder/composebackup ]]; then $(command -v mkidr) -p $basefolder/composebackup/;fi
+if [[ ! -d $basefolder/composebackup ]]; then $(command -v mkdir) -p $basefolder/composebackup/;fi
 docker=$($(command -v docker) ps -aq --format {{.Names}} )
 $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker >>$basefolder/composebackup/docker-compose.yml
 $(command -v docker) system prune -af
 }
 
-
-
-
-## notes !
-
-# Subactions 2
-#  >> downloader needs replacing after deploy for the configuration
-#  >> restart $(command -v docker) then when downloader is found
-
-updatesystem
+appstartup
