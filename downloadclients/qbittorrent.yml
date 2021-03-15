@@ -20,8 +20,6 @@ services:
       - '127.0.0.1:8083:8083'
     volumes:
       - '/opt/appdata/qbittorrent:/config:rw'
-      - '/mnt/downloads/torrent:/mnt/downloads/torrent:rw'
-      - '/mnt/incomplete/torrent:/mnt/incomplete/torrent:rw'
       - source: unionfs
         target: /mnt
         type: volume
