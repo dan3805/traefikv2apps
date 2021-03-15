@@ -31,7 +31,7 @@ services:
       - 'traefik.http.routers.sabnzbd-rtr.tls=true'
       - 'traefik.http.routers.sabnzbd-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.sabnzbd-rtr.middlewares=chain-authelia@file'
-      - 'traefik.http.routers.sabnzbd-rtr.service=uploader-svc'
+      - 'traefik.http.routers.sabnzbd-rtr.service=sabnzbd-svc'
       - 'traefik.http.services.sabnzbd-svc.loadbalancer.server.port=8080'
 
 networks:
