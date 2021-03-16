@@ -69,7 +69,6 @@ addons() {
 section=addons
 install
 }
-}
 
 install() {
 buildshow="ls -p /opt/apps/${section}/compose/"
