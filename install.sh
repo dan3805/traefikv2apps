@@ -71,7 +71,7 @@ install
 }
 
 install() {
-buildshow="ls -p /opt/apps/${section}/compose/ | grep -v '/$'"
+buildshow="$(ls -p /opt/apps/${section}/compose/ | grep -v '/$')"
 build=$($buildshow | sed -e 's/.yml//g' )
 
   tee <<-EOF
