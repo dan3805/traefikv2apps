@@ -2,54 +2,8 @@
 
 services:
   emby:
-    hostname: 'emby'
-    container_name: 'emby'
-    image: 'ghcr.io/linuxserver/emby'
-    restart: 'unless-stopped'
-    networks:
-      - proxy
-    security_opt:
-      - 'no-new-privileges:true'
     devices:
       - '/dev/dri:/dev/dri'
     environment:
-      - 'PUID=1000'
-      - 'PGID=1000'
-      - 'TZ=UTC'
-      - 'UMASK=022'
       - 'NVIDIA_VISIBLE_DEVICES=all'
       - 'NVIDIA_DRIVER_CAPABILITIES=all'
-    ports:
-      - target: 8096
-        published: 8096
-        protocol: tcp
-        mode: host
-      - target: 8920
-        published: 8920
-        protocol: tcp
-        mode: host
-    volumes:
-      - '/opt/appdata/emby:/config'
-      - 'unionfs:/mnt'
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.docker.network=proxy'
-      - 'dockupdater.enable=true'
-      - 'traefik.http.routers.emby-rtr.entrypoints=https'
-      - 'traefik.http.routers.emby-rtr.rule=Host(`emby.example.com`)'
-      - 'traefik.http.routers.emby-rtr.tls=true'
-      - 'traefik.http.routers.emby-rtr.tls.certresolver=dns-cloudflare'
-      - 'traefik.http.routers.emby-rtr.middlewares=chain-authelia@file'
-      - 'traefik.http.routers.emby-rtr.service=emby-svc'
-      - 'traefik.http.services.emby-svc.loadbalancer.server.port=8920'
-
-networks:
-  proxy:
-    driver: bridge
-    external: true
-
-volumes:
-  unionfs:
-    driver: local-persist
-    driver_opts:
-      mountpoint: /mnt
