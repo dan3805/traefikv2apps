@@ -69,10 +69,11 @@ addons() {
 section=addons
 install
 }
+}
 
 install() {
-buildshow="$(ls -p /opt/apps/${section}/compose/ | grep -v '/$')"
-build=$($buildshow | sed -e 's/.yml//g' )
+buildshow="ls -p /opt/apps/${section}/compose/"
+build=$($buildshow | grep -v '/$' | sed -e 's/.yml//g' )
 
   tee <<-EOF
 
@@ -80,7 +81,7 @@ build=$($buildshow | sed -e 's/.yml//g' )
 🚀 App Installer
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-$buildup
+$build
 
 [Z] Exit
 
@@ -88,12 +89,14 @@ $buildup
 
 
 EOF
+
   read -p '↪️ Type app to install | Press [ENTER]: ' typed </dev/tty
-  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed == "z" || $typed == "Z" ]]; then exit; fi
+
+  if [ $typed == "z" && ${section} != "0" ] || [ $typed == "Z" && ${section} != "0" ]]; then exit;else interface;fi
   if [[ $typed == "" ]]; then install; fi
-  current=$(ls /opt/apps/${section}/compose/ | sed -e 's/.yml//g' | grep -qE "\<$typed\>" 1>/dev/null 2>&1 && echo true || echo false)
-  if [[ $current == "false" && $typed != "" ]]; then install;fi
-  if [[ $current == "true" && $typed != "" ]]; then run;fi
+  current=$($build | grep -qE ${typed} 1>/dev/null 2>&1 && echo true || echo false)
+  if [[ $current == "false" ]]; then install;fi
+  if [[ $current == "true" ]]; then run;fi
 
 }
 run() {
@@ -202,7 +205,7 @@ fi
 }
 subtasks() {
 if [[ -x $(command -v ansible) && -x $(command -v ansible-playbook) ]]; then
-   if [[ -f $appfolder/subactions/${typed}.yml ]] $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml;fi
+   if [[ -f $appfolder/subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml;fi
 fi
 #if [[ ${section} == "mediaserver" && ${typed} == "plex" || ${typed} == "emby" ]]; then $(command -v bash) $appfolder/subactions/${typed}.sh;fi
 container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE "\<$typed\>")
