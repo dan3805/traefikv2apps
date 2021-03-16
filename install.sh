@@ -71,13 +71,9 @@ install
 }
 
 install() {
-buildshow="ls /opt/apps/${section}/compose/"
+buildshow="ls -p /opt/apps/${section}/compose/ | grep -v '/$'"
 build=$($buildshow | sed -e 's/.yml//g' )
-if [[ $section == "mediaserver" ]]; then
-    buildup=$($buildshow | sed -e 's/.yml//g' | sort -r | sed -e 's/embyintel//g' | sed -e 's/embynplex//g' | sed -e 's/plexnvidia//g' | sed -e 's/plexintel//g')
-else
-    buildup=$build
-fi
+
   tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -102,25 +98,26 @@ EOF
 }
 run() {
 compose="compose/docker-compose.yml"
+composeoverwrite="compose/docker-compose.override.yml"
 appfolder="/opt/apps"
 basefolder="/opt/appdata"
- if [[ ! -d $basefolder/compose/ ]];then $(command -v mkdir) -p $basefolder/compose/; fi
- if [[ ! -x $(command -v rsync) ]]; then $(command -v apt) install rsync -yqq >/dev/null 2>&1; fi
+ if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
+ if [[ ! -d $basefolder/compose/ ]];then $(command -v mkdir) -p $basefolder/compose/;fi
+ if [[ ! -x $(command -v rsync) ]]; then $(command -v apt) install rsync -yqq >/dev/null 2>&1;fi
  if [[ ${section} == "mediaserver" ]]; then
-    if [[ ${typed} == "emby" || ${typed} == "plex" ]]; then
-       IGPU=$(lshw -C video | grep -qE 'i915' && echo true || echo false)
-       NGPU=$(lshw -C video | grep -qE 'nvidia' && echo true || echo false)
-       if [[ $IGPU == "true" ]]; then
-          $(command -v rsync) $appfolder/${section}/compose/${typed}intel.yml $basefolder/$compose -aq --info=progress2 -hv
-       elif [[ $NGPU == "true" ]]; then
-          $(command -v rsync) $appfolder/${section}/compose/${typed}nvidia.yml $basefolder/$compose -aq --info=progress2 -hv
-       else
-          $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv
-       fi
-    fi
+     gpu="i915 nvidia"
+     for i in ${gpu}; do
+         TDV=$(lshw -C video | grep -qE $i && echo true || echo false)
+         if [[ $TDV == "true" ]]; then $(command -v rsync) $appfolder/${section}/compose/gpu/$i.yml $basefolder/$composeoverwrite -aq --info=progress2 -hv;fi
+     done
+     if [[ $(uname) == "Darwin" ]]; then
+        sed -i '' "s/<APP>/${typed}/g" $basefolder/$composeoverwrite
+     else
+        sed -i "s/<APP>/${typed}/g" $basefolder/$composeoverwrite
+     fi
  else
    $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv
-fi
+ fi
  if [[ ! -d $basefolder/${typed} ]]; then
     folder=$basefolder/${typed}
     for i in ${folder}; do
@@ -143,8 +140,8 @@ if [[ ${section} == "mediaserver" && ${typed} == "plex" ]]; then
    if [[ $SERVERIP != "" ]]; then
       if [[ $(uname) == "Darwin" ]]; then
          sed -i '' "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
-     else
-        sed -i "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
+      else
+         sed -i "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
      fi
    fi
 fi
