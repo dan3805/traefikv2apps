@@ -1,7 +1,7 @@
  version: '3'
 
 services:
-  emby:
+  <app>:
     devices:
       - '/dev/dri:/dev/dri'
     environment:
