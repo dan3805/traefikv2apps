@@ -40,10 +40,7 @@ EOF
   if [[ $section == "" ]]; then interface; fi
   checksection=$($buildshow | grep -qE '$section' && echo true || echo false)
   if [[ $checksection == "false" ]]; then interface;fi
-  if [[ $checksection == "true" ]]; then
-      section=$section
-      install
-  fi
+  if [[ $checksection == "true" ]]; then install;fi
 }
 install() {
 section=${section}
@@ -70,6 +67,7 @@ EOF
    if [[ $typed == "z" || $typed == "Z" ]]; then install;fi
    if [[ $typed == "" ]]; then install;fi
    buildapp=$($buildshow | grep -qE '$typed' && echo true || echo false)
+   if [[ $buildapp == "false" ]]; then install;fi
    if [[ $buildapp == "true" ]]; then runinstall;fi
 }
 runinstall() {
