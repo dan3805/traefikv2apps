@@ -38,9 +38,11 @@ EOF
 
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then exit;fi
   if [[ $section == "" ]]; then interface; fi
-  checksection=$($buildshow | grep -qE '$section' && echo true || echo false)
-  if [[ $checksection == "false" ]]; then interface;fi
-  if [[ $checksection == "true" ]]; then install;fi
+  #checksection=$($buildshow | grep -qE '$section' && echo true || echo false)
+  #if [[ $checksection == "false" ]]; then install;fi
+  if [[ $($buildshow | grep -qE '$section' && echo true || echo false) == "false" ]]; then interface;fi
+  if [[ $($buildshow | grep -qE '$section' && echo true || echo false) == "true" ]]; then install;fi
+  #if [[ $checksection == "true" ]]; then install;fi
 }
 install() {
 section=${section}
