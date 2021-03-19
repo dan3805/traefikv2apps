@@ -45,7 +45,7 @@ EOF
   #elif [[ $checksection == "false" && ${section} != "0" ]]; then
   #    interface
   elif [[ $checksection == "true" ]]; then
-      appsection=${section}
+      #appsection=${section}
       install
   else
       interface
@@ -86,7 +86,7 @@ EOF
 #}
 
 install() {
-appsection=${section}
+section=${appsection}
 buildlist="ls -p /opt/apps/${section}/compose/"
 buildshow=$($buildlist | grep -v '/$' | sed -e 's/.yml//g' )
 buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
