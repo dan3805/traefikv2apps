@@ -19,60 +19,77 @@ done
 }
 
 interface() {
+buildlist="ls -l /opt/apps/"
+buildshow=$($buildlist | grep '^/d' | awk -F' ' '{print $9}')
+checksection=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
+
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 App Installer
+🚀 App Section Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[1] Mediamanager
-[2] Mediaserver
-[3] Download Clients
-[4] System
-[5] Addons
+$buildshow
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[Z] - Exit
+[ EXIT ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -p '↘️  Type Number | Press [ENTER]: ' typed </dev/tty
-  case $typed in
-  1) mediamanager && interface ;;
-  2) mediaserver && interface ;;
-  3) downloadclients && interface ;;
-  4) system && interface ;;
-  5) addons && interface ;;
-  z) exit 0 ;;
-  Z) exit 0 ;;
-  *) interface ;;
-  esac
+  read -p '↘️  Type Section | Press [ENTER]: ' section </dev/tty
+
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then
+      exit
+  elif [[ $section == "" && ${section} != "" ]]; then
+      interface
+  #elif [[ $checksection == "false" && ${section} != "0" ]]; then
+  #    interface
+  elif [[ $checksection == "true" ]]; then
+      appsection=${section}
+      install
+  else
+      interface
+  fi
+
+
+#  case $typed in
+#  1) mediamanager && interface ;;
+#  2) mediaserver && interface ;;
+#  3) downloadclients && interface ;;
+#  4) system && interface ;;
+#  5) addons && interface ;;
+#  z) exit 0 ;;
+#  Z) exit 0 ;;
+#  *) interface ;;
+#  esac
 }
 ## section part
-mediamanager() {
-section=mediamanager
-install
-}
-mediaserver() {
-section=mediaserver
-install
-}
-downloadclients() {
-section=downloadclients
-install
-}
-system() {
-section=system
-install
-}
-addons() {
-section=addons
-install
-}
+#mediamanager() {
+#section=mediamanager
+#install
+#}
+#mediaserver() {
+#section=mediaserver
+#install
+#}
+#downloadclients() {
+#section=downloadclients
+#install
+#}
+#system() {
+#section=system
+#install
+#}
+#addons() {
+#section=addons
+#install
+#}
 
 install() {
-buildshow="ls -p /opt/apps/${section}/compose/"
-build=$($buildshow | grep -v '/$' | sed -e 's/.yml//g' )
+appsection=${section}
+buildlist="ls -p /opt/apps/${section}/compose/"
+buildshow=$($buildlist | grep -v '/$' | sed -e 's/.yml//g' )
+buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
 
   tee <<-EOF
 
@@ -80,7 +97,7 @@ build=$($buildshow | grep -v '/$' | sed -e 's/.yml//g' )
 🚀 App Installer
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-$build
+$buildshow
 
 [Z] Exit
 
@@ -91,14 +108,22 @@ EOF
 
   read -p '↪️ Type app to install | Press [ENTER]: ' typed </dev/tty
 
-  if [ $typed == "z" && ${section} != "0" ] || [ $typed == "Z" && ${section} != "0" ]]; then exit;else interface;fi
-  if [[ $typed == "" ]]; then install; fi
-  current=$($build | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
-  if [[ $current == "false" ]]; then install;fi
-  if [[ $current == "true" ]]; then run;fi
+#  if [[ $typed == "z" ]] || [[ $typed == "Z" ]]; then exit;fi
+#  if [[ $typed == "" && ${section} != "" ]]; then install; fi
+#  if [[ $current == "false" ]]; then install;else interface;fi
+#  if [[ $current == "true" ]]; then run;else interface;fi
 
+  if [[ $typed == "z" || $typed == "Z" ]]; then
+      install
+  elif [[ $typed == "" && ${section} != "" ]]; then
+      install
+  elif [[ $buildapp == "true" ]]; then
+      runinstall
+  else
+      interface
+  fi
 }
-run() {
+runinstall() {
 compose="compose/docker-compose.yml"
 composeoverwrite="compose/docker-compose.override.yml"
 appfolder="/opt/apps"
@@ -204,7 +229,7 @@ fi
 }
 subtasks() {
 if [[ -x $(command -v ansible) && -x $(command -v ansible-playbook) ]]; then
-   if [[ -f $appfolder/subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml;fi
+   if [[ -f $appfolder/.subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml;fi
 fi
 #if [[ ${section} == "mediaserver" && ${typed} == "plex" || ${typed} == "emby" ]]; then $(command -v bash) $appfolder/subactions/${typed}.sh;fi
 container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE "\<$typed\>")
