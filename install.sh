@@ -93,7 +93,7 @@ EOF
 
   if [ $typed == "z" && ${section} != "0" ] || [ $typed == "Z" && ${section} != "0" ]]; then exit;else interface;fi
   if [[ $typed == "" ]]; then install; fi
-  current=$($build | grep -qE ${typed} 1>/dev/null 2>&1 && echo true || echo false)
+  current=$($build | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
   if [[ $current == "false" ]]; then install;fi
   if [[ $current == "true" ]]; then run;fi
 
