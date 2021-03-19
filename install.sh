@@ -21,7 +21,6 @@ done
 interface() {
 buildlist="ls -l /opt/apps/"
 buildshow=$($buildlist | grep '^d' | awk -F' ' '{print $9}')
-#checksection=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
 
 tee <<-EOF
 
@@ -38,21 +37,14 @@ $buildshow
 EOF
   read -p '↘️  Type Section | Press [ENTER]: ' section </dev/tty
 
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then exit;fi
+  if [[ $section == "" ]]; then interface; fi
   checksection=$($buildshow | grep -qE $section 1>/dev/null 2>&1 && echo true || echo false)
-  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then
-      exit
-  elif [[ $section == "" ]]; then
-      interface
-  #elif [[ $checksection == "false" && ${section} != "0" ]]; then
-  #    interface
-  elif [[ $checksection == "true" ]]; then
-      #appsection=${section}
+  if [[ $checksection == "false" ]]; then interface;fi
+  if [[ $checksection == "true" ]]; then
+      section=$section
       install
-  else
-      interface
   fi
-
-
 #  case $typed in
 #  1) mediamanager && interface ;;
 #  2) mediaserver && interface ;;
@@ -90,7 +82,6 @@ install() {
 section=${appsection}
 buildlist="ls -p /opt/apps/${section}/compose/"
 buildshow=$($buildlist | grep -v '/$' | sed -e 's/.yml//g' )
-#buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
 
   tee <<-EOF
 
@@ -113,16 +104,10 @@ EOF
 #  if [[ $typed == "" && ${section} != "" ]]; then install; fi
 #  if [[ $current == "false" ]]; then install;else interface;fi
 #  if [[ $current == "true" ]]; then run;else interface;fi
-  buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
-  if [[ $typed == "z" || $typed == "Z" ]]; then
-      install
-  elif [[ $typed == "" && ${section} != "" ]]; then
-      install
-  elif [[ $buildapp == "true" ]]; then
-      runinstall
-  else
-      interface
-  fi
+   if [[ $typed == "z" || $typed == "Z" ]]; then install;fi
+   if [[ $typed == "" ]]; then install;fi
+   buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
+   if [[ $buildapp == "true" ]]; then runinstall;fi
 }
 runinstall() {
 compose="compose/docker-compose.yml"
