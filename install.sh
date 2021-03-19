@@ -17,10 +17,9 @@ while true; do
   interface
 done
 }
-
 interface() {
-buildlist="ls -l /opt/apps/"
-buildshow=$($buildlist | grep '^d' | awk -F' ' '{print $9}')
+buildlist="ls -1p /opt/apps/"
+buildshow=$($buildlist | grep '/$' | sed 's/\/$//')
 
 tee <<-EOF
 
@@ -39,48 +38,16 @@ EOF
 
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then exit;fi
   if [[ $section == "" ]]; then interface; fi
-  checksection=$($buildshow | grep -qE $section 1>/dev/null 2>&1 && echo true || echo false)
+  checksection=$($buildshow | grep -qE '$section' && echo true || echo false)
   if [[ $checksection == "false" ]]; then interface;fi
   if [[ $checksection == "true" ]]; then
       section=$section
       install
   fi
-#  case $typed in
-#  1) mediamanager && interface ;;
-#  2) mediaserver && interface ;;
-#  3) downloadclients && interface ;;
-#  4) system && interface ;;
-#  5) addons && interface ;;
-#  z) exit 0 ;;
-#  Z) exit 0 ;;
-#  *) interface ;;
-#  esac
 }
-## section part
-#mediamanager() {
-#section=mediamanager
-#install
-#}
-#mediaserver() {
-#section=mediaserver
-#install
-#}
-#downloadclients() {
-#section=downloadclients
-#install
-#}
-#system() {
-#section=system
-#install
-#}
-#addons() {
-#section=addons
-#install
-#}
-
 install() {
-section=${appsection}
-buildlist="ls -p /opt/apps/${section}/compose/"
+section=${section}
+buildlist="ls -1p /opt/apps/${section}/compose/"
 buildshow=$($buildlist | grep -v '/$' | sed -e 's/.yml//g' )
 
   tee <<-EOF
@@ -98,15 +65,11 @@ $buildshow
 
 EOF
 
-  read -p '↪️ Type app to install | Press [ENTER]: ' typed </dev/tty
+  read -p '↪️ Type App-Name to install | Press [ENTER]: ' typed </dev/tty
 
-#  if [[ $typed == "z" ]] || [[ $typed == "Z" ]]; then exit;fi
-#  if [[ $typed == "" && ${section} != "" ]]; then install; fi
-#  if [[ $current == "false" ]]; then install;else interface;fi
-#  if [[ $current == "true" ]]; then run;else interface;fi
    if [[ $typed == "z" || $typed == "Z" ]]; then install;fi
    if [[ $typed == "" ]]; then install;fi
-   buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
+   buildapp=$($buildshow | grep -qE '$typed' && echo true || echo false)
    if [[ $buildapp == "true" ]]; then runinstall;fi
 }
 runinstall() {
