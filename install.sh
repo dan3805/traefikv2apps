@@ -20,8 +20,8 @@ done
 
 interface() {
 buildlist="ls -l /opt/apps/"
-buildshow=$($buildlist | grep '^/d' | awk -F' ' '{print $9}')
-checksection=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
+buildshow=$($buildlist | grep '^d' | awk -F' ' '{print $9}')
+#checksection=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
 
 tee <<-EOF
 
@@ -38,9 +38,10 @@ $buildshow
 EOF
   read -p '↘️  Type Section | Press [ENTER]: ' section </dev/tty
 
+  checksection=$($buildshow | grep -qE $section 1>/dev/null 2>&1 && echo true || echo false)
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then
       exit
-  elif [[ $section == "" && ${section} != "" ]]; then
+  elif [[ $section == "" ]]; then
       interface
   #elif [[ $checksection == "false" && ${section} != "0" ]]; then
   #    interface
@@ -89,7 +90,7 @@ install() {
 section=${appsection}
 buildlist="ls -p /opt/apps/${section}/compose/"
 buildshow=$($buildlist | grep -v '/$' | sed -e 's/.yml//g' )
-buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
+#buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
 
   tee <<-EOF
 
@@ -112,7 +113,7 @@ EOF
 #  if [[ $typed == "" && ${section} != "" ]]; then install; fi
 #  if [[ $current == "false" ]]; then install;else interface;fi
 #  if [[ $current == "true" ]]; then run;else interface;fi
-
+  buildapp=$($buildshow | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
   if [[ $typed == "z" || $typed == "Z" ]]; then
       install
   elif [[ $typed == "" && ${section} != "" ]]; then
