@@ -17,62 +17,31 @@ while true; do
   interface
 done
 }
-
 interface() {
+buildshow=$(ls -1p /opt/apps/ | grep '/$' | sed 's/\/$//')
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 App Installer
+🚀 App Section Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-[1] Mediamanager
-[2] Mediaserver
-[3] Download Clients
-[4] System
-[5] Addons
+$buildshow
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[Z] - Exit
+[ EXIT ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -p '↘️  Type Number | Press [ENTER]: ' typed </dev/tty
-  case $typed in
-  1) mediamanager && interface ;;
-  2) mediaserver && interface ;;
-  3) downloadclients && interface ;;
-  4) system && interface ;;
-  5) addons && interface ;;
-  z) exit 0 ;;
-  Z) exit 0 ;;
-  *) interface ;;
-  esac
-}
-## section part
-mediamanager() {
-section=mediamanager
-install
-}
-mediaserver() {
-section=mediaserver
-install
-}
-downloadclients() {
-section=downloadclients
-install
-}
-system() {
-section=system
-install
-}
-addons() {
-section=addons
-install
-}
+  read -p '↘️  Type Section Name and Press [ENTER]: ' section </dev/tty
 
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $typed == "z" || $typed == "Z" ]]; then clear && exit;fi
+  checksection=$(ls /opt/apps/ | grep -x $section)
+  if [[ $section == "" ]] || [[ $checksection == "" ]] ; then clear && interface; fi
+  if [[ $checksection == $section ]]; then clear && install;fi
+}
 install() {
-buildshow="ls -p /opt/apps/${section}/compose/"
-build=$($buildshow | grep -v '/$' | sed -e 's/.yml//g' )
+section=${section}
+buildshow=$(ls -1p /opt/apps/${section}/compose/ | grep -v '/$' | sed -e 's/.yml//g' )
 
   tee <<-EOF
 
@@ -80,31 +49,28 @@ build=$($buildshow | grep -v '/$' | sed -e 's/.yml//g' )
 🚀 App Installer
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-$build
+$buildshow
 
 [Z] Exit
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-
 EOF
 
-  read -p '↪️ Type app to install | Press [ENTER]: ' typed </dev/tty
+  read -p '↪️ Type App-Name to install and Press [ENTER]: ' typed </dev/tty
 
-  if [ $typed == "z" && ${section} != "0" ] || [ $typed == "Z" && ${section} != "0" ]]; then exit;else interface;fi
-  if [[ $typed == "" ]]; then install; fi
-  current=$($build | grep -qE $typed 1>/dev/null 2>&1 && echo true || echo false)
-  if [[ $current == "false" ]]; then install;fi
-  if [[ $current == "true" ]]; then run;fi
-
+   if [[ $typed == "z" || $typed == "Z" ]]; then clear && interface;fi
+   buildapp=$(ls /opt/apps/${section}/compose/ | sed -e 's/.yml//g' | grep -x $typed)
+   if [[ $typed == "" ]] || [[ $buildapp == "" ]]; then clear && install;fi
+   if [[ $buildapp == $typed ]]; then clear && runinstall;fi
 }
-run() {
+runinstall() {
 compose="compose/docker-compose.yml"
 composeoverwrite="compose/docker-compose.override.yml"
 appfolder="/opt/apps"
 basefolder="/opt/appdata"
- if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
  if [[ ! -d $basefolder/compose/ ]];then $(command -v mkdir) -p $basefolder/compose/;fi
+ if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
  if [[ ! -x $(command -v rsync) ]]; then $(command -v apt) install rsync -yqq >/dev/null 2>&1;fi
  if [[ ${section} == "mediaserver" ]]; then
      gpu="i915 nvidia"
@@ -158,7 +124,7 @@ if [[ $TZTEST != "false" ]]; then
       fi
    fi
 fi
-container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -E "\<$typed\>")
+container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -x ${typed})
 if [[ $container != "" ]]; then
    docker="stop rm"
    for i in ${docker}; do
@@ -185,7 +151,6 @@ PLEX CLAIM
 
 https://www.plex.tv/claim/
 
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
@@ -204,15 +169,13 @@ fi
 }
 subtasks() {
 if [[ -x $(command -v ansible) && -x $(command -v ansible-playbook) ]]; then
-   if [[ -f $appfolder/subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml;fi
+   if [[ -f $appfolder/.subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml 1>/dev/null 2>&1;fi
 fi
-#if [[ ${section} == "mediaserver" && ${typed} == "plex" || ${typed} == "emby" ]]; then $(command -v bash) $appfolder/subactions/${typed}.sh;fi
-container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE "\<$typed\>")
+container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE ${typed})
 if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then $(command -v docker) restart $container 1>/dev/null 2>&1;fi
 backupcomposer
 }
 backupcomposer() {
-## run autocomposer when all is done
 if [[ ! -d $basefolder/composebackup ]]; then $(command -v mkdir) -p $basefolder/composebackup/;fi
 docker=$($(command -v docker) ps -aq --format {{.Names}} )
 $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker >>$basefolder/composebackup/docker-compose.yml
