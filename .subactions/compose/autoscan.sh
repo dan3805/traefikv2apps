@@ -28,6 +28,7 @@ done
 }
 arrs() {
 echo "\
+
 triggers:
   manual:
     priority: 0" $basefolder/${typed}/config.yml
