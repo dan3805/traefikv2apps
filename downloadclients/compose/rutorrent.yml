@@ -32,7 +32,7 @@ services:
       - 'traefik.http.routers.rutorrent-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.rutorrent-rtr.middlewares=chain-authelia@file'
       - 'traefik.http.routers.rutorrent-rtr.service=rutorrent-svc'
-      - 'traefik.http.services.rutorrent-svc.loadbalancer.server.port=5000'
+      - 'traefik.http.services.rutorrent-svc.loadbalancer.server.port=80'
 
 networks:
   proxy:

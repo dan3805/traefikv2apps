@@ -22,22 +22,22 @@ buildshow=$(ls -1p /opt/apps/ | grep '/$' | sed 's/\/$//')
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 App Section Menu
+                      🚀 App Section Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 $buildshow
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-[ EXIT ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [ EXIT ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
   read -p '↘️  Type Section Name and Press [ENTER]: ' section </dev/tty
 
-  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $typed == "z" || $typed == "Z" ]]; then clear && exit;fi
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then exit;fi
   checksection=$(ls /opt/apps/ | grep -x $section)
-  if [[ $section == "" ]] || [[ $checksection == "" ]] ; then clear && interface; fi
-  if [[ $checksection == $section ]]; then clear && install;fi
+  if [[ $section == "" ]] || [[ $checksection == "" ]];then clear && interface; fi
+  if [[ $checksection == $section ]];then clear && install;fi
 }
 install() {
 section=${section}
@@ -46,23 +46,23 @@ buildshow=$(ls -1p /opt/apps/${section}/compose/ | grep -v '/$' | sed -e 's/.yml
   tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚀 App Installer
+                 🚀 App Installer of ${section}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 $buildshow
 
-[Z] Exit
-
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  [ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
 
   read -p '↪️ Type App-Name to install and Press [ENTER]: ' typed </dev/tty
 
-   if [[ $typed == "z" || $typed == "Z" ]]; then clear && interface;fi
+   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
    buildapp=$(ls /opt/apps/${section}/compose/ | sed -e 's/.yml//g' | grep -x $typed)
-   if [[ $typed == "" ]] || [[ $buildapp == "" ]]; then clear && install;fi
-   if [[ $buildapp == $typed ]]; then clear && runinstall;fi
+   if [[ $typed == "" ]] || [[ $buildapp == "" ]];then install;fi
+   if [[ $buildapp == $typed ]];then runinstall;fi
 }
 runinstall() {
 compose="compose/docker-compose.yml"
@@ -94,49 +94,75 @@ basefolder="/opt/appdata"
         $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
     done
  fi
-## change values inside docker-compose.yml
-DOMAIN=$(cat /etc/hosts | grep 127.0.0.1 | tail -n 1 | awk '{print $2}')
-if [[ $DOMAIN != "example.com" ]]; then
-   if [[ $(uname) == "Darwin" ]]; then
-      sed -i '' "s/example.com/$DOMAIN/g" $basefolder/$compose
-   else
-      sed -i "s/example.com/$DOMAIN/g" $basefolder/$compose
-   fi
-fi
-if [[ ${section} == "mediaserver" && ${typed} == "plex" ]]; then
-   SERVERIP=$(ip addr show |grep 'inet '|grep -v 127.0.0.1 |awk '{print $2}'| cut -d/ -f1 | head -n1)
-   if [[ $SERVERIP != "" ]]; then
-      if [[ $(uname) == "Darwin" ]]; then
-         sed -i '' "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
-      else
-         sed -i "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
-     fi
-   fi
-fi
-TZTEST=$(command -v timedatectl && echo true || echo false)
-TZONE=$(timedatectl | grep "Time zone:" | awk '{print $3}')
-if [[ $TZTEST != "false" ]]; then
-   if [[ $TZONE != "" ]]; then
-      if [[ $(uname) == "Darwin" ]]; then
-         sed -i '' "s/UTC/$TZONE/g" $basefolder/$compose
-      else
-         sed -i "s/UTC/$TZONE/g" $basefolder/$compose
+ ## change values inside docker-compose.yml
+ DOMAIN=$(cat /etc/hosts | grep 127.0.0.1 | tail -n 1 | awk '{print $2}')
+ if [[ $DOMAIN != "example.com" ]];then
+    if [[ $(uname) == "Darwin" ]];then
+       sed -i '' "s/example.com/$DOMAIN/g" $basefolder/$compose
+    else
+       sed -i "s/example.com/$DOMAIN/g" $basefolder/$compose
+    fi
+ fi
+ if [[ ${section} == "mediaserver" && ${typed} == "plex" || ${typed} == "jellyfin" ]]; then
+    SERVERIP=$(ip addr show |grep 'inet '|grep -v 127.0.0.1 | awk '{print $2}'| cut -d/ -f1 | head -n1)
+    if [[ $SERVERIP != "" ]]; then
+       if [[ $(uname) == "Darwin" ]]; then
+          sed -i '' "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
+       else
+          sed -i "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
       fi
-   fi
+    fi
+ fi
+ container=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x ${typed})
+ if [[ $container != "" ]]; then
+    docker="stop rm"
+    for i in ${docker}; do
+        $(command -v docker) $i $container 1>/dev/null 2>&1
+    done
+    $(command -v docker) image prune -af 1>/dev/null 2>&1
+ else
+    $(command -v docker) image prune -af 1>/dev/null 2>&1
+ fi
+ if [[ ${section} == "addons" && ${typed} == "vnstat" ]];then vnstatcheck;fi
+ if [[ ${section} == "addons" && ${typed} == "autoscan" ]];then autoscancheck;fi
+ if [[ ${section} == "mediaserver" && ${typed} == "plex" ]]; then plexclaim;fi
+    cd $basefolder/compose/ && $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
+ if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then subtasks;fi
+ runningcheck=$($(command -v docker) ps -aq --format '{{.Names}} {{.State}}' | grep -x '${typed} running' | awk -F '{print $2' 1>/dev/null 2>&1 && echo true || echo false)
+  if [[ $runningcheck == "true" ]];then
+  tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ${typed} successfull deployed and working
+
+  https://${typed}.$DOMAIN
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+  read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
+  clear
 fi
-container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -x ${typed})
-if [[ $container != "" ]]; then
-   docker="stop rm"
-   for i in ${docker}; do
-       $(command -v docker) $i $container 1>/dev/null 2>&1
-   done
-   $(command -v docker) image prune -af 1>/dev/null 2>&1
+
+}
+vnstatcheck() {
+if [[ ! -x $(command -v vnstat) ]];then $(command -v apt) install vnstat -yqq;fi
+}
+autoscancheck() {
+if [[ ! -f $basefolder/${typed}/config.yml ]];then
+   $(command -v rsync) $appfolder/${section}/compose/${typed}.config.yml $basefolder/${typed} -aq --info=progress2 -hv
+   $(command -v bash) $appfolder/.subactions/compose/${typed}.sh
 else
-   $(command -v docker) image prune -af 1>/dev/null 2>&1
+  tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 ${typed} config found
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      We found an existing config.yml for ${typed}
+                no changes
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+  read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
+  clear
 fi
-if [[ ${section} == "mediaserver" && ${typed} == "plex" ]]; then plexclaim;fi
-   cd $basefolder/compose/ && $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
-if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then subtasks;fi
 }
 plexclaim() {
   tee <<-EOF
@@ -169,7 +195,7 @@ fi
 }
 subtasks() {
 if [[ -x $(command -v ansible) && -x $(command -v ansible-playbook) ]]; then
-   if [[ -f $appfolder/.subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml 1>/dev/null 2>&1;fi
+   if [[ -f $appfolder/.subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/${typed}.yml 1>/dev/null 2>&1;fi
 fi
 container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE ${typed})
 if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then $(command -v docker) restart $container 1>/dev/null 2>&1;fi

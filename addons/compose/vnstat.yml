@@ -28,7 +28,7 @@ services:
       - 'traefik.http.routers.vnstat-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.vnstat-rtr.middlewares=chain-authelia@file'
       - 'traefik.http.routers.vnstat-rtr.service=vnstat-svc'
-      - 'traefik.http.services.vnstat-svc.loadbalancer.server.port=8090'
+      - 'traefik.http.services.vnstat-svc.loadbalancer.server.port=80'
 
 networks:
   proxy:

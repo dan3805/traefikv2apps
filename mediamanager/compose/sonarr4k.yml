@@ -30,7 +30,7 @@ services:
       - 'traefik.http.routers.sonarr4k-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.sonarr4k-rtr.middlewares=chain-authelia@file'
       - 'traefik.http.routers.sonarr4k-rtr.service=sonarr4k-svc'
-      - 'traefik.http.services.sonarr4k-svc.loadbalancer.server.port=8984'
+      - 'traefik.http.services.sonarr4k-svc.loadbalancer.server.port=8989'
 
 networks:
   proxy:
