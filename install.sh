@@ -37,9 +37,11 @@ EOF
   read -p '↘️  Type Section | Press [ENTER]: ' section </dev/tty
 
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then exit;fi
-  if [[ $section == "" ]]; then interface; fi
-  checksection=$(ls -1p /opt/apps/ | grep '/$' | sed 's/\/$//' | grep -E '$section')
-  if [[ $checksection != $section ]]; then install;fi
+  checksection=$($buildshow | grep -E '$section')
+
+  if [[ $section == "" ]] || [[ $checksection == "" ]] ; then interface; fi
+  ##checksection=$($buildshow | grep -E '$section')
+  #if [[ $checksection == "" ]]; then interface;fi
   if [[ $checksection == $section ]]; then install;fi
 }
 install() {
@@ -65,10 +67,11 @@ EOF
   read -p '↪️ Type App-Name to install | Press [ENTER]: ' typed </dev/tty
 
    if [[ $typed == "z" || $typed == "Z" ]]; then install;fi
-   if [[ $typed == "" ]]; then install;fi
-   buildapp=$($buildshow | grep -qE '$typed' && echo true || echo false)
-   if [[ $buildapp == "false" ]]; then install;fi
-   if [[ $buildapp == "true" ]]; then runinstall;fi
+   buildapp=$($buildshow | grep -qE $typed)
+   if [[ $typed == "" ]] || [[ $buildapp == "" ]]; then install;fi
+   #buildapp=$($buildshow | grep -qE '$typed')
+   #if [[ $buildapp == "" ]]; then install;fi
+   if [[ $buildapp == $typed ]]; then runinstall;fi
 }
 runinstall() {
 compose="compose/docker-compose.yml"
