@@ -8,7 +8,7 @@ typed=autoscan
 anchor() {
 if [[ ! -x $(command -v rclone) ]];then curl https://rclone.org/install.sh | sudo bash >/dev/null 2>&1;fi
 echo "\
-anchors:" $basefolder/${typed}/config.yml
+anchors:" >> $basefolder/${typed}/config.yml
 IFS=$'\n'
 filter="$1"
 mountd=$(docker ps -aq --format={{.Names}} | grep -E "mount" && echo true || echo false)
