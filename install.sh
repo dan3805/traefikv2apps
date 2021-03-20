@@ -19,7 +19,6 @@ done
 }
 interface() {
 buildshow=$(ls -1p /opt/apps/ | grep '/$' | sed 's/\/$//')
-
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -35,10 +34,10 @@ $buildshow
 EOF
   read -p '↘️  Type Section Name and Press [ENTER]: ' section </dev/tty
 
-  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $typed == "z" || $typed == "Z" ]]; then exit;fi
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $typed == "z" || $typed == "Z" ]]; then clear && exit;fi
   checksection=$(ls /opt/apps/ | grep -x $section)
-  if [[ $section == "" ]] || [[ $checksection == "" ]] ; then interface; fi
-  if [[ $checksection == $section ]]; then install;fi
+  if [[ $section == "" ]] || [[ $checksection == "" ]] ; then clear && interface; fi
+  if [[ $checksection == $section ]]; then clear && install;fi
 }
 install() {
 section=${section}
@@ -56,15 +55,14 @@ $buildshow
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-
 EOF
 
   read -p '↪️ Type App-Name to install and Press [ENTER]: ' typed </dev/tty
 
-   if [[ $typed == "z" || $typed == "Z" ]]; then interface;fi
+   if [[ $typed == "z" || $typed == "Z" ]]; then clear && interface;fi
    buildapp=$(ls /opt/apps/${section}/compose/ | sed -e 's/.yml//g' | grep -x $typed)
-   if [[ $typed == "" ]] || [[ $buildapp == "" ]]; then install;fi
-   if [[ $buildapp == $typed ]]; then runinstall;fi
+   if [[ $typed == "" ]] || [[ $buildapp == "" ]]; then clear && install;fi
+   if [[ $buildapp == $typed ]]; then clear && runinstall;fi
 }
 runinstall() {
 compose="compose/docker-compose.yml"
@@ -126,7 +124,7 @@ if [[ $TZTEST != "false" ]]; then
       fi
    fi
 fi
-container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -E "\<$typed\>")
+container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -x ${typed})
 if [[ $container != "" ]]; then
    docker="stop rm"
    for i in ${docker}; do
@@ -153,7 +151,6 @@ PLEX CLAIM
 
 https://www.plex.tv/claim/
 
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
@@ -172,15 +169,13 @@ fi
 }
 subtasks() {
 if [[ -x $(command -v ansible) && -x $(command -v ansible-playbook) ]]; then
-   if [[ -f $appfolder/.subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml;fi
+   if [[ -f $appfolder/.subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/subactions/${typed}.yml 1>/dev/null 2>&1;fi
 fi
-#if [[ ${section} == "mediaserver" && ${typed} == "plex" || ${typed} == "emby" ]]; then $(command -v bash) $appfolder/subactions/${typed}.sh;fi
-container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE "\<$typed\>")
+container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE ${typed})
 if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then $(command -v docker) restart $container 1>/dev/null 2>&1;fi
 backupcomposer
 }
 backupcomposer() {
-## run autocomposer when all is done
 if [[ ! -d $basefolder/composebackup ]]; then $(command -v mkdir) -p $basefolder/composebackup/;fi
 docker=$($(command -v docker) ps -aq --format {{.Names}} )
 $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker >>$basefolder/composebackup/docker-compose.yml
