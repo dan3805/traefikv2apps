@@ -33,7 +33,7 @@ $buildshow
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -p '↘️  Type Section | Press [ENTER]: ' section </dev/tty
+  read -p '↘️  Type Section Name and Press [ENTER]: ' section </dev/tty
 
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $typed == "z" || $typed == "Z" ]]; then exit;fi
   checksection=$(ls /opt/apps/ | grep -x $section)
@@ -59,7 +59,7 @@ $buildshow
 
 EOF
 
-  read -p '↪️ Type App-Name to install | Press [ENTER]: ' typed </dev/tty
+  read -p '↪️ Type App-Name to install and Press [ENTER]: ' typed </dev/tty
 
    if [[ $typed == "z" || $typed == "Z" ]]; then interface;fi
    buildapp=$(ls /opt/apps/${section}/compose/ | sed -e 's/.yml//g' | grep -x $typed)
@@ -71,8 +71,8 @@ compose="compose/docker-compose.yml"
 composeoverwrite="compose/docker-compose.override.yml"
 appfolder="/opt/apps"
 basefolder="/opt/appdata"
- if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
  if [[ ! -d $basefolder/compose/ ]];then $(command -v mkdir) -p $basefolder/compose/;fi
+ if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
  if [[ ! -x $(command -v rsync) ]]; then $(command -v apt) install rsync -yqq >/dev/null 2>&1;fi
  if [[ ${section} == "mediaserver" ]]; then
      gpu="i915 nvidia"
