@@ -18,8 +18,7 @@ while true; do
 done
 }
 interface() {
-buildlist="ls -1p /opt/apps/"
-buildshow=$($buildlist | grep '/$' | sed 's/\/$//')
+buildshow=$(ls -1p /opt/apps/ | grep '/$' | sed 's/\/$//')
 
 tee <<-EOF
 
@@ -37,17 +36,13 @@ EOF
   read -p '↘️  Type Section | Press [ENTER]: ' section </dev/tty
 
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" ]]; then exit;fi
-  checksection=$($buildshow | grep -E '$section')
-
+  checksection=$(ls /opt/apps/ | grep -x $section)
   if [[ $section == "" ]] || [[ $checksection == "" ]] ; then interface; fi
-  ##checksection=$($buildshow | grep -E '$section')
-  #if [[ $checksection == "" ]]; then interface;fi
   if [[ $checksection == $section ]]; then install;fi
 }
 install() {
 section=${section}
-buildlist="ls -1p /opt/apps/${section}/compose/"
-buildshow=$($buildlist | grep -v '/$' | sed -e 's/.yml//g' )
+buildshow=$(ls -1p /opt/apps/${section}/compose/ | grep -v '/$' | sed -e 's/.yml//g' )
 
   tee <<-EOF
 
@@ -67,10 +62,8 @@ EOF
   read -p '↪️ Type App-Name to install | Press [ENTER]: ' typed </dev/tty
 
    if [[ $typed == "z" || $typed == "Z" ]]; then install;fi
-   buildapp=$($buildshow | grep -qE $typed)
+   buildapp=$(ls /opt/apps/${section}/compose/ | sed -e 's/.yml//g' | grep -x $typed)
    if [[ $typed == "" ]] || [[ $buildapp == "" ]]; then install;fi
-   #buildapp=$($buildshow | grep -qE '$typed')
-   #if [[ $buildapp == "" ]]; then install;fi
    if [[ $buildapp == $typed ]]; then runinstall;fi
 }
 runinstall() {
