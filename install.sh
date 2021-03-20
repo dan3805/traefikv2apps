@@ -103,7 +103,7 @@ basefolder="/opt/appdata"
        sed -i "s/example.com/$DOMAIN/g" $basefolder/$compose
     fi
  fi
- if [[ ${section} == "mediaserver" && ${typed} == "plex" || ${typed} == "jellyfin" ]]; then
+ if [[ ${section} == "mediaserver" ]]; then
     SERVERIP=$(ip addr show |grep 'inet '|grep -v 127.0.0.1 | awk '{print $2}'| cut -d/ -f1 | head -n1)
     if [[ $SERVERIP != "" ]]; then
        if [[ $(uname) == "Darwin" ]]; then
