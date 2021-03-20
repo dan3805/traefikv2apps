@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  petio:
+    hostname: 'petio'
+    container_name: 'petio'
+    environment:
+      - 'PGID=1000'
+      - 'PUID=1000'
+      - 'TZ=UTC'
+    image: 'ghcr.io/petio-team/petio:latest'
+    restart: 'unless-stopped'
+    ports:
+      - '127.0.0.1:7444:7777'
+    networks:
+      - proxy
+    security_opt:
+      - 'no-new-privileges:true'
+    volumes:
+      - 'petio/config:/app/api/config'
+      - 'petio/logs:/app/logs'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'dockupdater.enable=true'
+      - 'traefik.http.routers.petio-rtr.entrypoints=https'
+      - 'traefik.http.routers.petio-rtr.rule=Host(`petio.example.com`)'
+      - 'traefik.http.routers.petio-rtr.tls=true'
+      - 'traefik.http.routers.petio-rtr.tls.certresolver=dns-cloudflare'
+      - 'traefik.http.routers.petio-rtr.middlewares=chain-authelia@file'
+      - 'traefik.http.routers.petio-rtr.service=petio-svc'
+      - 'traefik.http.services.petio-svc.loadbalancer.server.port=7444'
+
+  mongo:
+    hostname: 'petiomongo'
+    image: 'mongo:latest'
+    container_name: 'petiomongo'
+    depends_on:
+      - petio
+    ports:
+      - 127.0.0.1:27055:27017'
+    networks:
+      - proxy
+    user: '1000:1000'
+    volumes:
+      - petio/db:/data/db
+
+volumes:
+  petio:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /opt/appdata/petio
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
