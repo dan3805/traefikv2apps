@@ -18,7 +18,7 @@ while true; do
 done
 }
 interface() {
-buildshow=$(ls -1p /opt/apps/ | grep '/$' | sed 's/\/$//' | sed 's/install//')
+buildshow=$(ls -1p /opt/apps/ | grep '/$' | sed 's/\/$//' | sed 's/installer//')
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
