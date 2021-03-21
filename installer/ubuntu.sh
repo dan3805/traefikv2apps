@@ -186,7 +186,7 @@ backupcomposer() {
 if [[ ! -d $basefolder/composebackup ]]; then $(command -v mkdir) -p $basefolder/composebackup/;fi
 docker=$($(command -v docker) ps -aq --format {{.Names}} )
 $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker >>$basefolder/composebackup/docker-compose.yml
-$(command -v docker) system prune -af
+#$(command -v docker) system prune -af
 }
 
 appstartup
