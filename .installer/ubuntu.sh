@@ -106,19 +106,18 @@ basefolder="/opt/appdata"
  fi
  if [[ ${section} == "addons" && ${typed} == "vnstat" ]];then vnstatcheck;fi
  if [[ ${section} == "addons" && ${typed} == "autoscan" ]];then autoscancheck;fi
- if [[ ${section} == "mediaserver" && ${typed} == "plex" ]]; then plexclaim;fi
+ if [[ ${section} == "mediaserver" && ${typed} == "plex" ]];then plexclaim;fi
     cd $basefolder/compose/ && $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
- if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then subtasks;fi
- runningcheck=$($(command -v docker) ps -aq --format '{{.Names}} {{.State}}' | grep -x '${typed} running' | awk -F '{print $2' 1>/dev/null 2>&1 && echo true || echo false)
-  if [[ $runningcheck == "true" ]];then
-  source $basefolder/compose/.env
+ if [[ ${section} == "mediaserver" ]];then subtasks;fi
+ if [[ ${section} == "downloadclients" ]];then subtasks;fi
+ runningcheck=$($(command -v docker) ps -aq --format '{{.Names}} {{.State}}' | grep -x '${typed} running' 1>/dev/null 2>&1 && echo true || echo false)
+ if [[ $runningcheck == "true" ]];then
+    source $basefolder/compose/.env
   tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ${typed} successfull deployed and working
 
   https://${typed}.${DOMAIN}
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
   read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
@@ -148,7 +147,6 @@ fi
 }
 plexclaim() {
   tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🚀 PLEX CLAIM
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -177,15 +175,15 @@ fi
 }
 subtasks() {
 if [[ -x $(command -v ansible) && -x $(command -v ansible-playbook) ]]; then
-   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml 1>/dev/null 2>&1;fi
+   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
 fi
 container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE ${typed})
 if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then $(command -v docker) restart $container 1>/dev/null 2>&1;fi
 }
 backupcomposer() {
 if [[ ! -d $basefolder/composebackup ]]; then $(command -v mkdir) -p $basefolder/composebackup/;fi
-docker=$($(command -v docker) ps -aq --format {{.Names}} )
-$(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker >>$basefolder/composebackup/docker-compose.yml
+   docker=$($(command -v docker) ps -aq --format {{.Names}} )
+   $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker >>$basefolder/composebackup/docker-compose.yml
 #$(command -v docker) system prune -af
 }
 
