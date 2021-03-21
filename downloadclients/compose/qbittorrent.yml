@@ -21,7 +21,7 @@ services:
     volumes:
       - '/opt/appdata/qbittorrent:/config:rw'
       - 'unionfs:/mnt'
-     labels:
+    labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true''
