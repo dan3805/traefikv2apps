@@ -165,9 +165,9 @@ EOF
 
 if [[ $PLEXCLAIM != "" ]]; then
    if [[ $(uname) == "Darwin" ]]; then
-      sed -i '' "s/$PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
+      sed -i '' "s/PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
    else
-      sed -i "s/$PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
+      sed -i "s/PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
    fi
 else
   echo "Plex Claim cannot be empty"
