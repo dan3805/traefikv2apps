@@ -123,7 +123,7 @@ EOF
   read -p 'Confirm Info | PRESS [ENTER] ' typed </dev/tty
   clear
 fi
-
+backupcomposer
 }
 vnstatcheck() {
 if [[ ! -x $(command -v vnstat) ]];then $(command -v apt) install vnstat -yqq;fi
@@ -176,11 +176,10 @@ fi
 }
 subtasks() {
 if [[ -x $(command -v ansible) && -x $(command -v ansible-playbook) ]]; then
-   if [[ -f $appfolder/.subactions/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/${typed}.yml 1>/dev/null 2>&1;fi
+   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml 1>/dev/null 2>&1;fi
 fi
 container=$($(command -v docker) ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -qE ${typed})
 if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then $(command -v docker) restart $container 1>/dev/null 2>&1;fi
-backupcomposer
 }
 backupcomposer() {
 if [[ ! -d $basefolder/composebackup ]]; then $(command -v mkdir) -p $basefolder/composebackup/;fi
