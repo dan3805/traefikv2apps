@@ -15,8 +15,8 @@ services:
     security_opt:
       - apparmor:unconfined
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
     volumes:
       - netdataconfig:/etc/netdata
       - netdatalib:/var/lib/netdata
@@ -31,7 +31,7 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
       - 'traefik.http.routers.netdata-rtr.entrypoints=https'
-      - 'traefik.http.routers.netdata-rtr.rule=Host(`netdata.example.com`)'
+      - 'traefik.http.routers.netdata-rtr.rule=Host(`netdata.${DOMAIN}`)'
       - 'traefik.http.routers.netdata-rtr.tls=true'
       - 'traefik.http.routers.netdata-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.netdata-rtr.middlewares=chain-authelia@file'

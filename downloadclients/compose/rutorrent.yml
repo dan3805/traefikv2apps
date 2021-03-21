@@ -5,9 +5,9 @@ services:
     hostname: 'rutorrent'
     container_name: 'rutorrent'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
       - 'UMASK=022'
     image: 'ghcr.io/linuxserver/rutorrent'
     networks:
@@ -27,7 +27,7 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
       - 'traefik.http.routers.rutorrent-rtr.entrypoints=https'
-      - 'traefik.http.routers.rutorrent-rtr.rule=Host(`rutorrent.example.com`)'
+      - 'traefik.http.routers.rutorrent-rtr.rule=Host(`rutorrent.${DOMAIN}`)'
       - 'traefik.http.routers.rutorrent-rtr.tls=true'
       - 'traefik.http.routers.rutorrent-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.rutorrent-rtr.middlewares=chain-authelia@file'

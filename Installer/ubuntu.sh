@@ -94,25 +94,6 @@ basefolder="/opt/appdata"
         $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
     done
  fi
- ## change values inside docker-compose.yml
- DOMAIN=$(cat /etc/hosts | grep 127.0.0.1 | tail -n 1 | awk '{print $2}')
- if [[ $DOMAIN != "example.com" ]];then
-    if [[ $(uname) == "Darwin" ]];then
-       sed -i '' "s/example.com/$DOMAIN/g" $basefolder/$compose
-    else
-       sed -i "s/example.com/$DOMAIN/g" $basefolder/$compose
-    fi
- fi
- if [[ ${section} == "mediaserver" ]]; then
-    SERVERIP=$(ip addr show |grep 'inet '|grep -v 127.0.0.1 | awk '{print $2}'| cut -d/ -f1 | head -n1)
-    if [[ $SERVERIP != "" ]]; then
-       if [[ $(uname) == "Darwin" ]]; then
-          sed -i '' "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
-       else
-          sed -i "s/SERVERIP_ID/$SERVERIP/g" $basefolder/$compose
-      fi
-    fi
- fi
  container=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x ${typed})
  if [[ $container != "" ]]; then
     docker="stop rm"

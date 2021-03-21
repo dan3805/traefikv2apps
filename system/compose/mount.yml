@@ -13,9 +13,9 @@ services:
         protocol: tcp
         mode: host
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
     image: 'ghcr.io/doob187/mount'
     restart: 'unless-stopped'
     security_opt:

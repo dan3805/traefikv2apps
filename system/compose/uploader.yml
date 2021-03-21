@@ -8,9 +8,9 @@ services:
     devices:
       - '/dev/fuse:/dev/fuse'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
     image: 'ghcr.io/doob187/uploader'
     restart: 'unless-stopped'
     ports:
@@ -33,7 +33,7 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
       - 'traefik.http.routers.uploader-rtr.entrypoints=https'
-      - 'traefik.http.routers.uploader-rtr.rule=Host(`uploader.example.com`)'
+      - 'traefik.http.routers.uploader-rtr.rule=Host(`uploader.${DOMAIN}`)'
       - 'traefik.http.routers.uploader-rtr.tls=true'
       - 'traefik.http.routers.uploader-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.uploader-rtr.middlewares=chain-authelia@file'

@@ -5,9 +5,9 @@ services:
     hostname: '<CONTAINERNAME>'
     container_name: '<CONTAINERNAME>'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
       - 'UMASK=022'
       - '<ADDITIONALENVIROMENT>'
     image: '<DOCKRHUBorGHRCIO/><REPO>/<IMAGE>:<VERSION>'
@@ -26,7 +26,7 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
       - 'traefik.http.routers.<CONTAINERNAME>-rtr.entrypoints=https'
-      - 'traefik.http.routers.<CONTAINERNAME>-rtr.rule=Host(`<CONTAINERNAME>.example.com`)'
+      - 'traefik.http.routers.<CONTAINERNAME>-rtr.rule=Host(`<CONTAINERNAME>.${DOMAIN}`)
       - 'traefik.http.routers.<CONTAINERNAME>-rtr.tls=true'
       - 'traefik.http.routers.<CONTAINERNAME>-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.<CONTAINERNAME>-rtr.middlewares=chain-authelia@file'

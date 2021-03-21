@@ -5,9 +5,9 @@ services:
     hostname: 'backup'
     container_name: 'backup'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
       - CRON_TIME=$CRON_TIME
       - CONTAINER_TIMEZONE=$TZ
       - 'BACKUP_HOLD=15'

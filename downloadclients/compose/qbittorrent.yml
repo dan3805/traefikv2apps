@@ -5,9 +5,9 @@ services:
     hostname: 'qbittorrent'
     container_name: 'qbittorrent'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
       - 'UMASK=022'
     image: 'ghcr.io/linuxserver/qbittorrent'
     networks:
@@ -28,7 +28,7 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true''
       - 'traefik.http.routers.qbittorrent-rtr.entrypoints=https'
-      - 'traefik.http.routers.qbittorrent-rtr.rule=Host(`qbittorrent.example.com`)'
+      - 'traefik.http.routers.qbittorrent-rtr.rule=Host(`qbittorrent.${DOMAIN}`)'
       - 'traefik.http.routers.qbittorrent-rtr.tls=true'
       - 'traefik.http.routers.qbittorrent-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.qbittorrent-rtr.middlewares=chain-authelia@file'

@@ -5,9 +5,9 @@ services:
     hostname: 'petio'
     container_name: 'petio'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
     image: 'ghcr.io/petio-team/petio:latest'
     restart: 'unless-stopped'
     ports:
@@ -24,7 +24,7 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
       - 'traefik.http.routers.petio-rtr.entrypoints=https'
-      - 'traefik.http.routers.petio-rtr.rule=Host(`petio.example.com`)'
+      - 'traefik.http.routers.petio-rtr.rule=Host(`petio.${DOMAIN}`)'
       - 'traefik.http.routers.petio-rtr.tls=true'
       - 'traefik.http.routers.petio-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.petio-rtr.middlewares=chain-authelia@file'
@@ -41,7 +41,7 @@ services:
       - 127.0.0.1:27055:27017'
     networks:
       - proxy
-    user: '1000:1000'
+    user: '${ID}:${ID}'
     volumes:
       - petio/db:/data/db
 

@@ -5,9 +5,9 @@ services:
     hostname: 'vnstat'
     container_name: 'vnstat'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
     image: 'ghcr.io/doob187/vnstat:latest'
     networks:
       - proxy
@@ -23,7 +23,7 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
       - 'traefik.http.routers.vnstat-rtr.entrypoints=https'
-      - 'traefik.http.routers.vnstat-rtr.rule=Host(`vnstat.example.com`)'
+      - 'traefik.http.routers.vnstat-rtr.rule=Host(`vnstat.${DOMAIN}`)'
       - 'traefik.http.routers.vnstat-rtr.tls=true'
       - 'traefik.http.routers.vnstat-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.vnstat-rtr.middlewares=chain-authelia@file'

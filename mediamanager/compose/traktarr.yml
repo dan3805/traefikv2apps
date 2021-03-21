@@ -5,9 +5,9 @@ services:
     hostname: 'traktarr'
     container_name: 'traktarr'
     environment:
-      - 'PGID=1000'
-      - 'PUID=1000'
-      - 'TZ=UTC'
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
       - 'DELAY=2.5'
       - 'SORT=rating'
       - 'NOSEARCH=yes'
