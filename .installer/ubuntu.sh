@@ -111,12 +111,13 @@ basefolder="/opt/appdata"
  if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]]; then subtasks;fi
  runningcheck=$($(command -v docker) ps -aq --format '{{.Names}} {{.State}}' | grep -x '${typed} running' | awk -F '{print $2' 1>/dev/null 2>&1 && echo true || echo false)
   if [[ $runningcheck == "true" ]];then
+  source $basefolder/compose/.env
   tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ${typed} successfull deployed and working
 
-  https://${typed}.$DOMAIN
+  https://${typed}.${DOMAIN}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
