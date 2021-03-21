@@ -24,7 +24,7 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=proxy'
-      - 'dockupdater.enable=true''
+      - 'dockupdater.enable=true'
       - 'traefik.http.routers.qbittorrent-rtr.entrypoints=https'
       - 'traefik.http.routers.qbittorrent-rtr.rule=Host(`qbittorrent.${DOMAIN}`)'
       - 'traefik.http.routers.qbittorrent-rtr.tls=true'
