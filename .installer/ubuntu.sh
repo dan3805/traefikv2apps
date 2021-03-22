@@ -32,7 +32,7 @@ $buildshow
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -ep "↘️  Type Section Name and Press [ENTER]:" section </dev/tty
+  read -erp "↘️  Type Section Name and Press [ENTER]:" section </dev/tty
 
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then exit;fi
       checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//'| grep -x $section)
@@ -41,7 +41,7 @@ EOF
 }
 install() {
 section=${section}
-buildshow=$(ls -1p /opt/apps/${section}/compose/ | grep '/$' | $(command -v sed) -e 's/.yml//g')
+buildshow=$(ls -1p /opt/apps/${section}/compose/ | sed -e 's/.yml//g' )
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -56,9 +56,9 @@ $buildshow
 
 EOF
 
-  read -ep "↪️ Type App-Name to install and Press [ENTER]:" typed </dev/tty
+  read -erp "↪️ Type App-Name to install and Press [ENTER]:" typed </dev/tty
 
-  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then exit;fi
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then interface;fi
      buildapp=$(ls -1p /opt/apps/${section}/compose/ | $(command -v sed) -e 's/.yml//g' | grep -x $typed)
   if [[ $typed == "" ]] || [[ $buildapp == "" ]];then install;fi
   if [[ $buildapp == $typed ]];then runinstall;fi
@@ -124,7 +124,7 @@ runinstall() {
   https://${typed}.${DOMAIN}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-  read -ep "Confirm Info | PRESS [ENTER]" typed </dev/tty
+  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear
 fi
 backupcomposer
@@ -145,7 +145,7 @@ tee <<-EOF
                 no changes
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-  read -ep "Confirm Info | PRESS [ENTER]" typed </dev/tty
+  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear
   fi
 }
@@ -164,7 +164,7 @@ https://www.plex.tv/claim/
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -ep "Enter your PLEX CLAIM CODE:" PLEXCLAIM
+  read -erp "Enter your PLEX CLAIM CODE:" PLEXCLAIM
 
   if [[ $PLEXCLAIM != "" ]]; then
      if [[ $(uname) == "Darwin" ]]; then
