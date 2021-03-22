@@ -13,6 +13,11 @@
       set_fact:
         app: 'emby'
 
+    - name: 'XML Check'
+      stat:
+        path: /opt/appdata/{{app}}/config/system.xml
+      register: xmlcheck
+
     - name: 'Configuring {{app}} for first time use'
       block:
 
@@ -37,6 +42,7 @@
         - name: 'Restart {{app}}'
           shell: 'docker restart {{app}}'
       when: not xmlcheck.stat.exists
+
      ##### Db edits
     - name: "Install package for {{app}}-db Cache size Fix"
       apt:
