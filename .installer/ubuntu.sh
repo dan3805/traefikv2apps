@@ -34,7 +34,7 @@ $buildshow
 EOF
   read -ep "↘️  Type Section Name and Press [ENTER]:" section </dev/tty
 
-  if [[ $section == [exit][Exit][EXIT][z][Z] ]];then exit;fi
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then exit;fi
       checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//'| grep -x $section)
   if [[ $section == "" ]] || [[ $checksection == "" ]];then clear && interface; fi
   if [[ $checksection == $section ]];then clear && install;fi
@@ -58,7 +58,7 @@ EOF
 
   read -ep "↪️ Type App-Name to install and Press [ENTER]:" typed </dev/tty
 
-  if [[ $section == [exit][Exit][EXIT][z][Z] ]];then exit;fi
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then exit;fi
      buildapp=$(ls -1p /opt/apps/${section}/compose/ | $(command -v sed) -e 's/.yml//g' | grep -x $typed)
   if [[ $typed == "" ]] || [[ $buildapp == "" ]];then install;fi
   if [[ $buildapp == $typed ]];then runinstall;fi
