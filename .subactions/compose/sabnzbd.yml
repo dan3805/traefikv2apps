@@ -32,7 +32,7 @@
     - name: 'Stopping {{app}}'
       shell: 'docker stop {{app}}'
 
-    - name: Set download_dir when incomplete is undefined
+    - name: 'Set download_dir when incomplete is undefined'
       ini_file:
         path: '/opt/appdata/{{app}}/sabnzbd.ini'
         section: misc
@@ -40,7 +40,7 @@
         value: '{{path}}/incomplete/nzb'
         state: present
 
-    - name: Set complete_dir
+    - name: 'Set complete_dir'
       ini_file:
         path: '/opt/appdata/{{app}}/sabnzbd.ini'
         section: misc
@@ -48,7 +48,7 @@
         value: '{{path}}/downloads/nzb'
         state: present
 
-    - name: Set nzb watch location
+    - name: 'Set nzb watch location'
       ini_file:
         path: '/opt/appdata/{{app}}/sabnzbd.ini'
         section: misc
@@ -56,7 +56,7 @@
         value: '{{path}}/nzb/watch'
         state: present
 
-    - name: Set nzb backup location
+    - name: 'Set nzb backup location'
       ini_file:
         path: '/opt/appdata/{{app}}/sabnzbd.ini'
         section: misc
@@ -64,7 +64,7 @@
         value: '{{path}}/nzb'
         state: present
 
-    - name: set script_dir
+    - name: 'set script_dir'
       ini_file:
         path: '/opt/appdata/{{app}}/sabnzbd.ini'
         section: misc
@@ -72,10 +72,9 @@
         value: scripts
         state: present
 
-    # FIRST TIME CONFIGURATION ###########################################################
     - name: 'Configuring {{app}} for first time use'
       block:
-        - name: Set host_whitelist
+        - name: 'Set host_whitelist'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -83,7 +82,7 @@
             value: 'sabnzbd.{{domain.stdout}},'
             state: present
 
-        - name: Set direct_unpack
+        - name: 'Set direct_unpack'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -91,7 +90,7 @@
             value: 1
             state: present
 
-        - name: Set ignore_samples
+        - name: 'Set ignore_samples'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -99,7 +98,7 @@
             value: 1
             state: present
 
-        - name: Set max logging lines
+        - name: 'Set max logging lines'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -107,7 +106,7 @@
             value: 524
             state: present
 
-        - name: Set max logging days
+        - name: 'Set max logging days'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -115,7 +114,7 @@
             value: 1
             state: present
 
-        - name: set unwanted_extensions
+        - name: 'set unwanted_extensions'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -123,7 +122,7 @@
             value: exe, com, bat, sh, iso, m2ts, mt2s
             state: present
 
-        - name: set cleanup_list
+        - name: 'set cleanup_list'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -131,7 +130,7 @@
             value: nfo, exe, com, bat, txt, doc, xls, xlxs, docx, doc, jpg, jeg, gif, png
             state: present
 
-        - name: set Cache Limit to 4G
+        - name: 'set Cache Limit to 4G'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -139,7 +138,7 @@
             value: 4G
             state: present
 
-        - name: set action_on_unwanted_extensions
+        - name: 'set action_on_unwanted_extensions'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -147,7 +146,7 @@
             value: 2
             state: present
 
-        - name: set pause_on_pwrar - aborts encrypted rar rather than pausing
+        - name: 'set pause_on_pwrar - aborts encrypted rar rather than pausing'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -155,7 +154,7 @@
             value: 2
             state: present
 
-        - name: set new_nzb_on_failure - try a new nzb if it fails
+        - name: 'set new_nzb_on_failure - try a new nzb if it fails'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -163,7 +162,7 @@
             value: 1
             state: present
 
-        - name: set flat_unpack
+        - name: 'set flat_unpack'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -171,7 +170,7 @@
             value: 1
             state: present
 
-        - name: set download_free
+        - name: 'set download_free'
           ini_file:
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
@@ -180,5 +179,5 @@
             state: present
       when: not inicheck.stat.exists
 
-    - name: Restart {{app}}
+    - name: 'Restart {{app}}'
       shell: 'docker restart {{app}}'
