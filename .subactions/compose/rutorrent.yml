@@ -30,7 +30,7 @@
     apt: "name=dnsutils state=present"
 
   - name: 'Settings  Get Public IP Address'
-    shell: dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'\"' '{ print $2}'
+    shell: curl -s http://whatismijnip.nl |cut -d " " -f 5
     register: public_ip_lookup
 
   - name: Settings Set 'public_ip' variable
