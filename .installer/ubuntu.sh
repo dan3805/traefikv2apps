@@ -27,6 +27,7 @@ tee <<-EOF
 [ 1 ] Install Apps
 [ 2 ] Remove  Apps
 
+[ 3 ] Create Backup Docker-compose File
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 [ Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -36,6 +37,7 @@ EOF
   case $headsection in
     1) clean && interface ;;
     2) clean && removeapp ;;
+    3) clean && backupcomposercommamd ;;
     Z|z) exit ;;
     *) appstartup ;;
   esac
@@ -227,6 +229,16 @@ backupcomposer() {
      $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker > $basefolder/composebackup/docker-compose.yml
      $(command -v docker) image prune -af 1>/dev/null 2>&1
   fi
+}
+backupcomposercommamd() {
+  if [[ ! -d $basefolder/composebackup ]];then $(command -v mkdir) -p $basefolder/composebackup/;fi
+  if [[ -d $basefolder/composebackup ]];then
+     docker=$($(command -v docker) ps -aq --format={{.Names}})
+     $(command -v docker) pull red5d/docker-autocompose 1>/dev/null 2>&1
+     $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker > $basefolder/composebackup/docker-compose.yml
+     $(command -v docker) image prune -af 1>/dev/null 2>&1
+  fi
+  headinterface
 }
 
 removeapp() {
