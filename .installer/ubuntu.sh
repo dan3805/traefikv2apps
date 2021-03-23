@@ -193,8 +193,8 @@ EOF
         $(command -v sed) -i "s/PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
      fi
   else
-    echo "Plex Claim cannot be empty"
-    plexclaim
+     echo "Plex Claim cannot be empty"
+     plexclaim
   fi
 }
 subtasks() {
@@ -215,7 +215,7 @@ confbackup=$basefolder/authelia/configuration.yml.backup
      if [[ -f $conf ]];then $(command -v rsync) $conf $confbackup -aq --info=progress2 -hv;fi
      if [[ -f $conf ]];then $(command -v rsync) $confnew $conf -aq --info=progress2 -hv;fi
      if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
-    if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
+     if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
   fi
 }
 
@@ -266,11 +266,10 @@ deleteapp() {
             $(command -v rm) -rf $i 1>/dev/null 2>&1
         done
      fi
+     backupcomposer && removeapp
   else
      removeapp
   fi
-backupcomposer
-removeapp
 }
 ##########
 appstartup
