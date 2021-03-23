@@ -14,27 +14,49 @@ fi
 while true; do
   if [[ ! -x $(command -v docker) ]]; then exit;fi
   if [[ ! -x $(command -v docker-compose) ]]; then exit;fi
-  interface
+  headinterface
 done
+}
+headinterface() {
+tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     🚀 App Head Section Menu
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[ 1 ] Install Apps
+[ 2 ] Remove  Apps
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+  read -erp "↘️  Type Number and Press [ENTER]:" headsection </dev/tty
+  case $headsection in
+    1) clean && interface ;;
+    2) clean && removeapp ;;
+    Z|z) exit ;;
+    *) appstartup ;;
+  esac
 }
 interface() {
 buildshow=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//')
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                      🚀 App Section Menu
+      🚀 App Section Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 $buildshow
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   [ EXIT ] - Exit
+[ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
   read -erp "↘️  Type Section Name and Press [ENTER]:" section </dev/tty
-
-  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then exit;fi
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then headinterface;fi
       checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//'| grep -x $section)
   if [[ $section == "" ]] || [[ $checksection == "" ]];then clear && interface;fi
   if [[ $checksection == $section ]];then clear && install;fi
@@ -45,20 +67,19 @@ buildshow=$(ls -1p /opt/apps/${section}/compose/ | sed -e 's/.yml//g' )
 tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                 🚀 App Installer of ${section}
+     🚀 App Installer of ${section}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 $buildshow
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  [ EXIT or Z ] - Exit
+[ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
 
   read -erp "↪️ Type App-Name to install and Press [ENTER]:" typed </dev/tty
-
-  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then interface;fi
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then interface;fi
      buildapp=$(ls -1p /opt/apps/${section}/compose/ | $(command -v sed) -e 's/.yml//g' | grep -x $typed)
   if [[ $typed == "" ]] || [[ $buildapp == "" ]];then install;fi
   if [[ $buildapp == $typed ]];then runinstall;fi
@@ -165,7 +186,6 @@ https://www.plex.tv/claim/
 
 EOF
   read -erp "Enter your PLEX CLAIM CODE:" PLEXCLAIM
-
   if [[ $PLEXCLAIM != "" ]]; then
      if [[ $(uname) == "Darwin" ]]; then
         $(command -v sed) -i '' "s/PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
@@ -178,10 +198,27 @@ EOF
   fi
 }
 subtasks() {
+source $basefolder/compose/.env
+authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x 'authelia' 1>/dev/null 2>&1 && echo true || echo false)
+conf=$basefolder/authelia/configuration.yml
+confnew=$basefolder/authelia/configuration.yml.new
+confbackup=$basefolder/authelia/configuration.yml.backup
+
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
   if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
+  if [[ ${section} == "mediaserver" ]];then
+     { head -n 38 $conf;
+     echo "\
+    - domain: ${typed}.${DOMAIN}
+      policy: bypass"; tail -n +40 $conf; } > $confnew
+     if [[ -f $conf ]];then $(command -v rsync) $conf $confbackup -aq --info=progress2 -hv;fi
+     if [[ -f $conf ]];then $(command -v rsync) $confnew $conf -aq --info=progress2 -hv;fi
+     if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
+    if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
+  fi
 }
+
 backupcomposer() {
   if [[ ! -d $basefolder/composebackup ]];then $(command -v mkdir) -p $basefolder/composebackup/;fi
   if [[ -d $basefolder/composebackup ]];then
@@ -192,4 +229,48 @@ backupcomposer() {
   fi
 }
 
+removeapp() {
+list=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -vE 'auth|trae')
+tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     🚀 App Rwmove Menu
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$list
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ EXIT or Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+  read -erp "↪️ Type App-Name to remove and Press [ENTER]:" typed </dev/tty
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then interface;fi
+  if [[ $typed == "" ]];then removeapp;fi
+     checktyped=$($(command -v docker) ps -aq --format={{.Names}} | grep -x $typed)
+  if [[ $checktyped == $typed ]];then deleteapp;fi
+}
+deleteapp() {
+  basefolder="/opt/appdata"
+  checktyped=$($(command -v docker) ps -aq --format={{.Names}} | grep -x $typed)
+  if [[ $checktyped == $typed ]];then
+     app=${typed}
+     for i in ${app}; do
+         $(command -v docker) stop $i 1>/dev/null 2>&1
+         $(command -v docker) rm $i 1>/dev/null 2>&1
+         $(command -v docker) image prune -af 1>/dev/null 2>&1
+     done
+     if [[ -d $basefolder/${typed} ]];then 
+        folder=$basefolder/${typed}
+        for i in ${folder}; do
+            $(command -v rm) -rf $i 1>/dev/null 2>&1
+        done
+     fi
+  else
+     removeapp
+  fi
+backupcomposer
+removeapp
+}
+##########
 appstartup
