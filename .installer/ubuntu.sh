@@ -267,12 +267,11 @@ deleteapp() {
             $(command -v rm) -rf $i 1>/dev/null 2>&1
         done
      fi
-     authrmapp=$(cat -An $conf | grep ${typed} | awk '{print $1}')
-     authrmapp2=$($(authrmapp + 1) | bc)
-     authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x authelia 1>/dev/null 2>&1 && echo true || echo false)
      if [[ ! -x $(command -v bc) ]];then $(command -v apt) install bc -yqq 1>/dev/null 2>&1;fi
-     if [[ $authrmapp != "" ]];then        
-        sed -i '${authrmapp};${authrmapp2}d' $conf
+        authrmapp=$(cat -An $conf | grep -E ${typed} | awk '{print $1}')
+        authrmapp2=$(echo "$(${authrmapp} + 1)" | bc)
+        authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x authelia 1>/dev/null 2>&1 && echo true || echo false)
+        if [[ $authrmapp != "" ]];then sed -i '${authrmapp};${authrmapp2}d' $conf;fi
         if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
      fi
      backupcomposer && removeapp
