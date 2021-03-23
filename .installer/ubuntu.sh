@@ -36,7 +36,7 @@ EOF
 
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then exit;fi
       checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//'| grep -x $section)
-  if [[ $section == "" ]] || [[ $checksection == "" ]];then clear && interface; fi
+  if [[ $section == "" ]] || [[ $checksection == "" ]];then clear && interface;fi
   if [[ $checksection == $section ]];then clear && install;fi
 }
 install() {
