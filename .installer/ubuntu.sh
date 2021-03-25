@@ -132,8 +132,21 @@ runinstall() {
   if [[ ${section} == "mediaserver" && ${typed} == "plex" ]];then plexclaim;fi
   if [[ -f $basefolder/$compose ]];then
      $(command -v cd) $basefolder/compose/
-     $(command -v docker-compose) pull ${typed} 1>/dev/null 2>&1
-     $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
+     $(command -v docker-compose) config 1>/dev/null 2>&1
+     errorcode=$?
+     if [[ $errorcode -ne 0 ]]; then
+  tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  docker-compose config check of ${typed} was failed
+  Return code was ${errorcode}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+  clear && interface
+     else
+         $(command -v docker-compose) pull ${typed} 1>/dev/null 2>&1
+         $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
+     fi
   fi
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
   if [[ ${section} == "downloadclients" ]];then subtasks;fi
@@ -141,11 +154,11 @@ runinstall() {
   if [[ $runningcheck == "true" ]];then
      source $basefolder/compose/.env
   tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   ${typed} successfull deployed and working
 
   https://${typed}.${DOMAIN}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
   read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear
