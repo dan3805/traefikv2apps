@@ -35,9 +35,9 @@ tee <<-EOF
 EOF
   read -erp "↘️  Type Number and Press [ENTER]:" headsection </dev/tty
   case $headsection in
-    1) clean && interface ;;
-    2) clean && removeapp ;;
-    3) clean && backupcomposercommamd ;;
+    1) clear && interface ;;
+    2) clear && removeapp ;;
+    3) clear && backupcomposercommamd ;;
     Z|z) exit ;;
     *) appstartup ;;
   esac
@@ -58,7 +58,7 @@ $buildshow
 
 EOF
   read -erp "↘️  Type Section Name and Press [ENTER]:" section </dev/tty
-  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then headinterface;fi
+  if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then clear && headinterface;fi
       checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//'| grep -x $section)
   if [[ $section == "" ]] || [[ $checksection == "" ]];then clear && interface;fi
   if [[ $checksection == $section ]];then clear && install;fi
@@ -205,19 +205,22 @@ authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x 'autheli
 conf=$basefolder/authelia/configuration.yml
 confnew=$basefolder/authelia/configuration.yml.new
 confbackup=$basefolder/authelia/configuration.yml.backup
+authadd=$(cat $config | grep -qE '${typed}' && echo true || false)
 
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
   if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
-  if [[ ${section} == "mediaserver" ]];then
+  if [[ $authcheck == "false" || $authcheck == "" ]];then
+     if [[ ${section} == "mediaserver" ]];then
      { head -n 38 $conf;
      echo "\
     - domain: ${typed}.${DOMAIN}
       policy: bypass"; tail -n +40 $conf; } > $confnew
-     if [[ -f $conf ]];then $(command -v rsync) $conf $confbackup -aq --info=progress2 -hv;fi
-     if [[ -f $conf ]];then $(command -v rsync) $confnew $conf -aq --info=progress2 -hv;fi
-     if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
-     if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
+        if [[ -f $conf ]];then $(command -v rsync) $conf $confbackup -aq --info=progress2 -hv;fi
+        if [[ -f $conf ]];then $(command -v rsync) $confnew $conf -aq --info=progress2 -hv;fi
+        if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
+        if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
+     fi
   fi
 }
 
