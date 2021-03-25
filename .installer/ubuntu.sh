@@ -285,8 +285,7 @@ deleteapp() {
         authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x authelia 1>/dev/null 2>&1 && echo true || echo false)
         if [[ $authrmapp != "" ]];then sed -i '${authrmapp};${authrmapp2}d' $conf;fi
         if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
-     fi
-     backupcomposer && removeapp
+        backupcomposer && removeapp
   else
      removeapp
   fi
