@@ -200,17 +200,18 @@ EOF
   fi
 }
 subtasks() {
+basefolder="/opt/appdata"
 source $basefolder/compose/.env
 authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x 'authelia' 1>/dev/null 2>&1 && echo true || echo false)
 conf=$basefolder/authelia/configuration.yml
 confnew=$basefolder/authelia/configuration.yml.new
 confbackup=$basefolder/authelia/configuration.yml.backup
-authadd=$(cat $config | grep -qE '${typed}' && echo true || false)
+authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
 
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
   if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
-  if [[ $authcheck == "false" || $authcheck == "" ]];then
+  if [[ $authadd == "false" || $authadd == "" ]];then
      if [[ ${section} == "mediaserver" ]];then
      { head -n 38 $conf;
      echo "\
