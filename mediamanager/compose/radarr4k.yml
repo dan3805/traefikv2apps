@@ -29,7 +29,7 @@ services:
       - 'traefik.http.routers.radarr4k-rtr.tls=true'
       - 'traefik.http.routers.radarr4k-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.radarr4k-rtr.middlewares=chain-authelia@file'
-      - 'traefik.http.routers.radarr4k-rtr.service=uploader-svc'
+      - 'traefik.http.routers.radarr4k-rtr.service=radarr4k-svc'
       - 'traefik.http.services.radarr4k-svc.loadbalancer.server.port=7878'
 
 networks:
