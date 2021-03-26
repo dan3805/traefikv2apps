@@ -38,12 +38,12 @@ services:
     depends_on:
       - petio
     ports:
-      - 127.0.0.1:27055:27017'
+      - '127.0.0.1:27055:27017'
     networks:
       - proxy
     user: '${ID}:${ID}'
     volumes:
-      - petio/db:/data/db
+      - 'petio/db:/data/db'
 
 volumes:
   petio:
