@@ -177,7 +177,5 @@
             option: download_free
             value: 25G
             state: present
-      when: not inicheck.stat.exists
+      when: inicheck.stat.exists
 
-    - name: 'Restart {{app}}'
-      shell: 'docker restart {{app}}'

@@ -188,7 +188,5 @@
               Task1.Command=UnpauseDownload
               Task1.Param=
             insertafter: '^### SCHEDULER'
-      when: not confcheck.stat.exists
+      when: confcheck.stat.exists
 
-    - name: 'Start {{app}}'
-      shell: 'docker start {{app}}'
