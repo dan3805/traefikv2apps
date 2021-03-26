@@ -98,7 +98,6 @@ runinstall() {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
   if [[ ! -d $basefolder/compose/ ]];then $(command -v mkdir) -p $basefolder/compose/;fi
-  if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
   if [[ ! -x $(command -v rsync) ]];then $(command -v apt) install rsync -yqq >/dev/null 2>&1;fi
   if [[ -f $basefolder/$compose ]];then $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv;fi
   if [[ ! -f $basefolder/$compose ]];then $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv;fi
@@ -124,10 +123,10 @@ EOF
      done
   fi
   container=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x ${typed})
-  if [[ $container != "" ]]; then
+  if [[ $container == ${typed} ]]; then
      docker="stop rm"
      for i in ${docker}; do
-         $(command -v docker) $i $container 1>/dev/null 2>&1
+         $(command -v docker) $i ${typed} 1>/dev/null 2>&1
      done
      $(command -v docker) image prune -af 1>/dev/null 2>&1
   else
@@ -170,6 +169,8 @@ EOF
   read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear
 fi
+if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
+if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
 backupcomposer && clear && install
 }
 vnstatcheck() {
@@ -324,8 +325,8 @@ EOF
            authrmapp=$(cat -An $conf | grep -x ${typed}.${DOMAIN})
            authrmapp2=$(echo "$(${authrmapp} + 1)" | bc)
         if [[ $authrmapp != "" ]];then sed -i '${authrmapp};${authrmapp2}d' $conf;fi
-        $($(command -v docker) ps -aq --format '{{.Names}}' | grep -x authelia 1>/dev/null 2>&1)
-        errorcode=$?
+           $($(command -v docker) ps -aq --format '{{.Names}}' | grep -x authelia 1>/dev/null 2>&1)
+           errorcode=$?
         if [[ $errorcode -eq 0 ]];then $(command -v docker) restart authelia;fi
      fi
     tee <<-EOF
