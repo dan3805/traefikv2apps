@@ -41,7 +41,7 @@
 
         - name: 'Restart {{app}}'
           shell: 'docker restart {{app}}'
-      when: not xmlcheck.stat.exists
+      when: xmlcheck.stat.exists
 
      ##### Db edits
     - name: "Install package for {{app}}-db Cache size Fix"
