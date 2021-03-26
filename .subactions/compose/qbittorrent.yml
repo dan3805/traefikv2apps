@@ -88,7 +88,7 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Bittorrent\DHT
-            value: false
+            value: 'false'
             state: present
 
         - name: 'Disable PeX'
@@ -96,7 +96,7 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Bittorrent\PeX
-            value: false
+            value: 'false'
             state: present
 
         - name: 'Disable LSD'
@@ -104,7 +104,7 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Bittorrent\LSD
-            value: false
+            value: 'false'
             state: present
 
         - name: 'Enable Encryption'
@@ -120,7 +120,7 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Downloads\UseIncompleteExtension
-            value: false
+            value: 'false'
             state: present
 
         - name: 'Ignore slow torrents'
@@ -184,8 +184,7 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: WebUI\CSRFProtection
-            value: false
-            force: yes
+            value: 'false'
             state: present
 
         - name: 'Disable HostHeaderValidation'
@@ -193,8 +192,7 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: WebUI\HostHeaderValidation
-            value: false
-            force: yes
+            value: 'false'
             state: present
 
         - name: 'Disable ClickjackingProtection'
@@ -202,8 +200,7 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: WebUI\ClickjackingProtection
-            value: false
-            force: yes
+            value: 'false'
             state: present
 
         - name: 'Set ServerDomains'
@@ -212,7 +209,6 @@
             section: Preferences
             option: WebUI\ServerDomains
             value: '*'
-            force: yes
             state: present
 
         - name: 'Set Address'
@@ -221,7 +217,6 @@
             section: Preferences
             option: WebUI\Address
             value: '*'
-            force: yes
             state: present
       when: confcheck.stat.exists
 

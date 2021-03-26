@@ -9,6 +9,7 @@ services:
       - 'PUID=${ID}'
       - 'TZ=${TZ}'
       - 'UMASK=022'
+      - 'WEBUI_PORT=8080'
     image: 'ghcr.io/linuxserver/qbittorrent'
     networks:
       - proxy
@@ -17,7 +18,7 @@ services:
       - 'no-new-privileges:true'
     ports:
       - '7889:7889'
-      - '127.0.0.1:8083:8083'
+      - '127.0.0.1:8083:8080'
     volumes:
       - '/opt/appdata/qbittorrent:/config:rw'
       - 'unionfs:/mnt'
@@ -31,7 +32,7 @@ services:
       - 'traefik.http.routers.qbittorrent-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.qbittorrent-rtr.middlewares=chain-authelia@file'
       - 'traefik.http.routers.qbittorrent-rtr.service=qbittorrent-svc'
-      - 'traefik.http.services.qbittorrent-svc.loadbalancer.server.port=8083'
+      - 'traefik.http.services.qbittorrent-svc.loadbalancer.server.port=8080'
 
 networks:
   proxy:

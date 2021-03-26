@@ -3,7 +3,7 @@
 # Copyright (c) 2020, MrDoob
 # All rights reserved.
 appstartup() {
-if [[ $EUID -ne 0 ]]; then
+if [[ $EUID -ne 0 ]];then
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⛔  You Must Execute as a SUDO USER (with sudo) or as ROOT!
@@ -12,8 +12,8 @@ EOF
 exit 0
 fi
 while true; do
-  if [[ ! -x $(command -v docker) ]]; then exit;fi
-  if [[ ! -x $(command -v docker-compose) ]]; then exit;fi
+  if [[ ! -x $(command -v docker) ]];then exit;fi
+  if [[ ! -x $(command -v docker-compose) ]];then exit;fi
   headinterface
 done
 }
@@ -33,7 +33,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -erp "↘️  Type Number and Press [ENTER]:" headsection </dev/tty
+  read -erp "↘️  Type Number and Press [ENTER]: " headsection </dev/tty
   case $headsection in
     1) clear && interface ;;
     2) clear && removeapp ;;
@@ -57,10 +57,11 @@ $buildshow
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -erp "↘️  Type Section Name and Press [ENTER]:" section </dev/tty
+  read -erp "↘️  Type Section Name and Press [ENTER]: " section </dev/tty
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then clear && headinterface;fi
-      checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//'| grep -x $section)
-  if [[ $section == "" ]] || [[ $checksection == "" ]];then clear && interface;fi
+  if [[ $section == "" ]];then clear && interface;fi
+      checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//' | grep -x $section)
+  if [[ $checksection == "" ]];then clear && interface;fi
   if [[ $checksection == $section ]];then clear && install;fi
 }
 install() {
@@ -80,10 +81,11 @@ $buildshow
 
 EOF
 
-  read -erp "↪️ Type App-Name to install and Press [ENTER]:" typed </dev/tty
-  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then interface;fi
+  read -erp "↪️ Type App-Name to install and Press [ENTER]: " typed </dev/tty
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
+  if [[ $typed == "" ]];then clear && install;fi
      buildapp=$(ls -1p /opt/apps/${section}/compose/ | $(command -v sed) -e 's/.yml//g' | grep -x $typed)
-  if [[ $typed == "" ]] || [[ $buildapp == "" ]];then install;fi
+  if [[ $buildapp == "" ]];then clear && install;fi
   if [[ $buildapp == $typed ]];then runinstall;fi
 }
 runinstall() {
@@ -123,7 +125,7 @@ EOF
      done
   fi
   container=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x ${typed})
-  if [[ $container == ${typed} ]]; then
+  if [[ $container == ${typed} ]];then
      docker="stop rm"
      for i in ${docker}; do
          $(command -v docker) $i ${typed} 1>/dev/null 2>&1
@@ -139,7 +141,7 @@ EOF
      $(command -v cd) $basefolder/compose/
      $(command -v docker-compose) config 1>/dev/null 2>&1
      errorcode=$?
-     if [[ $errorcode -ne 0 ]]; then
+     if [[ $errorcode -ne 0 ]];then
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     compose check of ${typed} was failed
@@ -157,7 +159,7 @@ EOF
   if [[ ${section} == "downloadclients" ]];then subtasks;fi
      $($(command -v docker) ps -aq --format '{{.Names}}{{.State}}' | grep -qE ${typed}running 1>/dev/null 2>&1)
      errorcode=$?
-  if [[ $errorcode -eq 0 ]]; then
+  if [[ $errorcode -eq 0 ]];then
   source $basefolder/compose/.env
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -179,7 +181,7 @@ vnstatcheck() {
 autoscancheck() {
 $(docker ps -aq --format={{.Names}} | grep -E 'arr' 1>/dev/null 2>&1)
 errorcode=$?
-if [[ $errorcode -eq 0 ]]; then
+if [[ $errorcode -eq 0 ]];then
   if [[ ! -f $basefolder/${typed}/config.yml ]];then
      $(command -v rsync) $appfolder/.subactions/compose/${typed}.config.yml $basefolder/${typed}/config.yml -aq --info=progress2 -hv
      $(command -v bash) $appfolder/.subactions/compose/${typed}.sh
@@ -215,9 +217,9 @@ tee <<-EOF
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-  read -erp "Enter your PLEX CLAIM CODE:" PLEXCLAIM
-  if [[ $PLEXCLAIM != "" ]]; then
-     if [[ $(uname) == "Darwin" ]]; then
+  read -erp "Enter your PLEX CLAIM CODE : " PLEXCLAIM
+  if [[ $PLEXCLAIM != "" ]];then
+     if [[ $(uname) == "Darwin" ]];then
         $(command -v sed) -i '' "s/PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
      else
         $(command -v sed) -i "s/PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
@@ -237,7 +239,11 @@ confbackup=$basefolder/authelia/configuration.yml.backup
 authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
-  if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
+     $(grep "model name" /proc/cpuinfo | cut -d ' ' -f3- | head -n1 |grep -qE 'i7|i9' 1>/dev/null 2>&1)
+     errorcode=$?
+     if [[ $errorcode -eq 0 ]];then
+        if [[ -f $appfolder/.subactions/compose/${typed}.sh ]];then $(command -v bash) $appfolder/.subactions/compose/${typed}.sh;fi
+     fi
   if [[ $authadd == "false" || $authadd == "" ]];then
      if [[ ${section} == "mediaserver" ]];then
      { head -n 38 $conf;
@@ -250,6 +256,7 @@ authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
         if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
      fi
   fi
+  if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
 }
 
 backupcomposer() {
@@ -285,7 +292,7 @@ $list
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-  read -erp "↪️ Type App-Name to remove and Press [ENTER]:" typed </dev/tty
+  read -erp "↪️ Type App-Name to remove and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then interface;fi
   if [[ $typed == "" ]];then removeapp;fi
      checktyped=$($(command -v docker) ps -aq --format={{.Names}} | grep -x $typed)
