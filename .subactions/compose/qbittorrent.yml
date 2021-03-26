@@ -223,7 +223,7 @@
             value: '*'
             force: yes
             state: present
-      when: not confcheck.stat.exists
+      when: confcheck.stat.exists
 
     - name: 'Restart {{app}}'
       shell: 'docker start {{app}}'

@@ -87,7 +87,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: direct_unpack
-            value: 1
+            value: '1'
             state: present
 
         - name: 'Set ignore_samples'
@@ -95,7 +95,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: ignore_samples
-            value: 1
+            value: '1'
             state: present
 
         - name: 'Set max logging lines'
@@ -103,7 +103,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: max_log_size
-            value: 524
+            value: '524'
             state: present
 
         - name: 'Set max logging days'
@@ -111,7 +111,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: log_backups
-            value: 1
+            value: '1'
             state: present
 
         - name: 'set unwanted_extensions'
@@ -143,7 +143,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: action_on_unwanted_extensions
-            value: 2
+            value: '2'
             state: present
 
         - name: 'set pause_on_pwrar - aborts encrypted rar rather than pausing'
@@ -151,7 +151,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: pause_on_pwrar
-            value: 2
+            value: '2'
             state: present
 
         - name: 'set new_nzb_on_failure - try a new nzb if it fails'
@@ -159,7 +159,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: new_nzb_on_failure
-            value: 1
+            value: '1'
             state: present
 
         - name: 'set flat_unpack'
@@ -167,7 +167,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: flat_unpack
-            value: 1
+            value: '1'
             state: present
 
         - name: 'set download_free'
@@ -175,7 +175,7 @@
             path: '/opt/appdata/{{app}}/sabnzbd.ini'
             section: misc
             option: download_free
-            value: 25G
+            value: '25G'
             state: present
       when: inicheck.stat.exists
 
