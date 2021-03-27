@@ -334,7 +334,7 @@ authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
         if [[ -f $appfolder/.subactions/compose/${typed}.sh ]];then $(command -v bash) $appfolder/.subactions/compose/${typed}.sh;fi
      fi
   if [[ $authadd == "false" || $authadd == "" ]];then
-     if [[ ${section} == "mediaserver" ]];then
+     if [[ ${section} == "mediaserver" || ${section} == "request" ]];then
      { head -n 38 $conf;
      echo "\
     - domain: ${typed}.${DOMAIN}
@@ -345,7 +345,7 @@ authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
         if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
      fi
   fi
-  if [[ ${section} == "mediaserver" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
+  if [[ ${section} == "mediaserver" || ${section} == "request" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
 }
 
 backupcomposer() {
