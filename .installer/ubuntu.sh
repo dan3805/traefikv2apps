@@ -299,6 +299,8 @@ EOF
 fi
 }
 plexclaim() {
+compose="compose/docker-compose.yml"
+basefolder="/opt/appdata"
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 PLEX CLAIM
