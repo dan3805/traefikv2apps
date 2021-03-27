@@ -101,10 +101,10 @@ runinstall() {
 EOF
   if [[ ! -d $basefolder/compose/ ]];then $(command -v mkdir) -p $basefolder/compose/;fi
   if [[ ! -x $(command -v rsync) ]];then $(command -v apt) install rsync -yqq >/dev/null 2>&1;fi
-  if [[ -f $basefolder/$compose ]];then $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv;fi
-  if [[ ! -f $basefolder/$compose ]];then $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv;fi
+  if [ -f $basefolder/$compose ] || [ ! -f $basefolder/$compose ];then $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv;fi
+  #if [[ ! -f $basefolder/$compose ]];then $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv;fi
   if [[ ! -x $(command -v lshw) ]];then $(command -v apt) install lshw -yqq >/dev/null 2>&1;fi
-  if [[ ${section} == "mediaserver" ]];then
+  if [[ ${section} == "mediaserver" || ${section} == "encoder" ]];then
      gpu="i915 nvidia"
      for i in ${gpu}; do
         TDV=$($(command -v lshw) -C video | $(command -v grep) -qE $i && echo true || echo false)
