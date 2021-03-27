@@ -24,9 +24,7 @@ services:
     volumes:
       - '/etc/localtime:/etc/localtime:ro'
       - '/opt/appdata/uploader:/config:rw'
-      - source: unionfs
-        target: /mnt
-        type: volume
+      - 'unionfs:/mnt'
     labels:
     labels:
       - 'traefik.enable=true'
