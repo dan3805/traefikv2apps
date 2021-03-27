@@ -36,7 +36,7 @@ services:
       - 'traefik.http.routers.uploader-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.uploader-rtr.middlewares=chain-authelia@file'
       - 'traefik.http.routers.uploader-rtr.service=uploader-svc'
-      - 'traefik.http.services.uploader-svc.loadbalancer.server.port=7777'
+      - 'traefik.http.services.uploader-svc.loadbalancer.server.port=8080'
 
 networks:
   proxy:
