@@ -4,7 +4,7 @@
 # All rights reserved.
 basefolder="/opt/appdata"
 typed=autoscan
-composeoverwrite="compose/docker-compose.override.yml
+composeoverwrite="compose/docker-compose.override.yml"
 anchor() {
 if [[ ! -x $(command -v rclone) ]];then curl https://rclone.org/install.sh | sudo bash >/dev/null 2>&1;fi
 echo "\
