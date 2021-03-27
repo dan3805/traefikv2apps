@@ -132,7 +132,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-   read -ep "What root domain would you like to protect?: " USERAUTOSCAN
+   read -ep "Enter a username for autoscan?: " USERAUTOSCAN
 if [[ $USERAUTOSCAN != "" ]]; then
    if [[ $(uname) == "Darwin" ]]; then
       sed -i '' "s/<USERNAME>/$USERAUTOSCAN/g" $basefolder/${typed}/config.yml
