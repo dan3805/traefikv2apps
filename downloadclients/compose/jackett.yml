@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  jackett:
+    hostname: 'jackett'
+    container_name: 'jackett'
+    environment:
+      - 'PGID=${ID}'
+      - 'PUID=${ID}'
+      - 'TZ=${TZ}'
+      - 'UMASK=022'
+      - ÄAUTO_UPDATE=true'
+    image: 'ghcr.io/linuxserver/jackett'
+    restart: 'unless-stopped'
+    ports:
+      - '127.0.0.1:9117:9117'
+    networks:
+      - proxy
+    security_opt:
+      - 'no-new-privileges:true'
+    volumes:
+      - '/opt/appdata/jackett:/config:rw'
+      - 'unionfs:/mnt'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'dockupdater.enable=true'
+      - 'traefik.http.routers.jackett-rtr.entrypoints=https'
+      - 'traefik.http.routers.jackett-rtr.rule=Host(`jackett.${DOMAIN}`)'
+      - 'traefik.http.routers.jackett-rtr.tls=true'
+      - 'traefik.http.routers.jackett-rtr.tls.certresolver=dns-cloudflare'
+      - 'traefik.http.routers.jackett-rtr.middlewares=chain-authelia@file'
+      - 'traefik.http.routers.jackett-rtr.service=jackett-svc'
+      - 'traefik.http.services.jackett-svc.loadbalancer.server.port=9117'
+
+networks:
+  proxy:
+    driver: bridge
+    external: true
+
+volumes:
+  unionfs:
+    driver: local-persist
+    driver_opts:
+      mountpoint: /mnt

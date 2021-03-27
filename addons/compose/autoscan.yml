@@ -22,7 +22,6 @@ services:
       - 'unionfs:/mnt'
       - '/etc/locatime:/etc/localtime:ro'
     labels:
-    labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
