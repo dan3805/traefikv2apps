@@ -19,7 +19,7 @@ services:
     security_opt:
       - 'no-new-privileges:true'
     volumes:
-      - '/opt/appdata/mellow4k/:/usr/src/app/data/:rw'
+      - '/opt/appdata/mellow4k:/usr/src/app/data/:rw'
     labels:
       - 'traefik.enable=true'
       - 'traefik.docker.network=proxy'
