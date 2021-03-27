@@ -9,7 +9,7 @@ services:
       - 'PUID=${ID}'
       - 'TZ=${TZ}'
       - 'UMASK=022'
-      - 'PLEX_CLAIM=$PLEX_CLAIM_ID'
+      - 'PLEX_CLAIM=PLEX_CLAIM_ID'
       - 'VERSION=latest'
       - 'ADVERTISE_IP=http://${SERVERIP}:32400,http://plex.${DOMAIN}:32400'
     image: 'ghcr.io/linuxserver/plex'
