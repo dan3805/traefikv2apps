@@ -245,7 +245,7 @@ EOF
   fi
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
   if [[ ${section} == "downloadclients" ]];then subtasks;fi
-  if [[ ${typed} == "overseerr" || ${typed} == "petio" || ${typed} == "heimdall" ]];then subtasks;fi
+  if [[ ${typed} == "overseerr" || ${typed} == "petio" || ${typed} == "heimdall" || ${typed} == "librespeed" ]];then subtasks;fi
      $($(command -v docker) ps -aq --format '{{.Names}}{{.State}}' | grep -qE ${typed}running 1>/dev/null 2>&1)
      errorcode=$?
   if [[ $errorcode -eq 0 ]];then
@@ -331,7 +331,7 @@ authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x 'autheli
 conf=$basefolder/authelia/configuration.yml
 confnew=$basefolder/authelia/configuration.yml.new
 confbackup=$basefolder/authelia/configuration.yml.backup
-authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
+authadd=$(cat $conf | grep -qE '${typed}')
 
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
@@ -340,8 +340,8 @@ authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
      if [[ $errorcode -eq 0 ]];then
         if [[ -f $appfolder/.subactions/compose/${typed}.sh ]];then $(command -v bash) $appfolder/.subactions/compose/${typed}.sh;fi
      fi
-  if [[ $authadd == "false" || $authadd == "" ]];then
-     if [[ ${section} == "mediaserver" || ${section} == "request" ]];then
+  if [[ $authadd == "" ]];then
+     if [[ ${section} == "mediaserver" || ${section} == "request" || ${typed} == "librespeed" ]];then
      { head -n 38 $conf;
      echo "\
     - domain: ${typed}.${DOMAIN}
