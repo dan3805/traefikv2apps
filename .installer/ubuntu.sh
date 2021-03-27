@@ -268,7 +268,7 @@ vnstatcheck() {
   if [[ ! -x $(command -v vnstat) ]];then $(command -v apt) install vnstat -yqq;fi
 }
 autoscancheck() {
-$(docker ps -aq --format={{.Names}} | grep -E 'arr' 1>/dev/null 2>&1)
+$(docker ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
 errorcode=$?
 if [[ $errorcode -eq 0 ]];then
   if [[ ! -f $basefolder/${typed}/config.yml ]];then
@@ -289,9 +289,13 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Sorry we cannot find any runnings Arrs
+    Sorry we can  not find any runnings Arrs/Plex/Emby or Jellfin
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
+  if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
+  if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
+  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+  clear && interface
 fi
 }
 plexclaim() {
