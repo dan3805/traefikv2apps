@@ -29,7 +29,7 @@ tee <<-EOF
 
     [ 3 ] Create Backup Docker-compose File
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    [ Z ] - Exit
+    [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
@@ -38,6 +38,7 @@ EOF
     1) clear && interface ;;
     2) clear && removeapp ;;
     3) clear && backupcomposer && clear && headinterface ;;
+    help|HELP|Help) clear && sectionhelplayout ;;
     Z|z|exit|EXIT|Exit|close) exit ;;
     *) appstartup ;;
   esac
@@ -53,13 +54,14 @@ tee <<-EOF
 $buildshow
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    [ EXIT or Z ] - Exit
+    [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
   read -erp "↘️  Type Section Name and Press [ENTER]: " section </dev/tty
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then clear && headinterface;fi
   if [[ $section == "" ]];then clear && interface;fi
+  if [[ $section == "help" || $section == "HELP"  ]];then clear && sectionhelplayout;fi
       checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//' | grep -x $section)
   if [[ $checksection == "" ]];then clear && interface;fi
   if [[ $checksection == $section ]];then clear && install;fi
@@ -76,7 +78,7 @@ tee <<-EOF
 $buildshow
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    [ EXIT or Z ] - Exit
+    [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
@@ -84,9 +86,93 @@ EOF
   read -erp "↪️ Type App-Name to install and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
   if [[ $typed == "" ]];then clear && install;fi
+  if [[ $typed == "help" || $typed == "HELP"  ]];then clear && helplayout;fi
      buildapp=$(ls -1p /opt/apps/${section}/compose/ | $(command -v sed) -e 's/.yml//g' | grep -x $typed)
   if [[ $buildapp == "" ]];then clear && install;fi
-  if [[ $buildapp == $typed ]];then runinstall;fi
+  if [[ $buildapp == $typed ]];then clear && runinstall;fi
+}
+sectionhelplayout() {
+helpshowsection=$(ls -1p /opt/apps/.help/ | sed -e 's/.me//g' )
+tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚀 Help
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$helpshowsection
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    [ EXIT or Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+  read -erp "↪️ Type App-Name to show short informations and Press [ENTER]: " typed </dev/tty
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
+  if [[ $typed == "" ]];then clear && helplayout;fi
+     helpappsection=$(ls -1p /opt/apps/.help/ | $(command -v sed) -e 's/.me//g' | grep -x $typed)
+  if [[ $helpappsection == "" ]];then clear && sectionhelplayout;fi
+  if [[ $helpappsection == $typed ]];then clear && showhelpsection;fi
+}
+showhelpsection() {
+showhelptypedsection=$(cat /opt/apps/.help/${typed}.me )
+tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚀 Section Help of ${typed}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$showhelptypedsection
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    [ EXIT or Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+  read -erp "Confirm Info | PRESS [ENTER] "  typed </dev/tty
+  clear && sectionhelplayout
+}
+helplayout() {
+section=${section}
+helpshow=$(ls -1p /opt/apps/${section}/.help/ | sed -e 's/.me//g' )
+tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚀 App Help of ${section}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$helpshow
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    [ EXIT or Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+  read -erp "↪️ Type App-Name to get help and Press [ENTER]: " typed </dev/tty
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
+  if [[ $typed == "" ]];then clear && helplayout;fi
+     helpapp=$(ls -1p /opt/apps/${section}/.help/ | $(command -v sed) -e 's/.me//g' | grep -x $typed)
+  if [[ $helpapp == "" ]];then clear && helplayout;fi
+  if [[ $helpapp == $typed ]];then clear && showhelp;fi
+}
+showhelp() {
+section=${section}
+showhelptyped=$(cat /opt/apps/${section}/.help/${typed}.me )
+tee <<-EOF
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚀 App Help of ${typed}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$showhelptyped
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    [ EXIT or Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+EOF
+  read -erp "Confirm Info | PRESS [ENTER] " typed </dev/tty
+  clear && helplayout
+
 }
 runinstall() {
   compose="compose/docker-compose.yml"
