@@ -116,6 +116,7 @@ EOF
         $(command -v sed) -i "s/<APP>/${typed}/g" $basefolder/$composeoverwrite
      fi
   fi
+  if [[ -f $appfolder/${section}/compose/.overwrite/${typed}.overwrite.yml ]];then $(command -v rsync) $appfolder/${section}/compose/.overwrite/${typed}.overwrite.yml $basefolder/$composeoverwrite -aq --info=progress2 -hv;fi
   if [[ ! -d $basefolder/${typed} ]];then
      folder=$basefolder/${typed}
      for i in ${folder}; do
