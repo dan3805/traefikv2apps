@@ -239,6 +239,7 @@ conf=$basefolder/authelia/configuration.yml
 confnew=$basefolder/authelia/configuration.yml.new
 confbackup=$basefolder/authelia/configuration.yml.backup
 authadd=$(cat $conf | grep -qE '${typed}' && echo true || false)
+
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
      $(grep "model name" /proc/cpuinfo | cut -d ' ' -f3- | head -n1 |grep -qE 'i7|i9' 1>/dev/null 2>&1)
@@ -296,9 +297,9 @@ $list
 EOF
   read -erp "↪️ Type App-Name to remove and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then interface;fi
-  if [[ $typed == "" ]];then removeapp;fi
+  if [[ $typed == "" ]];then clear && removeapp;fi
      checktyped=$($(command -v docker) ps -aq --format={{.Names}} | grep -x $typed)
-  if [[ $checktyped == $typed ]];then deleteapp;fi
+  if [[ $checktyped == $typed ]];then clear && deleteapp;fi
 }
 deleteapp() {
   basefolder="/opt/appdata"
@@ -343,7 +344,7 @@ EOF
     ${typed} App Remove finished
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-    sleep 5 && backupcomposer && removeapp
+    sleep 2 && backupcomposer && removeapp
   else
      removeapp
   fi
