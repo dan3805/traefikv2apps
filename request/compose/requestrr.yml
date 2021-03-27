@@ -27,7 +27,7 @@ services:
       - 'traefik.http.routers.requestrr-rtr.tls=true'
       - 'traefik.http.routers.requestrr-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.requestrr-rtr.middlewares=chain-authelia@file'
-      - 'traefik.http.routers.requestrr-rtr.service=uploader-svc'
+      - 'traefik.http.routers.requestrr-rtr.service=requestrr-svc'
       - 'traefik.http.services.requestrr-svc.loadbalancer.server.port=4545'
 
 networks:
