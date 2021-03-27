@@ -10,7 +10,7 @@ services:
       - 'TZ=${TZ}'
       - 'UMASK=022'
       - 'PORT=5060'
-    image: '<DOCKRHUBorGHRCIO/><REPO>/<IMAGE>:<VERSION>'
+    image: 'voidp/mellow'
     restart: 'unless-stopped'
     ports:
       - '127.0.0.1:5060:5060'
