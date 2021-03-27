@@ -53,3 +53,4 @@ volumes:
     driver: local-persist
     driver_opts:
       mountpoint: /mnt
+  tmpfs:
