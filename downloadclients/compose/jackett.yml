@@ -9,7 +9,7 @@ services:
       - 'PUID=${ID}'
       - 'TZ=${TZ}'
       - 'UMASK=022'
-      - ÄAUTO_UPDATE=true'
+      - 'AUTO_UPDATE=true'
     image: 'ghcr.io/linuxserver/jackett'
     restart: 'unless-stopped'
     ports:
