@@ -331,7 +331,7 @@ authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x 'autheli
 conf=$basefolder/authelia/configuration.yml
 confnew=$basefolder/authelia/configuration.yml.new
 confbackup=$basefolder/authelia/configuration.yml.backup
-authadd=$(cat $conf | grep -qE '${typed}')
+authadd=$(cat $conf | grep -E ${typed})
 
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
