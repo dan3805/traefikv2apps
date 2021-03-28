@@ -6,7 +6,7 @@
 typed=plex
   container=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x ${typed})
   if [[ $container == ${typed} ]];then
-     docker="stop rm"
+     docker=${typed}
      for i in ${docker}; do
      $(command -v docker) exec $i bash -c "apt update -y"
      $(command -v docker) exec $i bash -c " -y install cmake pkg-config python ocl-icd-dev libegl1-mesa-dev ocl-icd-opencl-dev libdrm-dev libxfixes-dev libxext-dev llvm-7-dev clang-7 libclang-7-dev libtinfo-dev libedit-dev zlib1g-dev build-essential git"
