@@ -274,9 +274,10 @@ autoscancheck() {
 $(docker ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
 code=$?
 if [[ $code -eq 0 ]];then
-  #if [[ ! -f $basefolder/${typed}/config.yml ]];then
    $(command -v rsync) $appfolder/.subactions/compose/${typed}.config.yml $basefolder/${typed}/config.yml -aq --info=progress2 -hv
    $(command -v bash) $appfolder/.subactions/compose/${typed}.sh
+fi
+  #if [[ ! -f $basefolder/${typed}/config.yml ]];then
   #else
 #tee <<-EOF
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -288,10 +289,10 @@ if [[ $code -eq 0 ]];then
 #  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
 #  clear
 #  fi
-  if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
-  if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
-  clear && interface
-fi
+#  if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
+#  if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
+#  clear && interface
+#fi
 }
 plexclaim() {
 compose="compose/docker-compose.yml"
