@@ -286,7 +286,7 @@ if [[ $code -eq 0 ]];then
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 #EOF
 #  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
-$  clear
+#  clear
 #  fi
   if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
   if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
