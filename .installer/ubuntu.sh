@@ -194,7 +194,7 @@ EOF
   if [[ ${section} == "mediaserver" || ${section} == "encoder" ]];then
      gpu="i915 nvidia"
      for i in ${gpu}; do
-        TDV=$($(command -v lshw) -C video | $(command -v grep) -qE $i && echo true || echo false)
+        TDV=$($(command -v lshw) -C video | grep -qE $i && echo true || echo false)
         if [[ $TDV == "true" ]];then $(command -v rsync) $appfolder/${section}/compose/gpu/$i.yml $basefolder/$composeoverwrite -aq --info=progress2 -hv;fi
      done
      if [[ -f $basefolder/$composeoverwrite ]];then
