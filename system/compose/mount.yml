@@ -14,6 +14,8 @@ services:
       - 'PUID=${ID}'
       - 'TZ=${TZ}'
     image: 'ghcr.io/doob187/mount'
+    networks:
+      - proxy
     restart: 'unless-stopped'
     security_opt:
       - 'apparmor=unconfined'

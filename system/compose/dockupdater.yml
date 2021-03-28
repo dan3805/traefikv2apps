@@ -4,7 +4,6 @@ services:
         container_name: dockupdater
         environment:
             - CLEANUP=true
-            - RUN_ONCE=true
             - LOG_LEVEL=info
             - LABEL=true
             - WAIT=180
