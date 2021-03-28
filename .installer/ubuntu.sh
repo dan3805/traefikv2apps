@@ -197,10 +197,12 @@ EOF
         TDV=$($(command -v lshw) -C video | $(command -v grep) -qE $i && echo true || echo false)
         if [[ $TDV == "true" ]];then $(command -v rsync) $appfolder/${section}/compose/gpu/$i.yml $basefolder/$composeoverwrite -aq --info=progress2 -hv;fi
      done
-     if [[ $(uname) == "Darwin" ]];then
-        $(command -v sed) -i '' "s/<APP>/${typed}/g" $basefolder/$composeoverwrite
-     else
-        $(command -v sed) -i "s/<APP>/${typed}/g" $basefolder/$composeoverwrite
+     if [[ -f $basefolder/$composeoverwrite ]];then
+        if [[ $(uname) == "Darwin" ]];then
+           $(command -v sed) -i '' "s/<APP>/${typed}/g" $basefolder/$composeoverwrite
+        else
+           $(command -v sed) -i "s/<APP>/${typed}/g" $basefolder/$composeoverwrite
+        fi
      fi
   fi
   if [[ -f $appfolder/${section}/compose/.overwrite/${typed}.overwrite.yml ]];then $(command -v rsync) $appfolder/${section}/compose/.overwrite/${typed}.overwrite.yml $basefolder/$composeoverwrite -aq --info=progress2 -hv;fi
@@ -232,6 +234,7 @@ EOF
      if [[ $errorcode -ne 0 ]];then
   tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    ❌ ERROR
     compose check of ${typed} was failed
     Return code was ${errorcode}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -289,7 +292,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Sorry we can  not find any runnings Arrs/Plex/Emby or Jellfin
+    Sorry we can not find any running Arrs/Plex/Emby or Jellfin
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
   if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
