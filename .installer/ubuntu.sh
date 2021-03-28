@@ -288,16 +288,8 @@ EOF
   read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear
   fi
-tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ❌ ERROR
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Sorry we can not find any running Arrs/Plex/Emby or Jellfin
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
   if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
   if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
-  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear && interface
 fi
 }
