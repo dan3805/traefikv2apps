@@ -152,7 +152,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 EOF
-   read -esp "Enter a password for autoscan " $USERAUTOSCAN
+   read -esp "Enter a password for autoscan " $PASSWORD
 
 if [[ $PASSWORD != "" ]]; then
    if [[ $(uname) == "Darwin" ]]; then
