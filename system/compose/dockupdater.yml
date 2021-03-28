@@ -6,11 +6,11 @@ services:
     container_name: 'dockupdater'
     image: dockupdater/dockupdater
     environment:
-      - CLEANUP=true
-      - LOG_LEVEL=info
-      - INTERVAL=720
-      - LABEL=true
-      - WAIT=180
+      - 'CLEANUP=true'
+      - 'LOG_LEVEL=info'
+      - 'INTERVAL=7200'
+      - 'LABEL=true'
+      - 'WAIT=180'
     restart: 'unless-stopped'
     security_opt:
       - 'no-new-privileges:true'
