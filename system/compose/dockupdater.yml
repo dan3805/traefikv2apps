@@ -1,16 +1,23 @@
-version: '3.3'
+version: '3'
+
 services:
-    dockupdater:
-        container_name: dockupdater
-        environment:
-            - CLEANUP=true
-            - LOG_LEVEL=info
-            - LABEL=true
-            - WAIT=180
-            - SKIP_START_NOTIF=true
-        volumes:
-            - '/var/run/docker.sock:/var/run/docker.sock'
-        image: dockupdater/dockupdater
+  dockupdater:
+    hostname: 'dockupdater'
+    container_name: 'dockupdater'
+    image: dockupdater/dockupdater
+    environment:
+      - CLEANUP=true
+      - LOG_LEVEL=info
+      - INTERVAL=720
+      - LABEL=true
+      - WAIT=180
+    restart: 'unless-stopped'
+    security_opt:
+      - 'no-new-privileges:true'
+    networks:
+      - proxy
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
 
 networks:
   proxy:
