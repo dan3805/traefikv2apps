@@ -272,22 +272,22 @@ vnstatcheck() {
 }
 autoscancheck() {
 $(docker ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
-errorcode=$?
-if [[ $errorcode -eq 0 ]];then
-  if [[ ! -f $basefolder/${typed}/config.yml ]];then
-     $(command -v rsync) $appfolder/.subactions/compose/${typed}.config.yml $basefolder/${typed}/config.yml -aq --info=progress2 -hv
-     $(command -v bash) $appfolder/.subactions/compose/${typed}.sh
-  else
-tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    🚀 ${typed} config found
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    We found an existing config.yml for ${typed}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
-  clear
-  fi
+code=$?
+if [[ $code -eq 0 ]];then
+  #if [[ ! -f $basefolder/${typed}/config.yml ]];then
+   $(command -v rsync) $appfolder/.subactions/compose/${typed}.config.yml $basefolder/${typed}/config.yml -aq --info=progress2 -hv
+   $(command -v bash) $appfolder/.subactions/compose/${typed}.sh
+  #else
+#tee <<-EOF
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#    🚀 ${typed} config found
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#    We found an existing config.yml for ${typed}
+#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#EOF
+#  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+$  clear
+#  fi
   if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
   if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
   clear && interface
