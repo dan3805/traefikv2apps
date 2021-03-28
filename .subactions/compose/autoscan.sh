@@ -166,10 +166,10 @@ else
 fi
 }
 runautoscan() {
-$(docker ps -aq --format={{.Names}} | grep -E 'arr' 1>/dev/null 2>&1)
-errorcode=$?
+    $($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
+    errorcode=$?
 if [[ $errorcode -eq 0 ]]; then
-   anchor && arrs && targets && addauthuser && addauthuser
+   anchor && arrs && targets && addauthuser && addauthpassword
 else
      app=${typed}
      for i in ${app}; do
@@ -187,7 +187,7 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     ❌ ERROR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Sorry we cannot find any runnings Arrs
+    Sorry we cannot find any running Arrs , Plex , Emby or Jellyfin 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 fi
