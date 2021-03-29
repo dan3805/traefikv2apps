@@ -107,7 +107,7 @@ $helpshowsection
 
 EOF
   read -erp "↪️ Type App-Name to show short informations and Press [ENTER]: " typed </dev/tty
-  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && headinterface;fi
   if [[ $typed == "" ]];then clear && helplayout;fi
      helpappsection=$(ls -1p /opt/apps/.help/ | $(command -v sed) -e 's/.me//g' | grep -x $typed)
   if [[ $helpappsection == "" ]];then clear && sectionhelplayout;fi
