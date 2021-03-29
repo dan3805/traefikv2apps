@@ -322,6 +322,7 @@ EOF
 }
 subtasks() {
 basefolder="/opt/appdata"
+appfolder="/opt/apps"
 source $basefolder/compose/.env
 authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x 'authelia' 1>/dev/null 2>&1 && echo true || echo false)
 conf=$basefolder/authelia/configuration.yml
