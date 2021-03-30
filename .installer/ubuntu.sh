@@ -335,8 +335,8 @@ authadd=$(cat $conf | grep -E ${typed})
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
   if [[ -f $appfolder/.subactions/compose/${typed}.yml ]];then $(command -v ansible-playbook) $appfolder/.subactions/compose/${typed}.yml;fi
      $(grep "model name" /proc/cpuinfo | cut -d ' ' -f3- | head -n1 |grep -qE 'i7|i9' 1>/dev/null 2>&1)
-     errorcode=$?
-     if [[ $errorcode -eq 0 ]];then
+     setcode=$?
+     if [[ $setcode -eq 0 ]];then
         if [[ -f $appfolder/.subactions/compose/${typed}.sh ]];then $(command -v bash) $appfolder/.subactions/compose/${typed}.sh;fi
      fi
   if [[ $authadd == "" ]];then
@@ -394,6 +394,7 @@ EOF
   if [[ $checktyped == $typed ]];then clear && deleteapp;fi
 }
 deleteapp() {
+  typed=${typed}
   basefolder="/opt/appdata"
   source $basefolder/compose/.env
   conf=$basefolder/authelia/configuration.yml
@@ -424,12 +425,13 @@ EOF
      fi
      if [[ $auth == ${typed} ]];then
         if [[ ! -x $(command -v bc) ]];then $(command -v apt) install bc -yqq 1>/dev/null 2>&1;fi
+           source $basefolder/compose/.env
            authrmapp=$(cat -An $conf | grep -x ${typed}.${DOMAIN})
            authrmapp2=$(echo "$(${authrmapp} + 1)" | bc)
         if [[ $authrmapp != "" ]];then sed -i '${authrmapp};${authrmapp2}d' $conf;fi
            $($(command -v docker) ps -aq --format '{{.Names}}' | grep -x authelia 1>/dev/null 2>&1)
-           errorcode=$?
-        if [[ $errorcode -eq 0 ]];then $(command -v docker) restart authelia;fi
+           newcode=$?
+        if [[ $newcode -eq 0 ]];then $(command -v docker) restart authelia;fi
      fi
     tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
