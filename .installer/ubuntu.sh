@@ -321,13 +321,15 @@ EOF
   fi
 }
 subtasks() {
+typed=${typed}
+section=${section}
 basefolder="/opt/appdata"
 appfolder="/opt/apps"
 source $basefolder/compose/.env
 authcheck=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -x 'authelia' 1>/dev/null 2>&1 && echo true || echo false)
 conf=$basefolder/authelia/configuration.yml
-confnew=$basefolder/authelia/configuration.yml.new
-confbackup=$basefolder/authelia/configuration.yml.backup
+confnew=$basefolder/authelia/.new-configuration.yml.new
+confbackup=$basefolder/authelia/.backup-configuration.yml.backup
 authadd=$(cat $conf | grep -E ${typed})
 
   if [[ ! -x $(command -v ansible) || ! -x $(command -v ansible-playbook) ]];then $(command -v apt) ansible --reinstall -yqq;fi
@@ -342,7 +344,7 @@ authadd=$(cat $conf | grep -E ${typed})
      { head -n 38 $conf;
      echo "\
     - domain: ${typed}.${DOMAIN}
-      policy: bypass"; tail -n +40 $conf; } > $confnew
+      policy: bypass"; tail -n +39 $conf; } > $confnew
         if [[ -f $conf ]];then $(command -v rsync) $conf $confbackup -aq --info=progress2 -hv;fi
         if [[ -f $conf ]];then $(command -v rsync) $confnew $conf -aq --info=progress2 -hv;fi
         if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
