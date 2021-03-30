@@ -1,10 +1,11 @@
+---
 version: '3'
 
 services:
   dockupdater:
     hostname: 'dockupdater'
     container_name: 'dockupdater'
-    image: dockupdater/dockupdater
+    image: 'dockupdater/dockupdater'
     environment:
       - 'CLEANUP=true'
       - 'LOG_LEVEL=info'
