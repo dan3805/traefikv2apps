@@ -8,6 +8,7 @@ composeoverwrite="compose/docker-compose.override.yml"
 anchor() {
 if [[ ! -x $(command -v rclone) ]];then curl https://rclone.org/install.sh | sudo bash >/dev/null 2>&1;fi
 echo "\
+
 anchors:" >> $basefolder/${typed}/config.yml
 IFS=$'\n'
 filter="$1"
@@ -31,7 +32,7 @@ echo "\
 
 triggers:
   manual:
-    priority: 0" $basefolder/${typed}/config.yml
+    priority: 0" >> $basefolder/${typed}/config.yml
 radarr=$(docker ps -aq --format={{.Names}} | grep -E 'radarr' 1>/dev/null 2>&1 && echo true || echo false)
 rrun=$(docker ps -aq --format={{.Names}} | grep 'rada')
 if [[ $radarr == "true" ]];then
