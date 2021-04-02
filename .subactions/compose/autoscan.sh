@@ -60,7 +60,6 @@ lrun=$(docker ps -aq --format={{.Names}} | grep 'lidarr')
 if [[ $lidarr == "true" ]];then
 echo "\
   lidarr:" >> $basefolder/${typed}/config.yml
-
    for i in ${lrun};do
 echo "\
     - name: $i
@@ -78,9 +77,10 @@ echo -n "\
       exclude:
         - '\.(srt|pdf)$'
       paths:
-      - path: /mnt/unionfs/
-
-  targets:" >> $basefolder/${typed}/config.yml
+      - path: /mnt/unionfs/" >> $basefolder/${typed}/config.yml
+echo -n "\
+  targets:
+" >> $basefolder/${typed}/config.yml
 plex=$(docker ps -aq --format={{.Names}} | grep -E 'plex' 1>/dev/null 2>&1 && echo true || echo false)
 prun=$(docker ps -aq --format={{.Names}} | grep 'plex')
 token=$(cat "/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Preferences.xml" | sed -e 's;^.* PlexOnlineToken=";;' | sed -e 's;".*$;;' | tail -1)
