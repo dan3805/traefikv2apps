@@ -150,9 +150,9 @@ EOF
 
 if [[ $PASSWORD != "" ]]; then
    if [[ $(uname) == "Darwin" ]]; then
-      sed -i '' "s/<PASSWORD>/$USERAUTOSCAN/g" $basefolder/${typed}/config.yml
+      sed -i '' "s/<PASSWORD>/$PASSWORD/g" $basefolder/${typed}/config.yml
    else
-      sed -i "s/<PASSWORD>/$USERAUTOSCAN/g" $basefolder/${typed}/config.yml
+      sed -i "s/<PASSWORD>/$PASSWORD/g" $basefolder/${typed}/config.yml
    fi
 else
   echo "Password for autoscan cannot be empty"
