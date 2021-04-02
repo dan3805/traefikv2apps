@@ -18,7 +18,7 @@ services:
     networks:
       - proxy
     restart: 'unless-stopped'
-    label:
+    labels:
       - 'dockupdater.enable=false'
     security_opt:
       - 'apparmor=unconfined'
