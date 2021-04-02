@@ -18,6 +18,8 @@ services:
     networks:
       - proxy
     restart: 'unless-stopped'
+    label:
+      - 'dockupdater.enable=false'
     security_opt:
       - 'apparmor=unconfined'
     volumes:
