@@ -29,7 +29,6 @@ done
 }
 arrs() {
 echo "\
-
 triggers:
   manual:
     priority: 0" >> $basefolder/${typed}/config.yml
@@ -77,8 +76,8 @@ echo -n "\
       exclude:
         - '\.(srt|pdf)$'
       paths:
-      - path: /mnt/unionfs/" >> $basefolder/${typed}/config.yml
-echo -n "\
+      - path: /mnt/unionfs/
+
   targets:
 " >> $basefolder/${typed}/config.yml
 plex=$(docker ps -aq --format={{.Names}} | grep -E 'plex' 1>/dev/null 2>&1 && echo true || echo false)
