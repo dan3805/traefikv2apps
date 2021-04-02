@@ -32,11 +32,21 @@
       "contributions": [
         "test"
       ]
+    },
+    {
+      "login": "GamermadHD",
+      "name": "Keiran Tronier",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7513233?v=4",
+      "profile": "https://github.com/GamermadHD",
+      "contributions": [
+        "infra",
+        "code"
+      ]
     }
   ],
   "badgeTemplate": "<a href=\"#contributors-\"><img alt=\"All Contributors\" src=\"https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg\"/></a>",
   "contributorsPerLine": 7,
-  "projectName": "Traefikv2",
+  "projectName": "traefikv2apps",
   "projectOwner": "doob187",
   "repoType": "github",
   "repoHost": "https://github.com",
