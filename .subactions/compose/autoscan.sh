@@ -78,7 +78,7 @@ echo -n "\
       paths:
       - path: /mnt/unionfs/
 
-  targets:
+targets:
 " >> $basefolder/${typed}/config.yml
 plex=$(docker ps -aq --format={{.Names}} | grep -E 'plex' 1>/dev/null 2>&1 && echo true || echo false)
 prun=$(docker ps -aq --format={{.Names}} | grep 'plex')
