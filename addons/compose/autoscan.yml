@@ -19,7 +19,8 @@ services:
     volumes:
       - '/opt/appdata/autoscan:/config:rw'
       - '/opt/appdata/plex:/data/plex:ro'
-      - '/opt/appdata/emby:/data/emby:ro'      
+      - '/opt/appdata/emby:/data/emby:ro'
+      - '/opt/appdata/jellyfin:/data/jellyfin:ro'
       - 'unionfs:/mnt'
       - '/etc/locatime:/etc/localtime:ro'
     labels:

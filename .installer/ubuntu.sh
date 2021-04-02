@@ -62,7 +62,7 @@ EOF
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then clear && headinterface;fi
   if [[ $section == "" ]];then clear && interface;fi
   if [[ $section == "help" || $section == "HELP"  ]];then clear && sectionhelplayout;fi
-      checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//' | grep -x $section)
+     checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//' | grep -x $section)
   if [[ $checksection == "" ]];then clear && interface;fi
   if [[ $checksection == $section ]];then clear && install;fi
 }
@@ -277,22 +277,6 @@ if [[ $code -eq 0 ]];then
    $(command -v rsync) $appfolder/.subactions/compose/${typed}.config.yml $basefolder/${typed}/config.yml -aq --info=progress2 -hv
    $(command -v bash) $appfolder/.subactions/compose/${typed}.sh
 fi
-  #if [[ ! -f $basefolder/${typed}/config.yml ]];then
-  #else
-#tee <<-EOF
-#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#    🚀 ${typed} config found
-#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#    We found an existing config.yml for ${typed}
-#━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-#EOF
-#  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
-#  clear
-#  fi
-#  if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
-#  if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
-#  clear && interface
-#fi
 }
 plexclaim() {
 compose="compose/docker-compose.yml"

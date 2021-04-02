@@ -92,8 +92,6 @@ echo "\
   $i:
     - url: http://$i:32400
       token: $token" >> $basefolder/${typed}/config.yml
-echo "\
-      - '/opt/appdata/$i:/data/$i:ro'" >> $basefolder/$composeoverwrite
    done
 fi
 
@@ -106,8 +104,6 @@ echo "\
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
-echo "\
-      - '/opt/appdata/$i:/data/$i:ro'" >> $basefolder/$composeoverwrite
    done
 fi
 jelly=$(docker ps -aq --format={{.Names}} | grep -E 'jelly' 1>/dev/null 2>&1 && echo true || echo false)
@@ -119,8 +115,6 @@ echo "\
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
-echo "\
-      - '/opt/appdata/$i:/data/$i:ro'" >> $basefolder/$composeoverwrite
    done
 fi
 }
