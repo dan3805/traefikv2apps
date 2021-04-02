@@ -19,25 +19,25 @@ done
 }
 headinterface() {
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 App Head Section Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
     [ 1 ] Install Apps
     [ 2 ] Remove  Apps
+    [ 3 ] Backup  Apps
 
-    [ 3 ] Create a Backup Docker-Compose File
+    [ 4 ] Create a Backup Docker-Compose File
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
   read -erp "↘️  Type Number and Press [ENTER]: " headsection </dev/tty
   case $headsection in
     1) clear && interface ;;
     2) clear && removeapp ;;
-    3) clear && backupcomposer && clear && headinterface ;;
+    3) clear && backupdocker ;;
+    4) clear && backupcomposer && clear && headinterface ;;
     help|HELP|Help) clear && sectionhelplayout ;;
     Z|z|exit|EXIT|Exit|close) exit ;;
     *) appstartup ;;
@@ -46,7 +46,6 @@ EOF
 interface() {
 buildshow=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//')
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 App Category Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -56,12 +55,11 @@ $buildshow
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
   read -erp "↘️  Type Section Name and Press [ENTER]: " section </dev/tty
   if [[ $section == "exit" || $section == "Exit" || $section == "EXIT" || $section  == "z" || $section == "Z" ]];then clear && headinterface;fi
   if [[ $section == "" ]];then clear && interface;fi
-  if [[ $section == "help" || $section == "HELP"  ]];then clear && sectionhelplayout;fi
+  if [[ $section == "help" || $section == "HELP" ]];then clear && sectionhelplayout;fi
      checksection=$(ls -1p /opt/apps/ | grep '/$' | $(command -v sed) 's/\/$//' | grep -x $section)
   if [[ $checksection == "" ]];then clear && interface;fi
   if [[ $checksection == $section ]];then clear && install;fi
@@ -70,7 +68,6 @@ install() {
 section=${section}
 buildshow=$(ls -1p /opt/apps/${section}/compose/ | sed -e 's/.yml//g' )
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 Apps to install under ${section} category
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -80,13 +77,11 @@ $buildshow
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
-
   read -erp "↪️ Type App-Name to install and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
   if [[ $typed == "" ]];then clear && install;fi
-  if [[ $typed == "help" || $typed == "HELP"  ]];then clear && helplayout;fi
+  if [[ $typed == "help" || $typed == "HELP" ]];then clear && helplayout;fi
      buildapp=$(ls -1p /opt/apps/${section}/compose/ | $(command -v sed) -e 's/.yml//g' | grep -x $typed)
   if [[ $buildapp == "" ]];then clear && install;fi
   if [[ $buildapp == $typed ]];then clear && runinstall;fi
@@ -94,7 +89,6 @@ EOF
 sectionhelplayout() {
 helpshowsection=$(ls -1p /opt/apps/.help/ | sed -e 's/.me//g' )
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -104,7 +98,6 @@ $helpshowsection
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
   read -erp "↪️ Type App-Name to show short informations and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && headinterface;fi
@@ -116,7 +109,6 @@ EOF
 showhelpsection() {
 showhelptypedsection=$(cat /opt/apps/.help/${typed}.me )
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 Help for ${typed}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -126,7 +118,6 @@ $showhelptypedsection
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
   read -erp "Confirm Info | PRESS [ENTER] "  typed </dev/tty
   clear && sectionhelplayout
@@ -135,7 +126,6 @@ helplayout() {
 section=${section}
 helpshow=$(ls -1p /opt/apps/${section}/.help/ | sed -e 's/.me//g' )
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 Help for ${section}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -145,7 +135,6 @@ $helpshow
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
   read -erp "↪️ Type App-Name to get help and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
@@ -158,7 +147,6 @@ showhelp() {
 section=${section}
 showhelptyped=$(cat /opt/apps/${section}/.help/${typed}.me )
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 Help for ${typed}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -168,11 +156,43 @@ $showhelptyped
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
   read -erp "Confirm Info | PRESS [ENTER] " typed </dev/tty
   clear && helplayout
+}
+backupdocker() {
+rundockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d')
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚀 Backup running Dockers
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+$rundockers
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    [ EXIT or Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+  read -erp "↪️ Type App-Name to Backup and Press [ENTER]: " typed </dev/tty
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
+  if [[ $typed == "" ]];then clear && install;fi
+  if [[ $typed == "help" || $typed == "HELP" ]];then clear && helplayout;fi
+     builddockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -x $typed)
+  if [[ $builddockers == "" ]];then clear && backupdocker;fi
+  if [[ $builddockers == $typed ]];then clear && runbackup;fi
+}
+runbackup() {
+typed=${typed}
+basefolder="/opt/appdata"
+if [[ -d $basefolder/${typed} ]];then
+   $(command -v docker) system prune -af >/dev/null 2>&1
+   $(command -v docker) run --rm -v /opt/appdata:/backup/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest backup ${typed}
+   $(command -v find) $basefolder/${typed} -exec $(command -v chown) -hR 1000:1000 {} \;
+   $(command -v docker) system prune -af >/dev/null 2>&1
+   clear && backupcomposer && backupdocker
+else
+   clear && backupcomposer && backupdocker
+fi
 }
 runinstall() {
   compose="compose/docker-compose.yml"
@@ -242,8 +262,8 @@ EOF
   read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear && interface
      else
-         $(command -v docker-compose) pull ${typed} 1>/dev/null 2>&1
-         $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
+       $(command -v docker-compose) pull ${typed} 1>/dev/null 2>&1
+       $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
      fi
   fi
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
