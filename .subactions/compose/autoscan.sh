@@ -89,7 +89,7 @@ if [[ $token == "" ]];then
 fi
 if [[ $plex == "true" ]];then
    for i in ${prun};do
-echo "\
+echo -n "\
   $i:
     - url: http://$i:32400
       token: $token" >> $basefolder/${typed}/config.yml
@@ -101,7 +101,7 @@ erun=$(docker ps -aq --format={{.Names}} | grep 'emby')
 token=youneedtoreplacethemselfnow
 if [[ $emby == "true" ]];then
    for i in ${erun};do
-echo "\
+echo -n "\
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
@@ -112,7 +112,7 @@ jrun=$(docker ps -aq --format={{.Names}} | grep 'jelly')
 token=youneedtoreplacethemselfnow
 if [[ $jelly == "true" ]];then
    for i in ${jrun};do
-echo "\
+echo -n "\
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
