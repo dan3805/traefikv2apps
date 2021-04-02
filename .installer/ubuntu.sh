@@ -185,10 +185,11 @@ runbackup() {
 typed=${typed}
 basefolder="/opt/appdata"
 if [[ -d $basefolder/${typed} ]];then
-   $(command -v docker) system prune -af >/dev/null 2>&1
-   $(command -v docker) run --rm -v /opt/appdata:/backup/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest backup ${typed}
+   $(command -v docker) system prune -af 1>/dev/null 2>&1
+   $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
+   $(command -v docker) run --rm -v /opt/appdata:/backup/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest backup ${typed} 
    $(command -v find) $basefolder/${typed} -exec $(command -v chown) -hR 1000:1000 {} \;
-   $(command -v docker) system prune -af >/dev/null 2>&1
+   $(command -v docker) system prune -af 1>/dev/null 2>&1
    clear && backupcomposer && backupdocker
 else
    clear && backupcomposer && backupdocker
