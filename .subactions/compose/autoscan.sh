@@ -11,30 +11,35 @@ if [[ -f $basefolder/${typed}/autoscan.db ]];then $(command -v rm) -rf $basefold
 anchor() {
 if [[ ! -x $(command -v rclone) ]];then curl https://rclone.org/install.sh | sudo bash >/dev/null 2>&1;fi
 echo "\
+anchors:
+  - /mnt/unionfs/.anchors/cloud.anchor
+  - /mnt/unionfs/.anchors/local.anchor" >> $basefolder/${typed}/config.yml
 
-anchors:" >> $basefolder/${typed}/config.yml
 IFS=$'\n'
 filter="$1"
 mountd=$(docker ps -aq --format={{.Names}} | grep -E "mount" && echo true || echo false)
 if [[ $mountd == "false" ]]; then
-   config=$basefolder/plexguide/rclone.conf
+   config=$basefolder/uploader/rclone.conf
 else
-   config=$basefolder/mount/rclone/rclone-docker.conf
+   config=$basefolder/mount/rclone.conf
 fi
+
 mapfile -t mounts < <(eval rclone listremotes --config=${config} | grep "$filter" | sed -e 's/://g' | sed '/union/d' | sed '/GDSA/d' | sort -r)
 ##### RUN MOUNT #####
 for i in ${mounts[@]}; do
-  rclone mkdir $i:/.anchors --config=${config}
-  rclone touch $i:/.anchors/$i.anchor --config=${config}
-echo "\
+  $(command -v rclone) mkdir $i:/.anchors --config=${config}
+  $(command -v rclone) touch $i:/.anchors/$i.anchor --config=${config}
+echo -n "\
   - /mnt/unionfs/.anchors/$i.anchor" >> $basefolder/${typed}/config.yml
 done
 }
+
 arrs() {
 echo "\
 triggers:
   manual:
     priority: 0" >> $basefolder/${typed}/config.yml
+
 radarr=$(docker ps -aq --format={{.Names}} | grep -E 'radarr' 1>/dev/null 2>&1 && echo true || echo false)
 rrun=$(docker ps -aq --format={{.Names}} | grep 'rada')
 if [[ $radarr == "true" ]];then
@@ -46,8 +51,9 @@ echo "\
       priority: 2" >> $basefolder/${typed}/config.yml
    done
 fi
+
 sonarr=$(docker ps -aq --format={{.Names}} | grep -E 'sonarr' 1>/dev/null 2>&1 && echo true || echo false)
-srun=$(docker ps -aq --format={{.Names}} | grep -E 'sonarr')
+srun=$(docker ps -aq --format={{.Names}} | grep -E 'sona')
 if [[ $sonarr == "true" ]];then
 echo "\
   sonarr:" >> $basefolder/${typed}/config.yml
@@ -57,8 +63,9 @@ echo "\
       priority: 2" >> $basefolder/${typed}/config.yml
    done
 fi
+
 lidarr=$(docker ps -aq --format={{.Names}} | grep -E 'lidarr' 1>/dev/null 2>&1 && echo true || echo false)
-lrun=$(docker ps -aq --format={{.Names}} | grep 'lidarr')
+lrun=$(docker ps -aq --format={{.Names}} | grep 'lida')
 if [[ $lidarr == "true" ]];then
 echo "\
   lidarr:" >> $basefolder/${typed}/config.yml
@@ -69,6 +76,7 @@ echo "\
    done
 fi
 }
+
 targets() {
 ## inotify adding for the /mnt/unionfs
 echo -n "\
@@ -83,6 +91,7 @@ echo -n "\
 
 targets:
 " >> $basefolder/${typed}/config.yml
+
 plex=$(docker ps -aq --format={{.Names}} | grep -E 'plex' 1>/dev/null 2>&1 && echo true || echo false)
 prun=$(docker ps -aq --format={{.Names}} | grep 'plex')
 token=$(cat "/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Preferences.xml" | sed -e 's;^.* PlexOnlineToken=";;' | sed -e 's;".*$;;' | tail -1)
@@ -109,6 +118,7 @@ echo -n "\
       token: $token" >> $basefolder/${typed}/config.yml
    done
 fi
+
 jelly=$(docker ps -aq --format={{.Names}} | grep -E 'jelly' 1>/dev/null 2>&1 && echo true || echo false)
 jrun=$(docker ps -aq --format={{.Names}} | grep 'jelly')
 token=youneedtoreplacethemselfnow
@@ -121,6 +131,7 @@ echo -n "\
    done
 fi
 }
+
 addauthuser() {
 tee <<-EOF
 
@@ -141,6 +152,7 @@ else
   addauthuser
 fi
 }
+
 addauthpassword() {
 tee <<-EOF
 
@@ -162,6 +174,7 @@ else
   addauthpassword
 fi
 }
+
 runautoscan() {
     $($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
     errorcode=$?
@@ -189,4 +202,5 @@ tee <<-EOF
 EOF
 fi
 }
+
 runautoscan
