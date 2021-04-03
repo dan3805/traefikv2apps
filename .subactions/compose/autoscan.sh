@@ -5,6 +5,9 @@
 basefolder="/opt/appdata"
 typed=autoscan
 composeoverwrite="compose/docker-compose.override.yml"
+headrm() {
+if [[ -f $basefolder/${typed}/autoscan.db ]];then $(command -v rm) -rf $basefolder/${typed}/autoscan.db;fi
+}
 anchor() {
 if [[ ! -x $(command -v rclone) ]];then curl https://rclone.org/install.sh | sudo bash >/dev/null 2>&1;fi
 echo "\
@@ -163,7 +166,7 @@ runautoscan() {
     $($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
     errorcode=$?
 if [[ $errorcode -eq 0 ]]; then
-   anchor && arrs && targets && addauthuser && addauthpassword
+   headrm && anchor && arrs && targets && addauthuser && addauthpassword
 else
      app=${typed}
      for i in ${app}; do
