@@ -9,7 +9,12 @@ headrm() {
 if [[ -f $basefolder/${typed}/autoscan.db ]];then $(command -v rm) -rf $basefolder/${typed}/autoscan.db;fi
 }
 anchor() {
-if [[ ! -x $(command -v rclone) ]];then curl https://rclone.org/install.sh | sudo bash >/dev/null 2>&1;fi
+if [[ ! -x $(command -v unzip) ]];then $(command -v apt) install unzip -yqq 1>/dev/null 2>&1;fi
+if [[ ! -x $(command -v rclone) ]];then $(command -v curl) https://rclone.org/install.sh | sudo bash 1>/dev/null 2>&1;fi
+if [[ ! -d "/mnt/unionfs/.anchors/" ]];then $(command -v mkdir) -p /mnt/unionfs/.anchors;fi
+if [[ ! -f "/mnt/unionfs/.anchors/cloud.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/cloud.anchor;fi
+if [[ ! -f "/mnt/unionfs/.anchors/local.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/local.anchor;fi
+
 echo "\
 anchors:
   - /mnt/unionfs/.anchors/cloud.anchor
