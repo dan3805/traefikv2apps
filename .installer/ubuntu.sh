@@ -489,7 +489,8 @@ EOF
   fi
 }
 updatecompose() {
-if [ ! -x $(command -v docker-compose) ] || [ -x $(command -v docker-compose) ];then 
+## existing 
+if [[ -x $(command -v docker-compose) ]];then 
    COMPOSE_VERSION=$($(command -v curl) --silent -fsSL https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
    INSTALLED_COMPOSE=$( (docker-compose --version 2> /dev/null || echo "0") | sed -E 's/(\S+ )(version )?([0-9][a-zA-Z0-9_.-]*)(, build .*)?/\3/')
    if [[ ${INSTALLED_COMPOSE} != ${COMPOSE_VERSION} ]];then
@@ -499,6 +500,15 @@ if [ ! -x $(command -v docker-compose) ] || [ -x $(command -v docker-compose) ];
       $(command -v chmod) a=rx,u+w /usr/local/bin/docker-compose >/dev/null 2>&1 
       $(command -v chmod) a=rx,u+w /usr/bin/docker-compose >/dev/null 2>&1
    fi
+fi
+## not exist
+if [[ ! -x $(command -v docker-compose) ]];then 
+   COMPOSE_VERSION=$($(command -v curl) --silent -fsSL https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
+   sh -c "curl --silent -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose"
+   sh -c "curl --silent -L https://raw.githubusercontent.com/docker/compose/${COMPOSE_VERSION}/contrib/completion/bash/docker-compose > /etc/bash_completion.d/docker-compose"
+   if [[ ! -L "/usr/bin/docker-compose" ]];then $(command -v rm) -f /usr/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;fi
+   $(command -v chmod) a=rx,u+w /usr/local/bin/docker-compose >/dev/null 2>&1 
+   $(command -v chmod) a=rx,u+w /usr/bin/docker-compose >/dev/null 2>&1
 fi
 }
 
