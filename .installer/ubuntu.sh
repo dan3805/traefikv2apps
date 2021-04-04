@@ -257,6 +257,14 @@ EOF
          $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
      done
   fi
+  if [[ ${section} == "mediamanager" && ${typed} == "readarr" ]];then
+     folder=$storage/books
+     for i in ${folder}; do
+         $(command -v mkdir) -p $i
+         $(command -v find) $i -exec $(command -v chmod) a=rx,u+w {} \;
+         $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
+     done
+  fi
   if [[ -f $basefolder/$compose ]];then
      $(command -v cd) $basefolder/compose/
      $(command -v docker-compose) config 1>/dev/null 2>&1
