@@ -273,6 +273,13 @@ EOF
          $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
      done
   fi
+  if [[ ${section} == "system" && ${typed} == "mount" ]];then
+     checkmt=$($(command -v mountpoint) -q /mnt/unionfs && echo true || echo false)
+     mount=$($(command -v docker) ps -aq --format={{.Names}} | grep -x 'mount')
+     if [[ ${checkmnt} == "true" && ${mount} == "mount" ]];then $(command -v docker) stop mount 1>/dev/null 2>&1 && $(command -v fusermount) -uzq /mnt/unionfs 1>/dev/null 2>&1;fi
+     if [[ ${checkmnt} == "false" && ${mount} == "mount" ]];then $(command -v docker) stop mount 1>/dev/null 2>&1 && $(command -v fusermount) -uzq /mnt/unionfs 1>/dev/null 2>&1;fi
+     if [[ ${checkmnt} == "false" && ${mount} == "" ]];then $(command -v fusermount) -uzq /mnt/unionfs 1>/dev/null 2>&1;fi
+  fi
   if [[ -f $basefolder/$compose ]];then
      $(command -v cd) $basefolder/compose/
      $(command -v docker-compose) config 1>/dev/null 2>&1
