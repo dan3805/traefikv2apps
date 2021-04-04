@@ -198,6 +198,7 @@ fi
 runinstall() {
   compose="compose/docker-compose.yml"
   composeoverwrite="compose/docker-compose.override.yml"
+  storage="/mnt/downloads"
   appfolder="/opt/apps"
   basefolder="/opt/appdata"
     tee <<-EOF
@@ -248,6 +249,14 @@ EOF
   if [[ ${section} == "addons" && ${typed} == "vnstat" ]];then vnstatcheck;fi
   if [[ ${section} == "addons" && ${typed} == "autoscan" ]];then autoscancheck;fi
   if [[ ${section} == "mediaserver" && ${typed} == "plex" ]];then plexclaim;fi
+  if [[ ${section} == "downloadclients" && ${typed} == "jdownloader2" ]];then
+     folder=$storage/${typed}
+     for i in ${folder}; do
+         $(command -v mkdir) -p $i
+         $(command -v find) $i -exec $(command -v chmod) a=rx,u+w {} \;
+         $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
+     done
+  fi
   if [[ -f $basefolder/$compose ]];then
      $(command -v cd) $basefolder/compose/
      $(command -v docker-compose) config 1>/dev/null 2>&1
@@ -401,6 +410,7 @@ EOF
 deleteapp() {
   typed=${typed}
   basefolder="/opt/appdata"
+  storage="/mnt/downloads"
   source $basefolder/compose/.env
   conf=$basefolder/authelia/configuration.yml
   checktyped=$($(command -v docker) ps -aq --format={{.Names}} | grep -x $typed)
@@ -421,7 +431,18 @@ EOF
         folder=$basefolder/${typed}
     tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ${typed} folder removal started
+   App ${typed} folder removal started
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+        for i in ${folder}; do
+            $(command -v rm) -rf $i 1>/dev/null 2>&1
+        done
+     fi
+     if [[ -d $storage/${typed} ]];then 
+        folder=$storage/${typed}
+    tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Storage ${typed} folder removal started
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
         for i in ${folder}; do
