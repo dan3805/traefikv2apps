@@ -26,7 +26,7 @@ tee <<-EOF
     [ 1 ] Install  Apps
     [ 2 ] Remove   Apps
     [ 3 ] Backup   Apps
-    [ 4 ] Restore  Apps
+    [ 4 ] Restore  Apps [ !!! BETA !!! ]
 
     [ 5 ] Create a Backup Docker-Compose File
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
