@@ -23,11 +23,12 @@ tee <<-EOF
     🚀 App Head Section Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-    [ 1 ] Install Apps
-    [ 2 ] Remove  Apps
-    [ 3 ] Backup  Apps
+    [ 1 ] Install  Apps
+    [ 2 ] Remove   Apps
+    [ 3 ] Backup   Apps
+    [ 4 ] Restore  Apps
 
-    [ 4 ] Create a Backup Docker-Compose File
+    [ 5 ] Create a Backup Docker-Compose File
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -37,7 +38,8 @@ EOF
     1) clear && interface ;;
     2) clear && removeapp ;;
     3) clear && backupdocker ;;
-    4) clear && backupcomposer && clear && headinterface ;;
+    4) clear && restoredocker ;;
+    5) clear && backupcomposer && clear && headinterface ;;
     help|HELP|Help) clear && sectionhelplayout ;;
     Z|z|exit|EXIT|Exit|close) exit ;;
     *) appstartup ;;
@@ -160,6 +162,7 @@ EOF
   read -erp "Confirm Info | PRESS [ENTER] " typed </dev/tty
   clear && helplayout
 }
+### backup docker ###
 backupdocker() {
 rundockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d')
 tee <<-EOF
@@ -175,7 +178,7 @@ $rundockers
 EOF
   read -erp "↪️ Type App-Name to Backup and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
-  if [[ $typed == "" ]];then clear && install;fi
+  if [[ $typed == "" ]];then clear && backupdocker;fi
   if [[ $typed == "help" || $typed == "HELP" ]];then clear && helplayout;fi
      builddockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -x $typed)
   if [[ $builddockers == "" ]];then clear && backupdocker;fi
@@ -196,8 +199,55 @@ else
    clear && backupcomposer && backupdocker
 fi
 }
+### restore backup ###
+restoredocker() {
+runrestore=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz//g')
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚀 Restore Dockers
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+$runrestore
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    [ EXIT or Z ] - Exit
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+  read -erp "↪️ Type App-Name to Restore and Press [ENTER]: " typed </dev/tty
+  if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
+  if [[ $typed == "" ]];then clear && restoredocker;fi
+  if [[ $typed == "help" || $typed == "HELP" ]];then clear && helplayout;fi
+     builddockers=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz//g' | grep -x $typed)
+  if [[ $builddockers == "" ]];then clear && restoredocker;fi
+  if [[ $builddockers == $typed ]];then clear && runrestore;fi
+}
+runrestore() {
+updatecompose
+typed=${typed}
+basefolder="/opt/appdata"
+if [[ ! -d $basefolder/${typed} ]];then
+   folder=$basefolder/${typed}
+   for i in ${folder}; do
+       $(command -v mkdir) -p $i
+       $(command -v find) $i -exec $(command -v chmod) a=rx,u+w {} \;
+       $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
+   done
+fi
+builddockers=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz//g' | grep -x $typed)
+if [[ $builddockers == $typed ]];then
+   $(command -v docker) system prune -af 1>/dev/null 2>&1
+   $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
+   $(command -v docker) run --rm -v /opt/appdata:/backup/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore ${typed} 
+   $(command -v find) $basefolder/${typed} -exec $(command -v chown) -hR 1000:1000 {} \;
+   $(command -v docker) system prune -af 1>/dev/null 2>&1
+   clear && interface
+else
+   clear && restoredocker
+fi
+}
+### install app ###
 runinstall() {
-  ## check for existing docker-compose  or update is needed
+  ## check for existing docker-compose or update is needed
   updatecompose
   compose="compose/docker-compose.yml"
   composeoverwrite="compose/docker-compose.override.yml"
