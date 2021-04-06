@@ -164,7 +164,7 @@ EOF
 }
 ### backup docker ###
 backupdocker() {
-rundockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d')
+rundockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -v 'trae' | grep -v 'auth')
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 Backup running Dockers
@@ -214,7 +214,7 @@ fi
 }
 ### restore backup ###
 restoredocker() {
-runrestore=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz//g')
+runrestore=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz//g' | grep -v 'trae' | grep -v 'auth')
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 Restore Dockers
@@ -230,15 +230,39 @@ EOF
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
   if [[ $typed == "" ]];then clear && restoredocker;fi
   if [[ $typed == "help" || $typed == "HELP" ]];then clear && helplayout;fi
+  if [[ $typed == "all" || $typed == "All" || $typed == "ALL" ]];then clear && restoreall;fi
      builddockers=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz//g' | grep -x $typed)
   if [[ $builddockers == "" ]];then clear && restoredocker;fi
   if [[ $builddockers == $typed ]];then clear && runrestore;fi
+}
+restoreall() {
+apps=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz//g' | grep -v 'trae' | grep -v 'auth')
+for i in ${apps};do
+   updatecompose
+   basefolder="/opt/appdata"
+   if [[ ! -d $basefolder/$i ]];then
+      echo "Create folder for $i is running"  
+      folder=$basefolder/$i
+      for ii in ${folder}; do
+          $(command -v mkdir) -p $ii
+          $(command -v find) $ii -exec $(command -v chmod) a=rx,u+w {} \;
+          $(command -v find) $ii -exec $(command -v chown) -hR 1000:1000 {} \;
+      done
+   fi
+   $(command -v docker) system prune -af 1>/dev/null 2>&1
+   $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
+   echo "Restore for $i is running" && $(command -v docker) run --rm -v /opt/appdata:/restore/$i -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore $i
+   $(command -v find) $basefolder/$i -exec $(command -v chown) -hR 1000:1000 {} \;
+   $(command -v docker) system prune -af 1>/dev/null 2>&1
+done
+clear && restoredocker
 }
 runrestore() {
 updatecompose
 typed=${typed}
 basefolder="/opt/appdata"
 if [[ ! -d $basefolder/${typed} ]];then
+   echo "Create folder for ${typed} is running"  
    folder=$basefolder/${typed}
    for i in ${folder}; do
        $(command -v mkdir) -p $i
@@ -250,7 +274,7 @@ builddockers=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz
 if [[ $builddockers == $typed ]];then
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
-   $(command -v docker) run --rm -v /opt/appdata:/backup/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore ${typed} 
+   echo "Restore for ${typed} is running" && $(command -v docker) run --rm -v /opt/appdata:/restore/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore ${typed}
    $(command -v find) $basefolder/${typed} -exec $(command -v chown) -hR 1000:1000 {} \;
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    clear && interface
