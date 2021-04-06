@@ -173,16 +173,29 @@ tee <<-EOF
 $rundockers
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    [ EXIT or Z ] - Exit
+   [ all = Backup all running Container ]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   [ EXIT or Z ] - Exit
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
   read -erp "↪️ Type App-Name to Backup and Press [ENTER]: " typed </dev/tty
   if [[ $typed == "exit" || $typed == "Exit" || $typed == "EXIT" || $typed  == "z" || $typed == "Z" ]];then clear && interface;fi
   if [[ $typed == "" ]];then clear && backupdocker;fi
   if [[ $typed == "help" || $typed == "HELP" ]];then clear && helplayout;fi
+  if [[ $typed == "all" || $typed == "All" || $typed == "ALL" ]];then clear && backupall;fi
      builddockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -x $typed)
   if [[ $builddockers == "" ]];then clear && backupdocker;fi
   if [[ $builddockers == $typed ]];then clear && runbackup;fi
+}
+backupall() {
+$(command -v docker) system prune -af 1>/dev/null 2>&1
+$(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
+dockers=$(docker ps -aq --format '{{.Names}}' | sed '/^$/d' | grep -v 'trae' | grep -v 'auth')
+for i in ${dockers};do
+   echo "Backup for $i is running" && $(command -v docker) run --rm -v /opt/appdata:/backup/$i -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest backup $i 1>/dev/null 2>&1
+done
+$(command -v docker) system prune -af 1>/dev/null 2>&1
+clear && backupdocker
 }
 runbackup() {
 updatecompose
