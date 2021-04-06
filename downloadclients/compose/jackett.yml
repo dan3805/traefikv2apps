@@ -34,6 +34,24 @@ services:
       - 'traefik.http.routers.jackett-rtr.service=jackett-svc'
       - 'traefik.http.services.jackett-svc.loadbalancer.server.port=9117'
 
+  flaresolverr:
+    image: 'ghcr.io/flaresolverr/flaresolverr:latest'
+    container_name: 'flaresolverr'
+    hostname: 'flaresolverr'
+    depends_on:
+      - jackett
+    environment:
+      - 'LOG_LEVEL=info'
+      - 'LOG_HTML=false'
+      - 'CAPTCHA_SOLVER=hcaptcha-solver'
+    networks:
+      - proxy
+    security_opt:
+      - 'no-new-privileges:true'
+    ports:
+      - '127.0.0.1:8191:8191'
+    restart: 'unless-stopped'
+
 networks:
   proxy:
     driver: bridge
