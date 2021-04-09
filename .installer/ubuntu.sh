@@ -383,6 +383,7 @@ EOF
   fi
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
   if [[ ${section} == "downloadclients" ]];then subtasks;fi
+  if [[ ${typed} == "overseerr" ]];then overserrf2ban;fi
   if [[ ${typed} == "overseerr" || ${typed} == "petio" || ${typed} == "heimdall" || ${typed} == "librespeed" ]];then subtasks;fi
      $($(command -v docker) ps -aq --format '{{.Names}}{{.State}}' | grep -qE ${typed}running 1>/dev/null 2>&1)
      errorcode=$?
@@ -401,6 +402,17 @@ fi
 if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
 if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
 backupcomposer && clear && install
+}
+overserrf2ban() {
+OV2BAN="/etc/fail2ban/filter.d/overseerr.local"
+if [[ ! -f $OV2BAN ]];then
+cat << EOF | tee -a $OV2BAN
+[Definition]
+failregex = .*\[info\]\[Auth\]\: Failed sign-in attempt.*"ip":"<HOST>"
+EOF
+fi
+f2ban=$($(command -v systemctl) is-active fail2ban | grep -qE 'active' && echo true || echo false)
+if [[ $f2ban != "false" ]];then $(command -v systemctl) reload-or-restart fail2ban.service 1>/dev/null 2>&1;fi
 }
 vnstatcheck() {
   if [[ ! -x $(command -v vnstat) ]];then $(command -v apt) install vnstat -yqq;fi
@@ -577,8 +589,8 @@ EOF
 }
 updatecompose() {
 if [ ! -x $(command -v docker-compose) ] || [ -x $(command -v docker-compose) ];then
-   $(command -v curl) --silent -L --fail https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh -o /usr/local/bin/docker-compose
-   $(command -v chmod) +x /usr/local/bin/docker-compose >/dev/null 2>&
+   $(command -v curl) --silent -L --fail https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh -o /usr/local/bin/docker-compose 1>/dev/null 2>&1
+   $(command -v chmod) +x /usr/local/bin/docker-compose 1>/dev/null 2>&1
 fi
 }
 
