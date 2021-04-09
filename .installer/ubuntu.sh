@@ -577,8 +577,8 @@ EOF
 }
 updatecompose() {
 if [ ! -x $(command -v docker-compose) ] || [ -x $(command -v docker-compose) ];then
-   $(command -v curl) --silent -L --fail https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh -o /usr/local/bin/docker-compose
-   $(command -v chmod) +x /usr/local/bin/docker-compose >/dev/null 2>&
+   $(command -v curl) --silent -L --fail https://raw.githubusercontent.com/linuxserver/docker-docker-compose/master/run.sh -o /usr/local/bin/docker-compose 1>/dev/null 2>&1
+   $(command -v chmod) +x /usr/local/bin/docker-compose 1>/dev/null 2>&1
 fi
 }
 
