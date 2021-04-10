@@ -1,5 +1,7 @@
 ## TreafikV2 Apps with Authelia over Cloudflare
 
+---
+
 ## FYI
 ```
 I am not a team-member of sudobox.io anymore
@@ -14,7 +16,6 @@ This guys don't have access to this Repository
   They just changed spellings nothing else!
    All the real Contributors you can below 
 ```
----
 
 ---
 
