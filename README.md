@@ -9,6 +9,8 @@ Ubuntu or Debian
 20GB Disk Space
 ```
 
+---
+
 ## minimum requirement
 ```
 1 VPS / VM / dedicated Sever
@@ -16,6 +18,7 @@ Ubuntu or Debian
 1 Cloudflare Account  ( free level )
 1 Traefikv2 and Authelia install
 ```
+---
 
 ## pre Install
 
@@ -24,6 +27,7 @@ Go to your CloudFlare Dashboard
 Add 1 A Record > pointed to the SeverIp
 Copy your CloudFlare-Global-Key and CloudFlare-Zone-ID
 ```
+---
 
 Set follow on Cloudflare
 ```
@@ -34,6 +38,7 @@ RocketLoader and Broli / Onion Routing = NO
 Tls min = 1.2
 TLS = v1.3
 ```
+---
 
 ## Install Traefikv2 Apps
 
@@ -53,8 +58,6 @@ Under the sections are the apps
 
 More and more me and mrfret added in the next time
 
-
-
 ---
 
 ## Install Missing Traefikv2 and Authelia 
@@ -68,9 +71,6 @@ sudo git clone  https://github.com/doob187/Traefikv2.git /opt/traefik
 cd /opt/traefik && sudo $(command -v bash) install.sh
 ```
 Then just follow the number and Press d/D to deploy
-
-
-
 
 ---
 
@@ -86,11 +86,13 @@ Only @mrfret and @doobsi have access
 to change or pr00f any Pull Request
 ( no one other )
 
+---
 
 ## FYI
 ```
 I am not a team-member of sudobox.io anymore and will not come back.
 ```
+---
 
 ## Contributors ✨
 
