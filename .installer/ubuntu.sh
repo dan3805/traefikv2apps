@@ -26,7 +26,7 @@ tee <<-EOF
     [ 1 ] Install  Apps
     [ 2 ] Remove   Apps
     [ 3 ] Backup   Apps
-    [ 4 ] Restore  Apps [ !!! BETA !!! ]
+    [ 4 ] Restore  Apps
 
     [ 5 ] Create a Backup Docker-Compose File
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -251,7 +251,7 @@ for i in ${apps};do
    fi
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
-   echo "Restore for $i is running" && $(command -v docker) run --rm -v /opt/appdata:/restore/$i -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore $i
+   echo "Restore for $i is running" && $(command -v docker) run --rm -v /opt/appdata:/restore -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore $i
    $(command -v find) $basefolder/$i -exec $(command -v chown) -hR 1000:1000 {} \;
    $(command -v docker) system prune -af 1>/dev/null 2>&1
 done
@@ -274,7 +274,7 @@ builddockers=$(ls -1p /mnt/unionfs/appbackups/ | $(command -v sed) -e 's/.tar.gz
 if [[ $builddockers == $typed ]];then
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
-   echo "Restore for ${typed} is running" && $(command -v docker) run --rm -v /opt/appdata:/restore/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore ${typed}
+   echo "Restore for ${typed} is running" && $(command -v docker) run --rm -v /opt/appdata:/restore -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore ${typed}
    $(command -v find) $basefolder/${typed} -exec $(command -v chown) -hR 1000:1000 {} \;
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    clear && interface
