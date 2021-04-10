@@ -2,13 +2,87 @@
 TreafikV2 Apps with Authelia over Cloudflare
 
 
-This is a Work In Progress 
+Ubuntu or Debian
+```
+2 Cores
+4GB Ram
+20GB Disk Space
+```
 
-All settings are adapted to my needs
+## minimum requirement
+```
+1 VPS / VM / dedicated Sever
+1 Domain
+1 Cloudflare Account  ( free level )
+1 Traefikv2 and Authelia install
+```
 
-It might but not necessarily work on other systems, so please use only if you know what you are doing
+## pre Install
 
-i do not give any support for bugs or adaptions to other systems
+```
+Go to your CloudFlare Dashboard
+Add 1 A Record > pointed to the SeverIp
+Copy your CloudFlare-Global-Key and CloudFlare-Zone-ID
+```
+
+Set follow on Cloudflare
+```
+SSL = FULL ( not FULL/STRICT
+Always on = YES
+http to https = YES
+RocketLoader and Broli / Onion Routing = NO
+Tls min = 1.2
+TLS = v1.3
+```
+
+## Install Traefikv2 Apps
+
+```
+$(command -v apt) update
+$(command -v apt) upgrade 
+sudo $(command -v apt) install git
+sudo git clone https://github.com/doob187/traefikv2apps.git /opt/apps
+
+cd /opt/apps && sudo $(command -v bash) install.sh
+```
+You will some pre- installations,
+After this it's open a layout with sections
+
+Just type the name of the section, 
+Under the sections are the apps
+
+More and more me and mrfret added in the next time
+
+
+
+---
+
+## Install Missing Traefikv2 and Authelia 
+
+```
+$(command -v apt) update
+$(command -v apt) upgrade 
+sudo $(command -v apt) install git
+sudo git clone  https://github.com/doob187/Traefikv2.git /opt/traefik
+
+cd /opt/traefik && sudo $(command -v bash) install.sh
+```
+Then just follow the number and Press d/D to deploy
+
+
+
+
+---
+
+## Code and Permissions 
+```
+Copyright 2021 @doobsi 
+Code owner @doobsi 
+Dev Code @doobsi 
+Co-Dev -APPS- @mrfret
+```
+
+Only @mrfret and @doobsi have access to change or pr00f any Pull Request  ( no one other )
 
 
 ## Contributors ✨
