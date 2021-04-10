@@ -10,18 +10,18 @@ This is my Repository and not SudoBox LITE !!!
 So if you see a broken part plz report it here !!
 And not on the Forum or Discord of SudoBox.IO
 
-This guys don't have access to this Repository 
+These guys don't have access to this Repository 
 
        And they can't say **We did**
   They just changed spellings nothing else!
- All the real Contributors you can see the end 
+All the real Contributors you can see at the end 
 ```
 
 ---
 
 ## minimum specs
 ```
-Ubuntu 18/20 server or Debian 9/10
+Ubuntu 18/20 or Server or Debian 9/10
 2 Cores
 4GB Ram
 20GB Disk Space
@@ -42,14 +42,14 @@ Ubuntu 18/20 server or Debian 9/10
 
 ```
 Go to your CloudFlare Dashboard
-Add 1 A Record > pointed to the SeverIp
+Add 1 A Record > pointed to the ServerIp
 Copy your CloudFlare-Global-Key and CloudFlare-Zone-ID
 ```
 ---
 
 Set follow on Cloudflare
 ```
-SSL = FULL ( not FULL/STRICT
+SSL = FULL ( not FULL/STRICT )
 Always on = YES
 http to https = YES
 RocketLoader and Broli / Onion Routing = NO
@@ -68,8 +68,8 @@ sudo git clone https://github.com/doob187/traefikv2apps.git /opt/apps
 
 cd /opt/apps && sudo $(command -v bash) install.sh
 ```
-You will some pre- installations,
-After this it's open a layout with sections
+You will some pre-installations,
+After this it will open a layout with sections
 
 Just type the name of the section, 
 Under the sections are the apps
@@ -84,7 +84,7 @@ More and more me and mrfret added in the next time
 $(command -v apt) update
 $(command -v apt) upgrade 
 sudo $(command -v apt) install git
-sudo git clone  https://github.com/doob187/Traefikv2.git /opt/traefik
+sudo git clone https://github.com/doob187/Traefikv2.git /opt/traefik
 
 cd /opt/traefik && sudo $(command -v bash) install.sh
 ```
