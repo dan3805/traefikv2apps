@@ -1,9 +1,10 @@
 # traefikv2apps
 TreafikV2 Apps with Authelia over Cloudflare
+---
 
-
-Ubuntu or Debian
+## minimum specs
 ```
+Ubuntu 18/20 server or Debian 9/10
 2 Cores
 4GB Ram
 20GB Disk Space
