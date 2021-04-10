@@ -362,6 +362,20 @@ EOF
      if [[ ${checkmnt} == "false" && ${mount} == "mount" ]];then $(command -v docker) stop mount 1>/dev/null 2>&1 && $(command -v fusermount) -uzq /mnt/unionfs 1>/dev/null 2>&1;fi
      if [[ ${checkmnt} == "false" && ${mount} == "" ]];then $(command -v fusermount) -uzq /mnt/unionfs 1>/dev/null 2>&1;fi
   fi
+  if [[ ${section} == "downloadclients" && ${typed} == "youtubedl-material" ]];then
+     folder="appdata audio video subscriptions"
+     for i in ${folder}; do
+         $(command -v mkdir) -p $basefolder/${typed}/$i
+         $(command -v find) $basefolder/${typed}/$i -exec $(command -v chmod) a=rx,u+w {} \;
+         $(command -v find) $basefolder/${typed}/$i -exec $(command -v chown) -hR 1000:1000 {} \;
+     done
+     folder=$storage/youtubedl
+     for i in ${folder}; do
+         $(command -v mkdir) -p $i
+         $(command -v find) $i -exec $(command -v chmod) a=rx,u+w {} \;
+         $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
+     done
+  fi
   if [[ -f $basefolder/$compose ]];then
      $(command -v cd) $basefolder/compose/
      $(command -v docker-compose) config 1>/dev/null 2>&1
