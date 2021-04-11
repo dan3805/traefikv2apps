@@ -16,8 +16,8 @@ services:
     ports:
       - '127.0.0.1:2489:80'
     volumes:
-      - '/opt/appdata/bitwarden:/usr/bin/bitwarden'
-      - '/opt/appdata/bitwarden:/var/lib/bitwarden'
+      - '/opt/appdata/bitwarden/data:/data'
+      - '/opt/appdata/bitwarden/database:/database'
       - '/etc/localtime:/etc/localtime:ro'
     labels:
       - 'traefik.enable=true'
