@@ -14,7 +14,7 @@ services:
       - proxy
     restart: 'unless-stopped'
     ports:
-      - '127.0.0.1:2489:80'
+      - '2489:80'
     volumes:
       - '/opt/appdata/bitwarden/data:/data'
       - '/opt/appdata/bitwarden/database:/database'
