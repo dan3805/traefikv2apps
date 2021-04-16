@@ -353,9 +353,9 @@ EOF
   if [[ ! -f $basefolder/$compose ]];then $(command -v rsync) $appfolder/${section}/compose/${typed}.yml $basefolder/$compose -aq --info=progress2 -hv;fi
   if [[ ! -x $(command -v lshw) ]];then $(command -v apt) install lshw -yqq >/dev/null 2>&1;fi
   if [[ ${section} == "mediaserver" || ${section} == "encoder" ]];then
-     gpu="i915 nvidia"
-     for i in ${gpu}; do
-        TDV=$($(command -v lshw) -C video | grep -qE $i && echo true || echo false)
+     gpu="Intel NVIDIA"
+     for i in ${gpu};do
+        TDV=$(lspci | grep -i --color 'vga\|3d\|2d' | grep -E $i 1>/dev/null 2>&1 && echo true || echo false)
         if [[ $TDV == "true" ]];then $(command -v rsync) $appfolder/${section}/compose/gpu/$i.yml $basefolder/$composeoverwrite -aq --info=progress2 -hv;fi
      done
      if [[ -f $basefolder/$composeoverwrite ]];then
