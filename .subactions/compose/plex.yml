@@ -194,5 +194,4 @@
         - plex_prefs.stat.exists
         - dev_dri.stat.exists == True
 
-      - name: 'Start {{app}} Container'
-        shell: 'docker start {{app}}'
+##EOF
