@@ -425,6 +425,9 @@ EOF
          $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
      done
   fi
+  if [[ ${typed} == "bitwardenrs"]];then
+     if [[ -f $appfolder/.subactions/compose/${typed}.sh ]];then $(command -v bash) $appfolder/.subactions/compose/${typed}.sh;fi
+  fi
   if [[ -f $basefolder/$compose ]];then
      $(command -v cd) $basefolder/compose/
      $(command -v docker-compose) config 1>/dev/null 2>&1
