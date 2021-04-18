@@ -12,26 +12,21 @@
       set_fact:
         app: 'qbittorrent'
         path: '/mnt'
-
     - name: 'Register Domain'
       shell: cat /etc/hosts | grep 127.0.0.1 | tail -n 1 | awk '{print $2}'
       register: domain
-
     - name: 'Waiting for {{app}} to initialize'
       wait_for:
         path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
         state: present
         timeout: 15
         delay: 5
-
     - name: 'Stopping {{app}}'
       shell: 'docker stop {{app}}'
-
     - name: 'Checking for existing app data'
       stat:
         path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
       register: confcheck
-
     - name: 'Set torrent port'
       ini_file:
         path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -39,7 +34,6 @@
         option: Connection\PortRangeMin
         value: '7889'
         state: present
-
     - name: 'Set SavePath'
       ini_file:
         path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -47,7 +41,6 @@
         option: Downloads\SavePath
         value: '{{path}}/downloads/torrent'
         state: present
-
     - name: 'Set TempPath'
       ini_file:
         path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -55,7 +48,6 @@
         option: Downloads\TempPath
         value: '{{path}}/incomplete/torrent'
         state: present
-
     - name: 'Set TempPathEnabled'
       ini_file:
         path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -63,7 +55,6 @@
         option: Downloads\TempPathEnabled
         value: True
         state: present
-
     - name: 'Configuring {{app}} for first time use'
       block:
         - name: 'Enable AutoRun'
@@ -73,7 +64,6 @@
             option: enabled
             value: True
             state: present
-
         - name: 'Enable Auto UnRar'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -81,7 +71,6 @@
             option: program
             value: '/usr/bin/unrar x -r \"%F/.\" \"%F/\"'
             state: present
-
         - name: 'Disable DHT'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -89,7 +78,6 @@
             option: Bittorrent\DHT
             value: 'false'
             state: present
-
         - name: 'Disable PeX'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -97,7 +85,6 @@
             option: Bittorrent\PeX
             value: 'false'
             state: present
-
         - name: 'Disable LSD'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -105,7 +92,6 @@
             option: Bittorrent\LSD
             value: 'false'
             state: present
-
         - name: 'Enable Encryption'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -113,7 +99,6 @@
             option: Bittorrent\Encryption
             value: 1
             state: present
-
         - name: 'Dont use incomplete extension'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -121,7 +106,6 @@
             option: Downloads\UseIncompleteExtension
             value: 'false'
             state: present
-
         - name: 'Ignore slow torrents'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -129,7 +113,6 @@
             option: Queueing\IgnoreSlowTorrents
             value: True
             state: present
-
         - name: 'Set MaxActiveDownloads'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -137,7 +120,6 @@
             option: Queueing\MaxActiveDownloads
             value: 10
             state: present
-
         - name: 'Set MaxActiveTorrents'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -145,7 +127,6 @@
             option: Queueing\MaxActiveTorrents
             value: 100
             state: present
-
         - name: 'Set MaxActiveUploads'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -153,7 +134,6 @@
             option: Queueing\MaxActiveUploads
             value: 100
             state: present
-
         - name: 'Set GlobalMaxSeedingMinutes'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -161,7 +141,6 @@
             option: Session\GlobalMaxSeedingMinutes
             value: 20160
             state: present
-
         - name: 'Set MaxRatio'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -169,7 +148,6 @@
             option: Bittorrent\MaxRatio
             value: 1
             state: present
-
         - name: 'pause on MaxRatioAction'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -177,7 +155,6 @@
             option: Bittorrent\MaxRatioAction
             value: 1
             state: present
-
         - name: 'Disable csrf'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -185,7 +162,6 @@
             option: WebUI\CSRFProtection
             value: 'false'
             state: present
-
         - name: 'Disable HostHeaderValidation'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -193,7 +169,6 @@
             option: WebUI\HostHeaderValidation
             value: 'false'
             state: present
-
         - name: 'Disable ClickjackingProtection'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -201,7 +176,6 @@
             option: WebUI\ClickjackingProtection
             value: 'false'
             state: present
-
         - name: 'Set ServerDomains'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -209,7 +183,6 @@
             option: WebUI\ServerDomains
             value: '*'
             state: present
-
         - name: 'Set Address'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
@@ -218,6 +191,5 @@
             value: '*'
             state: present
       when: confcheck.stat.exists
-
     - name: 'Restart {{app}}'
       shell: 'docker start {{app}}'

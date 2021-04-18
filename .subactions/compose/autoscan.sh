@@ -14,12 +14,10 @@ if [[ ! -x $(command -v rclone) ]];then $(command -v curl) https://rclone.org/in
 if [[ ! -d "/mnt/unionfs/.anchors/" ]];then $(command -v mkdir) -p /mnt/unionfs/.anchors;fi
 if [[ ! -f "/mnt/unionfs/.anchors/cloud.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/cloud.anchor;fi
 if [[ ! -f "/mnt/unionfs/.anchors/local.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/local.anchor;fi
-
 echo "\
 anchors:
   - /mnt/unionfs/.anchors/cloud.anchor
   - /mnt/unionfs/.anchors/local.anchor" >> $basefolder/${typed}/config.yml
-
 IFS=$'\n'
 filter="$1"
 mountd=$(docker ps -aq --format={{.Names}} | grep -E "mount" && echo true || echo false)
@@ -28,7 +26,6 @@ if [[ $mountd == "false" ]]; then
 else
    config=$basefolder/mount/rclone.conf
 fi
-
 mapfile -t mounts < <(eval rclone listremotes --config=${config} | grep "$filter" | sed -e 's/://g' | sed '/union/d' | sed '/GDSA/d' | sort -r)
 ##### RUN MOUNT #####
 for i in ${mounts[@]}; do
@@ -38,13 +35,11 @@ echo -n "\
   - /mnt/unionfs/.anchors/$i.anchor" >> $basefolder/${typed}/config.yml
 done
 }
-
 arrs() {
 echo -n "\
 triggers:
   manual:
     priority: 0" >> $basefolder/${typed}/config.yml
-
 radarr=$(docker ps -aq --format={{.Names}} | grep -E 'radarr' 1>/dev/null 2>&1 && echo true || echo false)
 rrun=$(docker ps -aq --format={{.Names}} | grep 'rada')
 if [[ $radarr == "true" ]];then
@@ -56,7 +51,6 @@ echo "\
       priority: 2" >> $basefolder/${typed}/config.yml
    done
 fi
-
 sonarr=$(docker ps -aq --format={{.Names}} | grep -E 'sonarr' 1>/dev/null 2>&1 && echo true || echo false)
 srun=$(docker ps -aq --format={{.Names}} | grep -E 'sona')
 if [[ $sonarr == "true" ]];then
@@ -68,7 +62,6 @@ echo "\
       priority: 2" >> $basefolder/${typed}/config.yml
    done
 fi
-
 lidarr=$(docker ps -aq --format={{.Names}} | grep -E 'lidarr' 1>/dev/null 2>&1 && echo true || echo false)
 lrun=$(docker ps -aq --format={{.Names}} | grep 'lida')
 if [[ $lidarr == "true" ]];then
@@ -81,7 +74,6 @@ echo "\
    done
 fi
 }
-
 targets() {
 ## inotify adding for the /mnt/unionfs
 echo -n "\
@@ -93,10 +85,8 @@ echo -n "\
         - '\.(srt|pdf)$'
       paths:
       - path: /mnt/unionfs/
-
 targets:
 " >> $basefolder/${typed}/config.yml
-
 plex=$(docker ps -aq --format={{.Names}} | grep -E 'plex' 1>/dev/null 2>&1 && echo true || echo false)
 prun=$(docker ps -aq --format={{.Names}} | grep 'plex')
 token=$(cat "/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Preferences.xml" | sed -e 's;^.* PlexOnlineToken=";;' | sed -e 's;".*$;;' | tail -1)
@@ -111,7 +101,6 @@ echo -n "\
       token: $token" >> $basefolder/${typed}/config.yml
    done
 fi
-
 emby=$(docker ps -aq --format={{.Names}} | grep -E 'emby' 1>/dev/null 2>&1 && echo true || echo false)
 erun=$(docker ps -aq --format={{.Names}} | grep 'emby')
 token=youneedtoreplacethemselfnow
@@ -123,7 +112,6 @@ echo -n "\
       token: $token" >> $basefolder/${typed}/config.yml
    done
 fi
-
 jelly=$(docker ps -aq --format={{.Names}} | grep -E 'jelly' 1>/dev/null 2>&1 && echo true || echo false)
 jrun=$(docker ps -aq --format={{.Names}} | grep 'jelly')
 token=youneedtoreplacethemselfnow
@@ -136,14 +124,11 @@ echo -n "\
    done
 fi
 }
-
 addauthuser() {
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      🚀 autoscan Username
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
    read -erp "Enter a username for autoscan?: " USERAUTOSCAN
 if [[ $USERAUTOSCAN != "" ]]; then
@@ -157,17 +142,13 @@ else
   addauthuser
 fi
 }
-
 addauthpassword() {
 tee <<-EOF
-
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
      🚀 autoscan Password
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 EOF
    read -erp "Enter a password for $USERAUTOSCAN: " PASSWORD
-
 if [[ $PASSWORD != "" ]]; then
    if [[ $(uname) == "Darwin" ]]; then
       sed -i '' "s/<PASSWORD>/$PASSWORD/g" $basefolder/${typed}/config.yml
@@ -179,7 +160,6 @@ else
   addauthpassword
 fi
 }
-
 runautoscan() {
     $($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
     errorcode=$?
@@ -207,5 +187,4 @@ tee <<-EOF
 EOF
 fi
 }
-
 runautoscan
