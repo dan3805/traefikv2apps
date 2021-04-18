@@ -425,7 +425,7 @@ EOF
          $(command -v find) $i -exec $(command -v chown) -hR 1000:1000 {} \;
      done
   fi
-  if [[ ${typed} == "bitwardenrs"]];then
+  if [[ ${typed} == "bitwarden"]];then
      if [[ -f $appfolder/.subactions/compose/${typed}.sh ]];then $(command -v bash) $appfolder/.subactions/compose/${typed}.sh;fi
   fi
   if [[ -f $basefolder/$compose ]];then
