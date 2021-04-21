@@ -272,7 +272,6 @@ typed=${typed}
 basefolder="/opt/appdata"
 compose="compose/docker-compose.yml"
 if [[ ! -d $basefolder/${typed} ]];then
-   echo "Create folder for ${typed} is running"  
    folder=$basefolder/${typed}
    for i in ${folder}; do
        $(command -v mkdir) -p $i
@@ -313,9 +312,7 @@ else
    clear && restoredocker
 fi
 }
-### install app ###
 runinstall() {
-  ## check for existing docker-compose or update is needed
   updatecompose
   compose="compose/docker-compose.yml"
   composeoverwrite="compose/docker-compose.override.yml"
@@ -427,6 +424,8 @@ EOF
      else
        $(command -v docker-compose) pull ${typed} 1>/dev/null 2>&1
        $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
+       errorcode=$?
+       if [[ $errorcode -eq 0 ]];then $(command -v chown) -cR 1000:1000 $basefolder/${typed};fi
      fi
   fi
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
