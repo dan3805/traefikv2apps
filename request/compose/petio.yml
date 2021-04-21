@@ -40,7 +40,7 @@ services:
     image: 'mongo:latest'
     container_name: 'petiomongo'
     ports:
-      - '127.0.0.1:27055:27017'
+      - '27017:27017'
     networks:
       - proxy
     user: '${ID}:${ID}'
