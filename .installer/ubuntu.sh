@@ -422,10 +422,13 @@ EOF
   read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
   clear && interface
      else
-       $(command -v docker-compose) pull ${typed} 1>/dev/null 2>&1
-       $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
-       errorcode=$?
-       if [[ $errorcode -eq 0 ]];then $(command -v chown) -cR 1000:1000 $basefolder/${typed};fi
+       composer=$(command -v docker-compose)
+       for i in ${composer};do
+          $i pull ${typed} 1>/dev/null 2>&1
+		  $i up -d --force-recreate 1>/dev/null 2>&1
+          $(command -v chown) -cR 1000:1000 $basefolder/${typed} 1>/dev/null 2>&1
+          $i restart 1>/dev/null 2>&1
+       done
      fi
   fi
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
@@ -520,7 +523,7 @@ authadd=$(cat $conf | grep -E ${typed})
       policy: bypass"; tail -n +39 $conf; } > $confnew
         if [[ -f $conf ]];then $(command -v rsync) $conf $confbackup -aq --info=progress2 -hv;fi
         if [[ -f $conf ]];then $(command -v rsync) $confnew $conf -aq --info=progress2 -hv;fi
-        if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia;fi
+        if [[ $authcheck == "true" ]];then $(command -v docker) restart authelia 1>/dev/null 2>&1;fi
         if [[ -f $conf ]];then $(command -v rm) -rf $confnew;fi
      fi
   fi
