@@ -434,7 +434,7 @@ EOF
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
   if [[ ${section} == "downloadclients" ]];then subtasks;fi
   if [[ ${typed} == "overseerr" ]];then overserrf2ban;fi
-  if [[ ${typed} == "overseerr" || ${typed} == "petio" || ${typed} == "heimdall" || ${typed} == "librespeed" || ${typed} == "xteve" ]];then subtasks;fi
+  if [[ ${typed} == "overseerr" || ${typed} == "petio" || ${typed} == "heimdall" || ${typed} == "librespeed" ]];then subtasks;fi
      $($(command -v docker) ps -aq --format '{{.Names}}{{.State}}' | grep -qE ${typed}running 1>/dev/null 2>&1)
      errorcode=$?
   if [[ $errorcode -eq 0 ]];then
