@@ -9,8 +9,6 @@ services:
       - 'PUID=${ID}'
       - 'TZ=${TZ}'
       - 'UMASK=022'
-      - 'log-opt max-size=10m'
-      - 'log-opt max-file=3'
     image: 'alturismo/xteve'
     restart: 'unless-stopped'
     ports:
