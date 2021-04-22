@@ -434,7 +434,7 @@ EOF
   if [[ ${section} == "mediaserver" ]];then subtasks;fi
   if [[ ${section} == "downloadclients" ]];then subtasks;fi
   if [[ ${typed} == "overseerr" ]];then overserrf2ban;fi
-  if [[ ${typed} == "overseerr" || ${typed} == "petio" || ${typed} == "heimdall" || ${typed} == "librespeed" ]];then subtasks;fi
+  if [[ ${typed} == "overseerr" || ${typed} == "petio" || ${typed} == "heimdall" || ${typed} == "librespeed" || ${typed} == "xteve" ]];then subtasks;fi
      $($(command -v docker) ps -aq --format '{{.Names}}{{.State}}' | grep -qE ${typed}running 1>/dev/null 2>&1)
      errorcode=$?
   if [[ $errorcode -eq 0 ]];then
@@ -516,7 +516,7 @@ authadd=$(cat $conf | grep -E ${typed})
         if [[ -f $appfolder/.subactions/compose/${typed}.sh ]];then $(command -v bash) $appfolder/.subactions/compose/${typed}.sh;fi
      fi
   if [[ $authadd == "" ]];then
-     if [[ ${section} == "mediaserver" || ${section} == "request" || ${typed} == "librespeed" ]];then
+     if [[ ${section} == "mediaserver" || ${section} == "request" || ${typed} == "librespeed" || ${typed} == "xteve" ]];then
      { head -n 38 $conf;
      echo "\
     - domain: ${typed}.${DOMAIN}
