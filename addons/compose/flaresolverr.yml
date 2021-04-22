@@ -28,11 +28,11 @@ services:
       - 'traefik.docker.network=proxy'
       - 'dockupdater.enable=true'
       - 'traefik.http.routers.flaresolverr-rtr.entrypoints=https'
-      - 'traefik.http.routers.flaresolverr.rule=Host(`xteve.${DOMAIN}`)'
+      - 'traefik.http.routers.flaresolverr.rule=Host(`flaresolverr.${DOMAIN}`)'
       - 'traefik.http.routers.flaresolverr-rtr.tls=true'
       - 'traefik.http.routers.flaresolverr-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.flaresolverr-rtr.middlewares=chain-authelia@file'
-      - 'traefik.http.routers.flaresolverr-rtr.service=xteve-svc'
+      - 'traefik.http.routers.flaresolverr-rtr.service=flaresolverr-svc'
       - 'traefik.http.services.flaresolverr-svc.loadbalancer.server.port=8191'
 
 networks:
