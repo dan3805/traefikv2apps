@@ -31,7 +31,7 @@ services:
       - 'traefik.http.routers.cloudcmd-rtr.tls.certresolver=dns-cloudflare'
       - 'traefik.http.routers.cloudcmd-rtr.middlewares=chain-authelia@file'
       - 'traefik.http.routers.cloudcmd-rtr.service=cloudcmd-svc'
-      - 'traefik.http.services.cloudcmd-svc.loadbalancer.server.port=<PORTOFAPP>'
+      - 'traefik.http.services.cloudcmd-svc.loadbalancer.server.port=8000'
 
 networks:
   proxy:
