@@ -14,7 +14,7 @@ services:
     image: 'alturismo/xteve'
     restart: 'unless-stopped'
     ports:
-      - '127.0.0.1:34400:34400'
+      - '34400:34400'
     networks:
       - proxy
     security_opt:
