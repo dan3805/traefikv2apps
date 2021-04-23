@@ -22,11 +22,12 @@ tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     🚀 App Head Section Menu
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
     [ 1 ] Install  Apps
     [ 2 ] Remove   Apps
     [ 3 ] Backup   Apps
     [ 4 ] Restore  Apps
-    [ 5 ] Create a Backup Docker-Compose File
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     [ EXIT or Z ] - Exit || [ help or HELP ] - Help
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -37,7 +38,6 @@ EOF
     2) clear && removeapp ;;
     3) clear && backupdocker ;;
     4) clear && restoredocker ;;
-    5) clear && backupcomposer && clear && headinterface ;;
     help|HELP|Help) clear && sectionhelplayout ;;
     Z|z|exit|EXIT|Exit|close) exit ;;
     *) appstartup ;;
@@ -191,14 +191,12 @@ basefolder="/opt/appdata"
 if [[ -d $basefolder/${typed} ]];then
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
-   $(command -v docker) pull red5d/docker-autocompose 1>/dev/null 2>&1
-   $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose ${typed} > /opt/appdata/${typed}/docker-compose.yml
    $(command -v docker) run --rm -v /opt/appdata:/backup/${typed} -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest backup ${typed} 
    $(command -v find) $basefolder/${typed} -exec $(command -v chown) -hR 1000:1000 {} \;
    $(command -v docker) system prune -af 1>/dev/null 2>&1
-   clear && backupcomposer && backupdocker
+   clear && backupdocker
 else
-   clear && backupcomposer && backupdocker
+   clear && backupdocker
 fi
 }
 ### restore backup ###
@@ -239,32 +237,7 @@ for i in ${apps};do
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
    echo "Restore for $i is running" && $(command -v docker) run --rm -v /opt/appdata:/restore -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore $i
-   if [[ -f $basefolder/$i/docker-compose.yml ]];then $(command -v rsync) $basefolder/$i/docker-compose.yml $basefolder/$compose -aq --info=progress2 -hv --remove-source-files;fi
-   if [[ -f $basefolder/$compose ]];then
-      echo "Recreation for $i is running" 
-      $(command -v cd) $basefolder/compose/
-      $(command -v docker-compose) config 1>/dev/null 2>&1
-      errorcode=$?
-      if [[ $errorcode -ne 0 ]];then
-  tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ❌ ERROR
-    Compose check of $i has failed
-    Return code is ${errorcode}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
-  clear && interface
-      else
-        echo "Repull Image for $i is running" && $(command -v docker-compose) pull $i 1>/dev/null 2>&1
-        echo "Run install for $i" && $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
-      fi
-   fi
-   $(command -v rm) -rf /opt/appdata/$i/docker-compose.yml 1>/dev/null 2>&1
-   $(command -v find) $basefolder/$i -exec $(command -v chown) -hR 1000:1000 {} \;
-   $(command -v docker) system prune -af 1>/dev/null 2>&1
-done
-clear && restoredocker
+clear && restoreall
 }
 runrestore() {
 updatecompose
@@ -284,35 +257,23 @@ if [[ $builddockers == $typed ]];then
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
    echo "Restore for ${typed} is running" && $(command -v docker) run --rm -v /opt/appdata:/restore -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore ${typed}
-   if [[ -f $basefolder/${typed}/docker-compose.yml ]];then $(command -v rsync) $basefolder/${typed}/docker-compose.yml $basefolder/$compose -aq --info=progress2 -hv --remove-source-files;fi
-   if [[ -f $basefolder/$compose ]];then
-      $(command -v cd) $basefolder/compose/
-      $(command -v docker-compose) config 1>/dev/null 2>&1
-      errorcode=$?
-      if [[ $errorcode -ne 0 ]];then
-  tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ❌ ERROR
-    Compose check of ${typed} has failed
-    Return code is ${errorcode}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
-  clear && interface
-      else
-        $(command -v docker-compose) pull ${typed} 1>/dev/null 2>&1
-        $(command -v docker-compose) up -d --force-recreate 1>/dev/null 2>&1
-      fi
-   fi
-   $(command -v rm) -rf /opt/appdata/${typed}/docker-compose.yml 1>/dev/null 2>&1
-   $(command -v find) $basefolder/${typed} -exec $(command -v chown) -hR 1000:1000 {} \;
-   $(command -v docker) system prune -af 1>/dev/null 2>&1
-   clear && interface
+   appfolder=/opt/apps
+   HEADSECTION=${HEADSECTION:-/}
+   IGNORE="! -path '**.subactions/**'"
+   mapfile -t files < <(eval find ${appfolder} -type f -name $typed.yml ${IGNORE})
+   for i in "${files[@]}"; do
+       section=$(dirname "${i}" | sed "s#${appfolder}${HEADSECTION}##g" | sed 's/[[:alnum:]]*$//' | sed 's|[/y]||g' )
+   done
+   section=${section}
+   typed=${typed}
+   runinstall
 else
    clear && restoredocker
 fi
 }
 runinstall() {
+  section=${section}
+  typed=${typed}
   updatecompose
   compose="compose/docker-compose.yml"
   composeoverwrite="compose/docker-compose.override.yml"
@@ -445,12 +406,12 @@ EOF
     https://${typed}.${DOMAIN}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+  sleep 10
   clear
 fi
 if [[ -f $basefolder/$compose ]];then $(command -v rm) -rf $basefolder/$compose;fi
 if [[ -f $basefolder/$composeoverwrite ]];then $(command -v rm) -rf $basefolder/$composeoverwrite;fi
-backupcomposer && clear && install
+clear && install
 }
 overserrf2ban() {
 OV2BAN="/etc/fail2ban/filter.d/overseerr.local"
@@ -529,26 +490,6 @@ authadd=$(cat $conf | grep -E ${typed})
   fi
   if [[ ${section} == "mediaserver" || ${section} == "request" || ${section} == "downloadclients" ]];then $(command -v docker) restart ${typed} 1>/dev/null 2>&1;fi
 }
-backupcomposer() {
-updatecompose
-  if [[ ! -d $basefolder/composebackup ]];then $(command -v mkdir) -p $basefolder/composebackup/;fi
-    tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Backup composer file is being updated
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-  if [[ -d $basefolder/composebackup ]];then
-     docker=$($(command -v docker) ps -aq --format={{.Names}})
-     $(command -v docker) pull red5d/docker-autocompose 1>/dev/null 2>&1
-     $(command -v docker) run --rm -v /var/run/docker.sock:/var/run/docker.sock red5d/docker-autocompose $docker > $basefolder/composebackup/docker-compose.yml
-     $(command -v docker) image prune -af 1>/dev/null 2>&1
-  fi
-    tee <<-EOF
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Backup composer file updated
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-EOF
-}
 removeapp() {
 list=$($(command -v docker) ps -aq --format '{{.Names}}' | grep -vE 'auth|trae|cf-companion')
 tee <<-EOF
@@ -623,7 +564,7 @@ EOF
     ${typed} removal finished
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-    sleep 2 && backupcomposer && removeapp
+    sleep 2 && removeapp
   else
      removeapp
   fi
