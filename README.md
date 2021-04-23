@@ -77,9 +77,9 @@ More and more me and mrfret added in the next time
 ## Install Missing Traefikv2 and Authelia 
 
 ```
-$(command -v apt) update
-$(command -v apt) upgrade 
-sudo $(command -v apt) install git
+$(command -v apt) update -y
+$(command -v apt) upgrade -y
+if [[ ! -x $(command -v git) ]];then sudo $(command -v apt) install git;fi
 sudo git clone https://github.com/doob187/Traefikv2.git /opt/traefik
 
 cd /opt/traefik && sudo $(command -v bash) install.sh
