@@ -1,6 +1,5 @@
 ---
 version: '3'
-
 services:
   tautulli:
     hostname: 'tautulli'
@@ -10,17 +9,16 @@ services:
       - 'PUID=${ID}'
       - 'TZ=${TZ}'
       - 'UMASK=022'
-    image: 'linuxserver/tautulli'
+    image: 'ghcr.io/linuxserver/tautulli'
     restart: 'unless-stopped'
     ports:
-      - '127.0.0.1:8181:8181'
+      - '127.0.0.1:8180:8181'
     networks:
       - proxy
     security_opt:
       - 'no-new-privileges:true'
     volumes:
       - '/opt/appdata/tautulli:/config:rw'
-      - 'unionfs:/mnt'
       - '/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Logs:/logs'
       - '/opt/appdata/tautulli/scripts:/scripts'
       - '/etc/localtime:/etc/localtime'
@@ -40,9 +38,3 @@ networks:
   proxy:
     driver: bridge
     external: true
-
-volumes:
-  unionfs:
-    driver: local-persist
-    driver_opts:
-      mountpoint: /mnt
