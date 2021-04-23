@@ -125,6 +125,8 @@ echo "\
       token: $token" >> $basefolder/${typed}/config.yml
    done
 fi
+}
+autoscantarget() {
 echo "\
   autoscan:
     - url: http://autoscan:3030
@@ -191,7 +193,7 @@ runautoscan() {
     $($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
     errorcode=$?
 if [[ $errorcode -eq 0 ]]; then
-   headrm && anchor && arrs && targets && addauthuser && addauthpassword && showending
+   headrm && anchor && arrs && targets && addauthuser && addauthpassword && autoscantarget && showending
 else
      app=${typed}
      for i in ${app}; do
