@@ -57,9 +57,9 @@ TLS = v1.3
 ## Install Traefikv2 Apps
 
 ```
-$(command -v apt) update
-$(command -v apt) upgrade 
-sudo $(command -v apt) install git
+$(command -v apt) update -y
+$(command -v apt) upgrade -y
+if [[ ! -x $(command -v git) ]];then sudo $(command -v apt) install git;fi
 sudo git clone https://github.com/doob187/traefikv2apps.git /opt/apps
 
 cd /opt/apps && sudo $(command -v bash) install.sh
