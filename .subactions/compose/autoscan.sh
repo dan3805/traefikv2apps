@@ -14,7 +14,7 @@ if [[ ! -x $(command -v rclone) ]];then $(command -v curl) https://rclone.org/in
 if [[ ! -d "/mnt/unionfs/.anchors/" ]];then $(command -v mkdir) -p /mnt/unionfs/.anchors;fi
 if [[ ! -f "/mnt/unionfs/.anchors/cloud.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/cloud.anchor;fi
 if [[ ! -f "/mnt/unionfs/.anchors/local.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/local.anchor;fi
-echo "\
+echo -ne "\n
 anchors:
   - /mnt/unionfs/.anchors/cloud.anchor
   - /mnt/unionfs/.anchors/local.anchor" >> $basefolder/${typed}/config.yml
@@ -31,22 +31,22 @@ mapfile -t mounts < <(eval rclone listremotes --config=${config} | grep "$filter
 for i in ${mounts[@]}; do
   $(command -v rclone) mkdir $i:/.anchors --config=${config}
   $(command -v rclone) touch $i:/.anchors/$i.anchor --config=${config}
-echo -n "\
+echo -ne "\n
   - /mnt/unionfs/.anchors/$i.anchor" >> $basefolder/${typed}/config.yml
 done
 }
 arrs() {
-echo -n "\
+echo -ne "\n
 triggers:
   manual:
     priority: 0" >> $basefolder/${typed}/config.yml
 radarr=$(docker ps -aq --format={{.Names}} | grep -E 'radarr' 1>/dev/null 2>&1 && echo true || echo false)
 rrun=$(docker ps -aq --format={{.Names}} | grep 'rada')
 if [[ $radarr == "true" ]];then
-echo "\
+echo -ne "\n
   radarr:" >> $basefolder/${typed}/config.yml
    for i in ${rrun};do
-echo "\
+echo -ne "\n
     - name: $i
       priority: 2" >> $basefolder/${typed}/config.yml
    done
@@ -54,10 +54,10 @@ fi
 sonarr=$(docker ps -aq --format={{.Names}} | grep -E 'sonarr' 1>/dev/null 2>&1 && echo true || echo false)
 srun=$(docker ps -aq --format={{.Names}} | grep -E 'sona')
 if [[ $sonarr == "true" ]];then
-echo "\
+echo -ne "\n
   sonarr:" >> $basefolder/${typed}/config.yml
    for i in ${srun};do
-echo "\
+echo -ne "\n
     - name: $i
       priority: 2" >> $basefolder/${typed}/config.yml
    done
@@ -65,10 +65,10 @@ fi
 lidarr=$(docker ps -aq --format={{.Names}} | grep -E 'lidarr' 1>/dev/null 2>&1 && echo true || echo false)
 lrun=$(docker ps -aq --format={{.Names}} | grep 'lida')
 if [[ $lidarr == "true" ]];then
-echo "\
+echo -ne "\n
   lidarr:" >> $basefolder/${typed}/config.yml
    for i in ${lrun};do
-echo "\
+echo -ne "\n
     - name: $i
       priority: 2" >> $basefolder/${typed}/config.yml
    done
@@ -76,7 +76,7 @@ fi
 }
 targets() {
 ## inotify adding for the /mnt/unionfs
-echo -n "\
+echo -ne "\n
   inotify:
     - priority: 1
       include:
@@ -95,7 +95,7 @@ if [[ $token == "" ]];then
 fi
 if [[ $plex == "true" ]];then
    for i in ${prun};do
-echo -n "\
+echo -ne "\n
   $i:
     - url: http://$i:32400
       token: $token" >> $basefolder/${typed}/config.yml
@@ -106,7 +106,7 @@ erun=$(docker ps -aq --format={{.Names}} | grep 'emby')
 token=youneedtoreplacethemselfnow
 if [[ $emby == "true" ]];then
    for i in ${erun};do
-echo -n "\
+echo -ne "\n
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
@@ -117,7 +117,7 @@ jrun=$(docker ps -aq --format={{.Names}} | grep 'jelly')
 token=youneedtoreplacethemselfnow
 if [[ $jelly == "true" ]];then
    for i in ${jrun};do
-echo -n "\
+echo -ne "\n
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
