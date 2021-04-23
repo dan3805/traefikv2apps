@@ -14,7 +14,8 @@ if [[ ! -x $(command -v rclone) ]];then $(command -v curl) https://rclone.org/in
 if [[ ! -d "/mnt/unionfs/.anchors/" ]];then $(command -v mkdir) -p /mnt/unionfs/.anchors;fi
 if [[ ! -f "/mnt/unionfs/.anchors/cloud.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/cloud.anchor;fi
 if [[ ! -f "/mnt/unionfs/.anchors/local.anchor" ]];then $(command -v touch) /mnt/unionfs/.anchors/local.anchor;fi
-echo -ne "\n
+echo "\
+" >> $basefolder/${typed}/config.yml && echo "\
 anchors:
   - /mnt/unionfs/.anchors/cloud.anchor
   - /mnt/unionfs/.anchors/local.anchor" >> $basefolder/${typed}/config.yml
@@ -31,22 +32,23 @@ mapfile -t mounts < <(eval rclone listremotes --config=${config} | grep "$filter
 for i in ${mounts[@]}; do
   $(command -v rclone) mkdir $i:/.anchors --config=${config}
   $(command -v rclone) touch $i:/.anchors/$i.anchor --config=${config}
-echo -ne "\n
+echo "\
   - /mnt/unionfs/.anchors/$i.anchor" >> $basefolder/${typed}/config.yml
 done
 }
 arrs() {
-echo -ne "\n
+echo "\
+" >> $basefolder/${typed}/config.yml && echo "\
 triggers:
   manual:
     priority: 0" >> $basefolder/${typed}/config.yml
 radarr=$(docker ps -aq --format={{.Names}} | grep -E 'radarr' 1>/dev/null 2>&1 && echo true || echo false)
 rrun=$(docker ps -aq --format={{.Names}} | grep 'rada')
 if [[ $radarr == "true" ]];then
-echo -ne "\n
+echo "\
   radarr:" >> $basefolder/${typed}/config.yml
    for i in ${rrun};do
-echo -ne "\n
+echo "\
     - name: $i
       priority: 2" >> $basefolder/${typed}/config.yml
    done
@@ -54,10 +56,10 @@ fi
 sonarr=$(docker ps -aq --format={{.Names}} | grep -E 'sonarr' 1>/dev/null 2>&1 && echo true || echo false)
 srun=$(docker ps -aq --format={{.Names}} | grep -E 'sona')
 if [[ $sonarr == "true" ]];then
-echo -ne "\n
+echo "\
   sonarr:" >> $basefolder/${typed}/config.yml
    for i in ${srun};do
-echo -ne "\n
+echo "\
     - name: $i
       priority: 2" >> $basefolder/${typed}/config.yml
    done
@@ -65,10 +67,10 @@ fi
 lidarr=$(docker ps -aq --format={{.Names}} | grep -E 'lidarr' 1>/dev/null 2>&1 && echo true || echo false)
 lrun=$(docker ps -aq --format={{.Names}} | grep 'lida')
 if [[ $lidarr == "true" ]];then
-echo -ne "\n
+echo "\
   lidarr:" >> $basefolder/${typed}/config.yml
    for i in ${lrun};do
-echo -ne "\n
+echo "\
     - name: $i
       priority: 2" >> $basefolder/${typed}/config.yml
    done
@@ -76,7 +78,7 @@ fi
 }
 targets() {
 ## inotify adding for the /mnt/unionfs
-echo -ne "\n
+echo "\
   inotify:
     - priority: 1
       include:
@@ -85,8 +87,8 @@ echo -ne "\n
         - '\.(srt|pdf)$'
       paths:
       - path: /mnt/unionfs/
-targets:
-" >> $basefolder/${typed}/config.yml
+
+targets:" >> $basefolder/${typed}/config.yml
 plex=$(docker ps -aq --format={{.Names}} | grep -E 'plex' 1>/dev/null 2>&1 && echo true || echo false)
 prun=$(docker ps -aq --format={{.Names}} | grep 'plex')
 token=$(cat "/opt/appdata/plex/database/Library/Application Support/Plex Media Server/Preferences.xml" | sed -e 's;^.* PlexOnlineToken=";;' | sed -e 's;".*$;;' | tail -1)
@@ -95,7 +97,7 @@ if [[ $token == "" ]];then
 fi
 if [[ $plex == "true" ]];then
    for i in ${prun};do
-echo -ne "\n
+echo "\
   $i:
     - url: http://$i:32400
       token: $token" >> $basefolder/${typed}/config.yml
@@ -106,7 +108,7 @@ erun=$(docker ps -aq --format={{.Names}} | grep 'emby')
 token=youneedtoreplacethemselfnow
 if [[ $emby == "true" ]];then
    for i in ${erun};do
-echo -ne "\n
+echo "\
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
@@ -117,17 +119,22 @@ jrun=$(docker ps -aq --format={{.Names}} | grep 'jelly')
 token=youneedtoreplacethemselfnow
 if [[ $jelly == "true" ]];then
    for i in ${jrun};do
-echo -ne "\n
+echo "\
   $i:
     - url: http://$i:8096
       token: $token" >> $basefolder/${typed}/config.yml
    done
 fi
+echo "\
+  autoscan:
+    - url: http://autoscan:3030
+      username: $USERAUTOSCAN
+      password: $PASSWORD" >> $basefolder/${typed}/config.yml
 }
 addauthuser() {
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     🚀 autoscan Username
+     🚀   autoscan Username
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
    read -erp "Enter a username for autoscan?: " USERAUTOSCAN
@@ -145,7 +152,7 @@ fi
 addauthpassword() {
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     🚀 autoscan Password
+     🚀   autoscan Password
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
    read -erp "Enter a password for $USERAUTOSCAN: " PASSWORD
@@ -160,11 +167,31 @@ else
   addauthpassword
 fi
 }
+showending() {
+source /opt/appdata/compose/.env
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     🚀   autoscan Details
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ autoscandomain :
+ 
+ Username : $USERAUTOSCAN
+ Password : $PASSWORD
+ 
+ local  : http://autoscan:3030/triggers/{name of app}
+ remote : https://autoscan.${DOMAIN}/triggers/{name of app}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+  read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+}
+
 runautoscan() {
     $($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
     errorcode=$?
 if [[ $errorcode -eq 0 ]]; then
-   headrm && anchor && arrs && targets && addauthuser && addauthpassword
+   headrm && anchor && arrs && targets && addauthuser && addauthpassword && showending
 else
      app=${typed}
      for i in ${app}; do
