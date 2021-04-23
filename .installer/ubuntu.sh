@@ -237,6 +237,7 @@ for i in ${apps};do
    $(command -v docker) system prune -af 1>/dev/null 2>&1
    $(command -v docker) pull ghcr.io/doob187/docker-remote:latest 1>/dev/null 2>&1
    echo "Restore for $i is running" && $(command -v docker) run --rm -v /opt/appdata:/restore -v /mnt:/mnt ghcr.io/doob187/docker-remote:latest restore $i
+done
 clear && restoreall
 }
 runrestore() {
