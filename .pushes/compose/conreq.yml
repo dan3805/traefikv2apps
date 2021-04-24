@@ -37,7 +37,6 @@ networks:
   proxy:
     driver: bridge
     external: true
-
 volumes:
   unionfs:
     driver: local-persist
