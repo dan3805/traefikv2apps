@@ -66,15 +66,16 @@ TLS = v1.3
 ```
 ---
 
-## Install Traefikv2 Apps
-
+## Use the easy mode installer 
 ```
-$(command -v apt) update -y
-$(command -v apt) upgrade -y
-if [[ ! -x $(command -v git) ]];then sudo $(command -v apt) install git;fi
-sudo git clone https://github.com/doob187/traefikv2apps.git /opt/apps
+cat <<EOF > /home/installer.sh
+$(command -v apt) update -yqq && $(command -v apt) upgrade -yqq
+if [[ -d "/opt/installer" ]];then sudo $(command -v rm) -rf /opt/installer && sudo git clone --quiet https://github.com/doob187/traefikv2installer.git /opt/installer;fi
+if [[ ! -d "/opt/installer" ]];then sudo git clone --quiet https://github.com/doob187/traefikv2installer.git /opt/installer;fi
+cd /opt/installer && $(command -v bash) install.sh
+EOF
+$(command -v bash) /home/installer.sh
 
-cd /opt/apps && sudo $(command -v bash) install.sh
 ```
 You will some pre-installations,
 After this it will open a layout with sections
@@ -83,20 +84,6 @@ Just type the name of the section,
 Under the sections are the apps
 
 More and more me and mrfret added in the next time
-
----
-
-## Install Missing Traefikv2 and Authelia 
-
-```
-$(command -v apt) update -y
-$(command -v apt) upgrade -y
-if [[ ! -x $(command -v git) ]];then sudo $(command -v apt) install git;fi
-sudo git clone https://github.com/doob187/Traefikv2.git /opt/traefik
-
-cd /opt/traefik && sudo $(command -v bash) install.sh
-```
-Then just follow the number and Press d/D to deploy
 
 ---
 
