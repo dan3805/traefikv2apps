@@ -118,42 +118,42 @@
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Queueing\MaxActiveDownloads
-            value: 10
+            value: '10'
             state: present
         - name: 'Set MaxActiveTorrents'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Queueing\MaxActiveTorrents
-            value: 100
+            value: '100'
             state: present
         - name: 'Set MaxActiveUploads'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Queueing\MaxActiveUploads
-            value: 100
+            value: '100'
             state: present
         - name: 'Set GlobalMaxSeedingMinutes'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: BitTorrent
             option: Session\GlobalMaxSeedingMinutes
-            value: 20160
+            value: '20160'
             state: present
         - name: 'Set MaxRatio'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Bittorrent\MaxRatio
-            value: 1
+            value: '1'
             state: present
         - name: 'pause on MaxRatioAction'
           ini_file:
             path: '/opt/appdata/{{app}}/qBittorrent/qBittorrent.conf'
             section: Preferences
             option: Bittorrent\MaxRatioAction
-            value: 1
+            value: '1'
             state: present
         - name: 'Disable csrf'
           ini_file:
