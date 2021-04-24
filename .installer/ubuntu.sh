@@ -178,7 +178,7 @@ EOF
   read -erp "↪️ Type Name to set the Backup-Folder and Press [ENTER]: " storage </dev/tty
   if [[ $storage == "exit" || $storage == "Exit" || $storage == "EXIT" || $storage  == "z" || $storage == "Z" ]];then clear && interface;fi
   if [[ $storage == "" ]];then clear && backupstorage;fi
-     if [[ $storage != "" ]];then $(command -v mkdir) -p /mnt/unionfs/appbackups/${storage};fi
+  if [[ $storage != "" ]];then $(command -v mkdir) -p /mnt/unionfs/appbackups/${storage};fi
      teststorage=$(ls -1p /mnt/unionfs/appbackups/ | grep '/$' | $(command -v sed) 's/\/$//' | grep -x $storage)
   if [[ $teststorage == $storage ]];then backupdocker;fi
 else
@@ -198,6 +198,16 @@ EOF
   if [[ $storage == "" ]];then clear && backupstorage;fi
      teststorage=$(ls -1p /mnt/unionfs/appbackups/ | grep '/$' | $(command -v sed) 's/\/$//' | grep -x $storage)
   if [[ $teststorage == $storage ]];then backupdocker;fi
+  if [[ $storage != "" ]];then 
+     $(command -v mkdir) -p /mnt/unionfs/appbackups/${storage}
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    🚀  New Backup folder set to $storage
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+sleep 3
+backupdocker
+  fi
 fi
 }
 backupdocker() {
