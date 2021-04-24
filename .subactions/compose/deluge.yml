@@ -62,13 +62,13 @@
       lineinfile:
         path: '/opt/appdata/{{app}}/config/core.conf'
         regexp: '"dht".*'
-        line: '    "    "dht": false,'
+        line: '    "dht": false,'
         state: present
     - name: Setting upnp to false
       lineinfile:
         path: '/opt/appdata/{{app}}/config/core.conf'
         regexp: '"upnp".*'
-        line: '    "    "upnp": false,'
+        line: '    "upnp": false,'
         state: present
 #    - name: Setting extractor
 #      lineinfile:
