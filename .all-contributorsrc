@@ -52,6 +52,16 @@
         "infra",
         "code"
       ]
+    },
+    {
+      "login": "Nossersvinet",
+      "name": "Nossersvinet",
+      "avatar_url": "https://avatars.githubusercontent.com/u/83166809?v=4",
+      "profile": "https://github.com/Nossersvinet",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "badgeTemplate": "<a href=\"#contributors-\"><img alt=\"All Contributors\" src=\"https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg\"/></a>",
