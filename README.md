@@ -22,6 +22,7 @@ https://discord.gg/A7h7bKBCVa
 Or create one issue 
 ```
 https://github.com/doob187/traefikv2apps/issues
+
 ```
 
 
@@ -68,7 +69,13 @@ TLS = v1.3
 
 ## Use the easy mode installer 
 ```
-sudo wget https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh -O /home/install.sh && sudo bash /home/install.sh
+sudo wget https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh -O /home/install.sh
+sudo bash /home/install.sh
+
+or 
+
+sudo wget -qO- https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh | sudo bash
+
 
 ```
 You will some pre-installations,
