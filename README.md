@@ -67,17 +67,19 @@ TLS = v1.3
 ```
 ---
 
-## Use the easy mode installer 
+## Use the easy mode installer
+
 ```
-sudo wget https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh -O /home/install.sh
-sudo bash /home/install.sh
+Long Line
+sudo wget -qO- https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh | sudo bash
 
 or 
 
-sudo wget -qO- https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh | sudo bash
-
+Short Line
+sudo wget -qO- https://git.io/JO7vg | sudo bash
 
 ```
+
 You will some pre-installations,
 After this it will open a layout with sections
 
