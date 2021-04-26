@@ -4,9 +4,7 @@
 
 ## FYI
 ```
-I am not a team-member of sudobox.io anymore
-        and will not come back.
-This is my Repository and not SudoBox LITE !!!
+
 So if you see a broken part plz report it here !!
 And not on the Forum or Discord of SudoBox.IO
 
