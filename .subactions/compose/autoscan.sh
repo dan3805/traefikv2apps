@@ -2,6 +2,16 @@
 # shellcheck shell=bash
 # Copyright (c) 2020, MrDoob
 # All rights reserved.
+
+#########################################################################
+# Author:         l3uddz / m-rots && cloudbox                           #
+# Docker:         https://github.com/Cloudbox/autoscan                  #
+# URL:            https://github.com/Cloudbox/autoscan                  #
+#         Part of the Cloudbox project: https://cloudbox.works          #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
 basefolder="/opt/appdata"
 typed=autoscan
 composeoverwrite="compose/docker-compose.override.yml"
@@ -169,6 +179,102 @@ else
   addauthpassword
 fi
 }
+showsettings() {
+source /opt/appdata/compose/.env
+arr=$($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr' 1>/dev/null 2>&1 && echo true || echo false)
+if [[ $arr == "true" ]];then
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     🚀   Arr settings ( SAMPLE )
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ Username : $USERAUTOSCAN
+ Password : $PASSWORD
+
+
+ Heres how to connect with sonarr/radarr:
+
+ Settings-> Connect-> Webhook
+
+ Notification triggers:
+           -->  Import
+           -->  Upgrade
+           -->  Rename
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  URL for radarr/sonarr
+
+  http://autoscan:3030/triggers/radarr
+  http://autoscan:3030/triggers/sonarr
+
+  Method: PUT
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+fi
+plex=$(docker ps -aq --format={{.Names}} | grep -E 'plex' 1>/dev/null 2>&1 && echo true || echo false)
+if [[ $plex = "true" ]];then
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+In Plex Media Server
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  UNTICK:
+
+- Scan my library automatically
+- Run a partial scan when changes are detected
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+fi
+jelly=$(docker ps -aq --format={{.Names}} | grep -E 'jelly' 1>/dev/null 2>&1 && echo true || echo false)
+if [[ $jelly = "true" ]];then
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+In Jellyfin
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+While Jellyfin provides much better behaviour out of the box than Plex,
+it still might be useful to use Autoscan for even better performance.
+
+Token :
+
+( must be added self )
+
+We need a Jellyfin API Token to make requests on your behalf. 
+This article should help you out.
+
+https://github.com/MediaBrowser/Emby/wiki/Api-Key-Authentication
+
+It's a bit out of date, but I'm sure you will manage!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+fi
+emby=$(docker ps -aq --format={{.Names}} | grep -E 'emby' 1>/dev/null 2>&1 && echo true || echo false)
+if [[ $emby = "true" ]];then
+tee <<-EOF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+In Jellyfin
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+While Jellyfin provides much better behaviour out of the box than Plex,
+it still might be useful to use Autoscan for even better performance.
+
+Token :
+
+( must be added self )
+
+We need a Jellyfin API Token to make requests on your behalf. 
+This article should help you out.
+
+https://github.com/MediaBrowser/Emby/wiki/Api-Key-Authentication
+
+It's a bit out of date, but I'm sure you will manage!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EOF
+read -erp "Confirm Info | PRESS [ENTER]" typed </dev/tty
+fi
+}
 showending() {
 source /opt/appdata/compose/.env
 tee <<-EOF
@@ -183,6 +289,7 @@ tee <<-EOF
  
  local  : http://autoscan:3030/triggers/{name of app}
  remote : https://autoscan.${DOMAIN}/triggers/{name of app}
+ manual : https://autoscan.${DOMAIN}/triggers/manual
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
@@ -193,7 +300,7 @@ runautoscan() {
     $($(command -v docker) ps -aq --format={{.Names}} | grep -E 'arr|ple|emb|jelly' 1>/dev/null 2>&1)
     errorcode=$?
 if [[ $errorcode -eq 0 ]]; then
-   headrm && anchor && arrs && targets && addauthuser && addauthpassword && autoscantarget && showending
+   headrm && anchor && arrs && targets && addauthuser && addauthpassword && autoscantarget && showsettings && showending
 else
      app=${typed}
      for i in ${app}; do
@@ -209,9 +316,10 @@ else
      fi
 tee <<-EOF
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    ❌ ERROR
+                   ❌ ERROR
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Sorry we cannot find any running Arrs , Plex , Emby or Jellyfin 
+         Sorry we cannot find any running
+          Arrs , Plex , Emby or Jellyfin 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
 fi

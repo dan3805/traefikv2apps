@@ -10,7 +10,7 @@ services:
       - 'PUID=${ID}'
       - 'TZ=${TZ}'
       - 'UMASK=022'
-    image: 'roxedus/conreq:latest'
+    image: 'ghcr.io/roxedus/conreq:latest'
     restart: 'unless-stopped'
     ports:
       - '127.0.0.1:8071:8071'
