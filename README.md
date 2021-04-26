@@ -3,12 +3,14 @@
 ---
 
 ## FYI
+
 ```
+So if you see a broken part plz report it here
+           over githube issues
+           or on the Discord
 
-So if you see a broken part plz report it here !!
-And not on the Forum or Discord of SudoBox.IO
+   All the Contributors you can see at the end 
 
-All the real Contributors you can see at the end 
 ```
 
 
@@ -60,23 +62,25 @@ SSL = FULL ( not FULL/STRICT )
 Always on = YES
 http to https = YES
 RocketLoader and Broli / Onion Routing = NO
-Tls min = 1.2
+TLS min = 1.2
 TLS = v1.3
 ```
+
 ---
 
-## Use the easy mode installer
+## Easy Mode install
 
 ```
 Long Line
 sudo wget -qO- https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh | sudo bash
 
-or 
+short liner
 
-Short Line
 sudo wget -qO- https://git.io/JO7vg | sudo bash
 
 ```
+
+---
 
 You will some pre-installations,
 After this it will open a layout with sections
