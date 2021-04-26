@@ -1,6 +1,6 @@
 ## TreafikV2 Apps with Authelia over Cloudflare
 
----
+----
 
 ## FYI
 
@@ -26,7 +26,7 @@ https://github.com/doob187/traefikv2apps/issues
 ```
 
 
----
+----
 
 ## minimum specs
 ```
@@ -36,7 +36,7 @@ Ubuntu 18/20 or Server or Debian 9/10
 20GB Disk Space
 ```
 
----
+----
 
 ## minimum requirement
 ```
@@ -45,7 +45,7 @@ Ubuntu 18/20 or Server or Debian 9/10
 1 Cloudflare Account  ( free level )
 1 Traefikv2 and Authelia install
 ```
----
+----
 
 ## pre Install
 
@@ -54,7 +54,7 @@ Go to your CloudFlare Dashboard
 Add 1 A Record > pointed to the ServerIp
 Copy your CloudFlare-Global-Key and CloudFlare-Zone-ID
 ```
----
+----
 
 Set follow on Cloudflare
 ```
@@ -66,7 +66,7 @@ TLS min = 1.2
 TLS = v1.3
 ```
 
----
+----
 
 ## Easy Mode install
 
@@ -80,7 +80,7 @@ sudo wget -qO- https://git.io/JO7vg | sudo bash
 
 ```
 
----
+----
 
 You will some pre-installations,
 After this it will open a layout with sections
@@ -90,7 +90,7 @@ Under the sections are the apps
 
 More and more me and mrfret added in the next time
 
----
+----
 
 ## Code and Permissions 
 ```
@@ -104,7 +104,7 @@ Only @mrfret and @doobsi have access
 to change or pr00f any Pull Request
 ( no one other )
 
----
+----
 
 ## Contributors ✨
 
