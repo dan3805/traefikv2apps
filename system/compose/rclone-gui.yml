@@ -25,6 +25,7 @@ services:
     volumes:
       - '/opt/appdata/mount:/config:rw'
       - 'unionfs:/mnt'
+      - 'unionfs:/media:ro'
       - '/etc/localtime:/etc/localtime:ro'
     labels:
       - 'traefik.enable=true'
