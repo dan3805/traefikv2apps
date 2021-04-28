@@ -23,7 +23,7 @@ services:
     security_opt:
       - 'no-new-privileges:true'
     volumes:
-      - '/opt/appdata/rclone-gui:/config:rw'
+      - '/opt/appdata/mount:/config:rw'
       - 'unionfs:/mnt'
       - '/etc/localtime:/etc/localtime:ro'
     labels:
