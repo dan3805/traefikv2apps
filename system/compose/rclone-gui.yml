@@ -17,7 +17,7 @@ services:
     image: 'd2dyno/rclone-gui:latest'
     restart: 'unless-stopped'
     ports:
-      - '127.0.0.1:5572:5572'
+      - '5572:5572'
     networks:
       - proxy
     security_opt:
