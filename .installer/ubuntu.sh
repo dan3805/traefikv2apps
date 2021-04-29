@@ -534,7 +534,7 @@ tee <<-EOF
     https://www.plex.tv/claim/
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-  read -erp "Enter your PLEX CLAIM CODE : " PLEXCLAIM
+  read -erp "Enter your PLEX CLAIM CODE : " PLEXCLAIM </dev/tty
   if [[ $PLEXCLAIM != "" ]];then
      if [[ $(uname) == "Darwin" ]];then
         $(command -v sed) -i '' "s/PLEX_CLAIM_ID/$PLEXCLAIM/g" $basefolder/$compose
