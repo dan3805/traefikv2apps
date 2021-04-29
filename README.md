@@ -72,12 +72,10 @@ TLS = v1.3
 
 ```
 Long Line
-sudo wget -qO- https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh | sudo bash
+sudo wget -qO- https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh >/tmp/install.sh && sudo bash /tmp/install.sh
 
 short liner
-
-sudo wget -qO- https://git.io/JO7vg | sudo bash
-
+sudo wget -qO- https://git.io/JO7vg >/tmp/install.sh && sudo bash /tmp/install.sh
 ```
 
 ----
