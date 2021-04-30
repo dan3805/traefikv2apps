@@ -149,7 +149,7 @@ tee <<-EOF
      🚀   autoscan Username
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-   read -erp "Enter a username for autoscan?: " USERAUTOSCAN
+   read -erp "Enter a username for autoscan?: " USERAUTOSCAN </dev/tty
 if [[ $USERAUTOSCAN != "" ]]; then
    if [[ $(uname) == "Darwin" ]]; then
       sed -i '' "s/<USERNAME>/$USERAUTOSCAN/g" $basefolder/${typed}/config.yml
@@ -167,7 +167,7 @@ tee <<-EOF
      🚀   autoscan Password
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 EOF
-   read -erp "Enter a password for $USERAUTOSCAN: " PASSWORD
+   read -erp "Enter a password for $USERAUTOSCAN: " PASSWORD </dev/tty
 if [[ $PASSWORD != "" ]]; then
    if [[ $(uname) == "Darwin" ]]; then
       sed -i '' "s/<PASSWORD>/$PASSWORD/g" $basefolder/${typed}/config.yml
