@@ -12,7 +12,7 @@ services:
     image: 'ghcr.io/linuxserver/nextcloud'
     restart: 'unless-stopped'
     ports:
-      - '127.0.0.1:4551:80'
+      - '4551:80'
     networks:
       - proxy
     security_opt:
