@@ -1,106 +1,76 @@
-## TreafikV2 Apps with Authelia over Cloudflare
+<br /><img src="https://github.com/dockserver/dockserver/blob/master/logo/cover.png"  width="600" height="300" style="vertical-align:middle">
 
-----
+[![Website: https://dockserver.io](https://img.shields.io/badge/Website-https%3A%2F%2Fdockserver.io-blue.svg?style=for-the-badge&colorB=177DC1&label=website)](https://dockserver.io)
+[![Discord: https://discord.gg/A7h7bKBCVa](https://img.shields.io/badge/Discord-gray.svg?style=for-the-badge)](https://discord.gg/A7h7bKBCVa)
+[![License: GPL 3](https://img.shields.io/badge/License-GPL%203-blue.svg?style=for-the-badge&colorB=177DC1&label=license)](LICENSE)
 
-## FYI
-
-```
-So if you see a broken part plz report it here
-           over githube issues
-           or on the Discord
-
-   All the Contributors you can see at the end 
-
-```
+*Docker + Traefik with Authelia and Cloudflare Protection*
 
 
-## You need Help 
+## Minimum Specs
 
-```
-https://discord.gg/A7h7bKBCVa
-```
-Or create one issue 
-```
-https://github.com/doob187/traefikv2apps/issues
+* Ubuntu 18/20 or Debian 9/10
+* 2 Cores
+* 4GB Ram
+* 20GB Disk Space
 
-```
+## Requirements
 
+* A VPS/VM or Dedicated Server
 
-----
+* Domain
 
-## minimum specs
-```
-Ubuntu 18/20 or Server or Debian 9/10
-2 Cores
-4GB Ram
-20GB Disk Space
-```
+* [Cloudflare](https://dash.cloudflare.com/sign-up) account free tier
 
-----
+## Pre-Install
 
-## minimum requirement
-```
-1 VPS / VM / dedicated Sever
-1 Domain
-1 Cloudflare Account  ( free level )
-1 Traefikv2 and Authelia install
-```
-----
+1. Login to your Cloudflare Account & goto DNS click on Add record.
+2. Add 1 **A-Record** pointed to your server's ip.
+3. Copy your [CloudFlare-Global-Key](https://support.cloudflare.com/hc/en-us/articles/200167836-Managing-API-Tokens-and-Keys) and [CloudFlare-Zone-ID](https://support.cloudflare.com/hc/en-us/articles/200167836-Managing-API-Tokens-and-Keys).
 
-## pre Install
+### Set the following on Cloudflare
 
-```
-Go to your CloudFlare Dashboard
-Add 1 A Record > pointed to the ServerIp
-Copy your CloudFlare-Global-Key and CloudFlare-Zone-ID
-```
-----
-
-Set follow on Cloudflare
-```
-SSL = FULL ( not FULL/STRICT )
-Always on = YES
-http to https = YES
-RocketLoader and Broli / Onion Routing = NO
-TLS min = 1.2
-TLS = v1.3
-```
-
-----
+1. `SSL = FULL` **( not FULL/STRICT )**
+2. `Always on = YES`
+3. `http to https = YES`
+4. `RocketLoader and Broli / Onion Routing = NO`
+5. `Tls min = 1.2`
+6. `TLS = v1.3`
 
 ## Easy Mode install
 
-```
-Long Line
-sudo wget -qO- https://raw.githubusercontent.com/doob187/traefikv2installer/main/wgetfile.sh >/tmp/install.sh && sudo bash /tmp/install.sh
+Run the following command:
 
-short liner
-sudo wget -qO- https://git.io/JO7vg >/tmp/install.sh && sudo bash /tmp/install.sh
+```sh
+sudo wget -qO- https://git.io/J3GDc >/tmp/install.sh && sudo bash /tmp/install.sh
 ```
 
-----
+<details>
+  <summary>Long commmand if the short one doesn't work.</summary>
+  <br />
 
-You will some pre-installations,
-After this it will open a layout with sections
+  ```sh
+  sudo wget -qO- https://raw.githubusercontent.com/dockserver/dockserver/master/wgetfile.sh >/tmp/install.sh && sudo bash /tmp/install.sh
+  ```
 
-Just type the name of the section, 
-Under the sections are the apps
+</details>
 
-More and more me and mrfret added in the next time
+## Support
 
-----
+Kindly report any issues/broken-parts/bugs on [github](https://github.com/dockserver/dockserver/issues) or [discord](https://discord.gg/A7h7bKBCVa)
 
-## Code and Permissions 
+* Join our [![Discord: https://discord.gg/A7h7bKBCVa](https://img.shields.io/badge/Discord-gray.svg?style=for-the-badge)](https://discord.gg/A7h7bKBCVa) for Support
+
+## Code and Permissions
+
+```sh
+Copyright 2021 @dockserver
+Code owner @dockserver
+Dev Code @dockserver
+Co-Dev -APPS- @CONTRIBUTORS-LIST
 ```
-Copyright 2021 @doobsi 
-Code owner @doobsi @mrfret
-Dev Code @doobsi 
-Co-Dev -APPS- @mrfret
-```
 
-Only @mrfret and @doobsi have access
-to change or pr00f any Pull Request
-( no one other )
+
 
 ----
 
@@ -113,13 +83,13 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/doob187"><img src="https://avatars.githubusercontent.com/u/60312740?v=4?s=100" width="100px;" alt=""/><br /><sub><b>doob187</b></sub></a><br /><a href="#infra-doob187" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/doob187/traefikv2apps/commits?author=doob187" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/doob187"><img src="https://avatars.githubusercontent.com/u/60312740?v=4?s=100" width="100px;" alt=""/><br /><sub><b>doob187</b></sub></a><br /><a href="#infra-doob187" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/dockserver/dockserver/commits?author=doob187" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Hawkinzzz"><img src="https://avatars.githubusercontent.com/u/24587652?v=4?s=100" width="100px;" alt=""/><br /><sub><b>hawkinzzz</b></sub></a><br /><a href="#infra-Hawkinzzz" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a></td>
-    <td align="center"><a href="https://github.com/mrfret"><img src="https://avatars.githubusercontent.com/u/72273384?v=4?s=100" width="100px;" alt=""/><br /><sub><b>mrfret</b></sub></a><br /><a href="https://github.com/doob187/traefikv2apps/commits?author=mrfret" title="Tests">⚠️</a></td>
-    <td align="center"><a href="https://github.com/GamermadHD"><img src="https://avatars.githubusercontent.com/u/7513233?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Keiran Tronier</b></sub></a><br /><a href="#infra-GamermadHD" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/doob187/traefikv2apps/commits?author=GamermadHD" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/dan3805"><img src="https://avatars.githubusercontent.com/u/35934387?v=4?s=100" width="100px;" alt=""/><br /><sub><b>dan3805</b></sub></a><br /><a href="#infra-dan3805" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/doob187/traefikv2apps/commits?author=dan3805" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/Nossersvinet"><img src="https://avatars.githubusercontent.com/u/83166809?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nossersvinet</b></sub></a><br /><a href="https://github.com/doob187/traefikv2apps/commits?author=Nossersvinet" title="Documentation">📖</a> <a href="https://github.com/doob187/traefikv2apps/commits?author=Nossersvinet" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/townsmcp"><img src="https://avatars.githubusercontent.com/u/14061617?v=4?s=100" width="100px;" alt=""/><br /><sub><b>townsmcp</b></sub></a><br /><a href="https://github.com/doob187/traefikv2apps/commits?author=townsmcp" title="Tests">⚠️</a> <a href="https://github.com/doob187/traefikv2apps/issues?q=author%3Atownsmcp" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/mrfret"><img src="https://avatars.githubusercontent.com/u/72273384?v=4?s=100" width="100px;" alt=""/><br /><sub><b>mrfret</b></sub></a><br /><a href="https://github.com/dockserver/dockserver/commits?author=mrfret" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/aelfa"><img src="https://avatars.githubusercontent.com/u/60222501?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Aelfa</b></sub></a><br /><a href="https://github.com/dockserver/dockserver/commits?author=aelfa" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/DrAg0n141"><img src="https://avatars.githubusercontent.com/u/44865095?v=4?s=100" width="100px;" alt=""/><br /><sub><b>DrAg0n141</b></sub></a><br /><a href="https://github.com/dockserver/dockserver/commits?author=DrAg0n141" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/townsmcp"><img src="https://avatars.githubusercontent.com/u/14061617?v=4?s=100" width="100px;" alt=""/><br /><sub><b>townsmcp</b></sub></a><br /><a href="https://github.com/dockserver/dockserver/commits?author=townsmcp" title="Tests">⚠️</a> <a href="https://github.com/dockserver/dockserver/issues?q=author%3Atownsmcp" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/Nossersvinet"><img src="https://avatars.githubusercontent.com/u/83166809?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nossersvinet</b></sub></a><br /><a href="https://github.com/dockserver/dockserver/commits?author=Nossersvinet" title="Tests">⚠️</a> <a href="https://github.com/dockserver/dockserver/commits?author=Nossersvinet" title="Code">💻</a> <a href="https://github.com/dockserver/dockserver/issues?q=author%3ANossersvinet" title="Bug reports">🐛</a> <a href="https://github.com/dockserver/dockserver/commits?author=Nossersvinet" title="Documentation">📖</a></td>
   </tr>
 </table>
 
